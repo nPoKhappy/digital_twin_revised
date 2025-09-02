@@ -98,18 +98,35 @@ def variable_selection(total_variables):
                         'SV11_TI05', 'SV12_TI07', 'SV13_FIC02PV', 'SV14_TI08', 'SV15_TIC12', 'SV16_TI09', 'SV17_PI04', 'SV18_PIC03', 'SV19_TI10', 'SV20_PI05',
                         'SV21_TI11', 'SV22_PIC02', 'SV23_FIC01PV', 'SV24_FC03PV','MV1_FIC01', 'MV2_SI01']
     elif total_variables == 30:
-        de_mv = ['QV1_AI01', 'QV2_AI02', 'SV1_FI05', 'SV2_FI06', 'SV3_TI06', 'SV4_TI01', 'SV5_PI06', 'SV6_AT02','SV7_TI02', 'SV8_TI03', 'SV9_FT04', 'SV10_TI04',
-                'SV11_TI05', 'SV12_TI07', 'SV13_FIC02', 'SV14_TI08', 'SV15_TIC12', 'SV16_TI09', 'SV17_PI04', 'SV18_PIC03', 'SV19_TI10', 'SV20_PI05',
-                'SV21_TI11', 'SV22_PIC02', 'SV23_FIC01', 'SV24_FIC02', 'MV1_AIC01', 'MV2_FIC01', 'MV3_FIC02', 'MV4_SI01']
-        y_sv =  ['QV1_AI01', 'QV2_AI02', 'SV1_FI05', 'SV2_FI06', 'SV3_TI06', 'SV4_TI01', 'SV5_PI06', 'SV6_AT02','SV7_TI02', 'SV8_TI03', 'SV9_FT04', 'SV10_TI04',
-                'SV11_TI05', 'SV12_TI07', 'SV13_FIC02', 'SV14_TI08', 'SV15_TIC12', 'SV16_TI09', 'SV17_PI04', 'SV18_PIC03', 'SV19_TI10', 'SV20_PI05',
-                'SV21_TI11', 'SV22_PIC02', 'SV23_FIC01', 'SV24_FIC02']
-        con_tag = [ 'QV1_AI01', 'QV2_AI02', 'SV1_FI05', 'SV2_FI06', 'SV3_TI06', 'SV4_TI01', 'SV5_PI06', 'SV6_AT02','SV7_TI02', 'SV8_TI03', 'SV9_FT04', 'SV10_TI04',
-                    'SV11_TI05', 'SV12_TI07', 'SV13_FIC02', 'SV14_TI08', 'SV15_TIC12', 'SV16_TI09', 'SV17_PI04', 'SV18_PIC03', 'SV19_TI10', 'SV20_PI05',
-                    'SV21_TI11', 'SV22_PIC02', 'SV23_FIC01', 'SV24_FIC02']
-        en_mv_and_sv = ['QV1_AI01', 'QV2_AI02', 'SV1_FI05', 'SV2_FI06', 'SV3_TI06', 'SV4_TI01', 'SV5_PI06', 'SV6_AT02','SV7_TI02', 'SV8_TI03', 'SV9_FT04', 'SV10_TI04',
-                        'SV11_TI05', 'SV12_TI07', 'SV13_FIC02', 'SV14_TI08', 'SV15_TIC12', 'SV16_TI09', 'SV17_PI04', 'SV18_PIC03', 'SV19_TI10', 'SV20_PI05',
-                        'SV21_TI11', 'SV22_PIC02', 'SV23_FIC01', 'SV24_FIC02', 'MV1_AIC01', 'MV2_FIC01', 'MV3_FIC02', 'MV4_SI01']
+        en_mv_and_sv = [
+            'MV1_AIC01', 'MV2_FIC01', 'MV3_FIC02', 'MV4_SI01',
+            'QV1_AI01', 'QV2_AI02', 'SV1_FI05', 'SV2_FI06',
+            'SV3_TI06', 'SV4_TI01', 'SV5_PI06', 'SV6_AT02',
+            'SV7_TI02', 'SV8_TI03', 'SV9_FT04', 'SV10_TI04',
+            'SV11_TI05', 'SV12_TI07', 'SV13_FIC02', 'SV14_TI08',
+            'SV15_TIC12', 'SV16_TI09', 'SV17_PI04', 'SV18_PIC03',
+            'SV19_TI10', 'SV20_PI05', 'SV21_TI11', 'SV22_PIC02',
+            'SV23_FIC01', 'SV24_FIC02'
+        ]
+
+        # Decoder 輸入 (de_mv): 只包含未來可控的操縱變數 (MV)
+        de_mv = [
+            'MV1_AIC01', 'MV2_FIC01', 'MV3_FIC02', 'MV4_SI01'
+        ]
+
+        # 模型預測目標 (y_sv): 包含所有非操縱變數，即 SV 和 QV
+        y_sv = [
+            'QV1_AI01', 'QV2_AI02', 'SV1_FI05', 'SV2_FI06',
+            'SV3_TI06', 'SV4_TI01', 'SV5_PI06', 'SV6_AT02',
+            'SV7_TI02', 'SV8_TI03', 'SV9_FT04', 'SV10_TI04',
+            'SV11_TI05', 'SV12_TI07', 'SV13_FIC02', 'SV14_TI08',
+            'SV15_TIC12', 'SV16_TI09', 'SV17_PI04', 'SV18_PIC03',
+            'SV19_TI10', 'SV20_PI05', 'SV21_TI11', 'SV22_PIC02',
+            'SV23_FIC01', 'SV24_FIC02'
+        ]
+        
+        # con_tag: 通常與 y_sv 相同
+        con_tag = y_sv
     elif total_variables == 33:
         de_mv = ['QV1_AI01', 'QV2_AI02', 'SV1_FI05', 'SV2_FI06', 'SV3_TI06', 'SV4_TI01', 'SV5_PI06', 'SV6_AT02','SV7_TI02', 'SV8_TI03', 'SV9_FT04', 'SV10_TI04',
                 'SV11_TI05', 'SV12_TI07', 'SV13_FIC02', 'SV14_TI08', 'SV15_TIC12', 'SV16_TI09', 'SV17_PI04', 'SV18_PIC03', 'SV19_TI10', 'SV20_PI05',

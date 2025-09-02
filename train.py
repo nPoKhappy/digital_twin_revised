@@ -1,163 +1,155 @@
-# train.py
+# train.py (完整且正確的版本)
 
 import torch
-import torch.nn as nn
 import torch.optim as optim
+import torch.nn as nn
 from torch.utils.data import DataLoader
-from sklearn.model_selection import train_test_split
-import pandas as pd
-from datetime import datetime
-import numpy as np
+import os
+import time
 
-# 從我們的 src 模組中導入所有需要的東西
-from src import data_utils
-from src.dataset import S2STimeSeriesDataset
+# 導入我們自己寫的模組
+from src import data_utils, engine
+from src.dataset import MultiStepS2SDataset
 from src.model import Seq2Seq
+from src.utils import generate_results
 
-# --- 1. 設定參數 (集中管理) ---
+# ==============================================================================
+# --- 實驗配置區 ---
+# ==============================================================================
 CONFIG = {
-    # 數據相關
-    'data_path': './data/',
-    'input_file': 'Train_input.csv', # <--- 請填寫您的檔案名
-    'total_variables': 30,
-    'validation_size': 0.2, # 20% 的數據用於驗證
+    'exp_name': 'Rolling_Training_Direct_Prediction',
 
-    # 時間窗口相關
-    'en_window_mins': 60, # Encoder 輸入序列長度 (分鐘)
-    'de_window_mins': 30, # Decoder 輸入/輸出序列長度 (分鐘)
-    'sampling_interval_min': 10, # 數據採樣間隔 (分鐘)
-
-    # 模型超參數 (Hyperparameters)
-    'embedding_dim': 32, # 輸入特徵的嵌入維度
-    'hidden_dim': 64,    # GRU 隱藏層的維度
-    'n_layers': 3,       # GRU 堆疊的層數
+    'data': {
+        'path': './data/',
+        'filename': 'Train_input.csv',
+        'variables_num': 30,
+        'point': 15000,
+        'test_data_split': 0.1,
+        'valid_data_split': 0.05,
+    },
     
-    # 訓練相關
-    'device': 'cuda' if torch.cuda.is_available() else 'cpu',
-    'batch_size': 32,
-    'num_epochs': 50,    # 訓練的總輪次
-    'learning_rate': 0.001,
-    'model_save_path': './saved_models/best_s2s_model.pth' # 模型儲存路徑
+    'window': {
+        'train_window_mins': 180,       # 輸入長度 (180/10 = 18 steps)
+        'sampling_interval_min': 10,
+        'prediction_length': 30,        # 直接指定預測 30 個時間點
+    },
+
+    'model': {
+        'embedding_dim': 32,
+        'hidden_dim': 64,
+        'n_layers': 3,
+    },
+
+    'training': {
+        'device': 'cuda' if torch.cuda.is_available() else 'cpu',
+        'batch_size': 4096,
+        'epochs': 1,
+        'learning_rate': 0.001,
+        'patience': 100,
+    },
+
+    'output': {
+        'results_dir': './results/',
+        'models_dir': './saved_models/',
+    }
 }
+# ==============================================================================
+# --- 主程式碼 ---
+# ==============================================================================
 
-def collate_fn(batch):
-    """
-    自定義的 collate_fn，用來過濾掉 Dataset 中返回 None 的樣本。
-    """
-    batch = list(filter(lambda x: x is not None, batch))
-    return torch.utils.data.dataloader.default_collate(batch)
+def main():
+    prefix = CONFIG['exp_name']
+    print(f"========== 開始實驗: {prefix} ==========")
+    start_time = time.time()
 
-
-# --- 2. 數據準備 ---
-print("步驟 1/4: 準備數據...")
-# 載入數據 (假設所有變數都在一個 CSV 中)
-df_raw = data_utils.load_data(CONFIG['data_path'] + CONFIG['input_file'])
-# (此處可以添加您在 main.py 中使用的預處理步驟，如 select_date_range, dropna 等)
-df_raw.dropna(inplace=True)
-
-# 數據標準化
-mean_all, std_all = data_utils.calculate_zscore_stats(df_raw)
-df_z = data_utils.apply_zscore(df_raw, mean_all, std_all)
-
-# 獲取變數列表
-de_mv, y_sv, con_tag, en_mv_and_sv = data_utils.variable_selection(CONFIG['total_variables'])
-num_en_input = len(en_mv_and_sv)
-num_de_input = len(de_mv)
-num_output = len(y_sv)
-
-# 切分訓練集和驗證集
-train_df, val_df = train_test_split(df_z, test_size=CONFIG['validation_size'], shuffle=False) # 時間序列數據不應打亂
-
-# 建立 Dataset
-train_dataset = S2STimeSeriesDataset(
-    df=train_df,
-    en_input_tags=en_mv_and_sv, de_input_tags=de_mv, y_tags=y_sv,
-    en_window_mins=CONFIG['en_window_mins'], de_window_mins=CONFIG['de_window_mins'],
-    sampling_interval_min=CONFIG['sampling_interval_min']
-)
-val_dataset = S2STimeSeriesDataset(
-    df=val_df,
-    en_input_tags=en_mv_and_sv, de_input_tags=de_mv, y_tags=y_sv,
-    en_window_mins=CONFIG['en_window_mins'], de_window_mins=CONFIG['de_window_mins'],
-    sampling_interval_min=CONFIG['sampling_interval_min']
-)
-
-# 建立 DataLoader
-train_loader = DataLoader(train_dataset, batch_size=CONFIG['batch_size'], shuffle=True, collate_fn=collate_fn)
-val_loader = DataLoader(val_dataset, batch_size=CONFIG['batch_size'], shuffle=False, collate_fn=collate_fn)
-
-print(f"數據準備完成。訓練樣本數: {len(train_dataset)}, 驗證樣本數: {len(val_dataset)}")
-
-
-# --- 3. 模型、損失函數、優化器初始化 ---
-print(f"步驟 2/4: 初始化模型... 使用設備: {CONFIG['device']}")
-
-model = Seq2Seq(
-    num_en_input=num_en_input,
-    num_de_input=num_de_input,
-    num_output=num_output,
-    embedding_dim=CONFIG['embedding_dim'],
-    hidden_dim=CONFIG['hidden_dim'],
-    n_layers=CONFIG['n_layers']
-).to(CONFIG['device'])
-
-criterion = nn.MSELoss() # 均方誤差損失，適用於回歸預測
-optimizer = optim.Adam(model.parameters(), lr=CONFIG['learning_rate'])
-
-
-# --- 4. 訓練與驗證迴圈 ---
-print("步驟 3/4: 開始訓練...")
-best_val_loss = float('inf')
-
-for epoch in range(CONFIG['num_epochs']):
-    # --- 訓練階段 ---
-    model.train()
-    total_train_loss = 0
-    for en_input, de_input, target in train_loader:
-        en_input = en_input.to(CONFIG['device'])
-        de_input = de_input.to(CONFIG['device'])
-        target = target.to(CONFIG['device'])
-
-        # 梯度歸零
-        optimizer.zero_grad()
-        # 前向傳播
-        predictions = model(en_input, de_input)
-        # 計算損失
-        loss = criterion(predictions, target)
-        # 反向傳播
-        loss.backward()
-        # 更新權重
-        optimizer.step()
-
-        total_train_loss += loss.item()
-
-    avg_train_loss = total_train_loss / len(train_loader)
-
-    # --- 驗證階段 ---
-    model.eval()
-    total_val_loss = 0
-    with torch.no_grad():
-        for en_input, de_input, target in val_loader:
-            en_input = en_input.to(CONFIG['device'])
-            de_input = de_input.to(CONFIG['device'])
-            target = target.to(CONFIG['device'])
-
-            predictions = model(en_input, de_input)
-            loss = criterion(predictions, target)
-            total_val_loss += loss.item()
-
-    avg_val_loss = total_val_loss / len(val_loader)
+    # 1. 數據準備
+    print("\n步驟 1/4: 準備數據...")
+    cfg_data = CONFIG['data']
+    cfg_win = CONFIG['window']
     
-    print(f'Epoch [{epoch+1:02d}/{CONFIG["num_epochs"]:02d}] | 訓練損失: {avg_train_loss:.6f} | 驗證損失: {avg_val_loss:.6f}')
+    # --- 關鍵修正處 ---
+    W = cfg_win['train_window_mins'] // cfg_win['sampling_interval_min']
+    H_out = cfg_win['prediction_length']  # 使用 H_out，不再使用 H
+    CONFIG['en_window_steps'] = W
+    CONFIG['de_window_steps'] = H_out     # 將 H_out 存入 config 以便 utils.py 使用
+    # --- 修正結束 ---
+    
+    df_raw = data_utils.load_data(os.path.join(cfg_data['path'], cfg_data['filename']))
+    df_raw = df_raw.iloc[:cfg_data['point']]
+    df_raw.dropna(inplace=True)
 
-    # --- 儲存最佳模型 ---
-    if avg_val_loss < best_val_loss:
-        best_val_loss = avg_val_loss
-        # 確保儲存模型的資料夾存在
-        import os
-        os.makedirs(os.path.dirname(CONFIG['model_save_path']), exist_ok=True)
-        torch.save(model.state_dict(), CONFIG['model_save_path'])
-        print(f'  -> 驗證損失降低，模型已儲存至: {CONFIG["model_save_path"]}')
+    mean_all, std_all = data_utils.calculate_zscore_stats(df_raw)
+    df_z = data_utils.apply_zscore(df_raw, mean_all, std_all)
+
+    de_mv, y_sv, _, en_mv_and_sv = data_utils.variable_selection(cfg_data['variables_num'])
+    num_en_input, num_de_input, num_output = len(en_mv_and_sv), len(de_mv), len(y_sv)
+    
+    data_len = len(df_z)
+    split_point1 = int(data_len * (1 - cfg_data['test_data_split']))
+    split_point2 = int(split_point1 * (1 - cfg_data['valid_data_split']))
+    
+    train_df, val_df, test_df = df_z.iloc[:split_point2], df_z.iloc[split_point2:split_point1], df_z.iloc[split_point1:]
+
+    # --- 關鍵修正處 ---
+    # 使用新的 Dataset 格式 (W, H_out)，並且不再傳入 horizons
+    train_ds = MultiStepS2SDataset(train_df, en_mv_and_sv, de_mv, y_sv, W, H_out)
+    val_ds = MultiStepS2SDataset(val_df, en_mv_and_sv, de_mv, y_sv, W, H_out)
+    test_ds = MultiStepS2SDataset(test_df, en_mv_and_sv, de_mv, y_sv, W, H_out)
+    # --- 修正結束 ---
+    
+    train_loader = DataLoader(train_ds, batch_size=CONFIG['training']['batch_size'], shuffle=True)
+    val_loader = DataLoader(val_ds, batch_size=CONFIG['training']['batch_size'], shuffle=False)
+    test_loader = DataLoader(test_ds, batch_size=CONFIG['training']['batch_size'], shuffle=False)
+    print("數據準備完成。")
+    
+    # 2. 初始化模型、優化器、損失函數
+    print("\n步驟 2/4: 初始化模型...")
+    cfg_model = CONFIG['model']
+    cfg_training = CONFIG['training']
+    model = Seq2Seq(num_en_input, num_de_input, num_output, cfg_model['embedding_dim'], cfg_model['hidden_dim'], cfg_model['n_layers']).to(cfg_training['device'])
+    optimizer = optim.Adam(model.parameters(), lr=cfg_training['learning_rate'])
+    criterion = nn.L1Loss()
+    
+    # 3. 選擇訓練策略
+    training_step_fn = engine.step_wise_rolling_training_step
+    print("訓練模式: Step-wise Rolling Training")
+
+    # 4. 執行訓練
+    print("\n步驟 3/4: 開始訓練...")
+    best_val_loss = float('inf')
+    patience_counter = 0
+    model_save_path = os.path.join(CONFIG['output']['models_dir'], f'{prefix}.pth')
+    os.makedirs(os.path.dirname(model_save_path), exist_ok=True)
+
+    for epoch in range(cfg_training['epochs']):
+        train_loss = engine.train_one_epoch(model, train_loader, optimizer, criterion, cfg_training['device'], training_step_fn)
+        val_loss = engine.evaluate(model, val_loader, criterion, cfg_training['device'], training_step_fn)
+        print(f'Epoch {epoch+1} | Train Loss: {train_loss:.6f} | Val Loss: {val_loss:.6f}')
+
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
+            torch.save(model.state_dict(), model_save_path)
+            print('  -> 驗證損失降低，模型已儲存。')
+            patience_counter = 0
+        else:
+            patience_counter += 1
+        
+        if patience_counter >= cfg_training['patience']:
+            print("Early stopping!")
+            break
+            
+    # 5. 最終評估
+    print("\n步驟 4/4: 使用最佳模型進行最終評估...")
+    best_model = Seq2Seq(num_en_input, num_de_input, num_output, cfg_model['embedding_dim'], cfg_model['hidden_dim'], cfg_model['n_layers']).to(cfg_training['device'])
+    best_model.load_state_dict(torch.load(model_save_path))
+    print(f"已從 {model_save_path} 加載最佳模型。")
+
+    generate_results(best_model, test_loader, cfg_training['device'], CONFIG, mean_all, std_all, y_sv, de_mv, prefix, 'test')
+    generate_results(best_model, val_loader, cfg_training['device'], CONFIG, mean_all, std_all, y_sv, de_mv, prefix, 'validation')
+    
+    end_time = time.time()
+    print(f"\n實驗 {prefix} 完成。總耗時: {end_time - start_time:.2f} 秒。")
 
 
-print("步驟 4/4: 訓練完成！")
+if __name__ == '__main__':
+    main()

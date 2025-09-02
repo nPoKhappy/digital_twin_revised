@@ -1,50 +1,76 @@
-# 可以放在 main.py 或 src/utils.py
+# src/utils.py (已修改為無 horizon 的版本)
 
 import torch
+import numpy as np
+import pandas as pd
+from math import sqrt
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, mean_absolute_percentage_error
+import os
+from tqdm import tqdm
 
-def predict_autoregressive(model, en_input, de_input_initial, steps):
-    """
-    使用模型進行自回歸滾動預測。
-
-    Args:
-        model (nn.Module): 訓練好的 Seq2Seq 模型。
-        en_input (Tensor): 編碼器的輸入 (batch_size, seq_len, num_en_input)。
-        de_input_initial (Tensor): 解碼器的初始輸入 (batch_size, seq_len, num_de_input)。
-        steps (int): 要向前預測的總步數。
-
-    Returns:
-        list: 包含每一步預測結果的 Tensor 列表。
-    """
-    model.eval()  # 設置為評估模式
-    predictions = []
+def generate_results(model, loader, device, config, mean, std, y_tags, de_mv_tags, prefix, set_name):
+    print(f"開始評估 {set_name}...")
+    model.eval()
     
-    with torch.no_grad(): # 在預測時不需要計算梯度
-        # 獲取初始的 encoder 狀態
-        encoder_outputs, encoder_hiddens = model.encoder(en_input)
+    all_predictions_list = []
+    all_targets_list = []
 
-        # 初始的 decoder input
-        current_de_input = de_input_initial
-
-        for _ in range(steps):
-            # 進行單步預測
-            output = model.decoder(current_de_input, encoder_outputs, encoder_hiddens)
-            predictions.append(output)
-
-            # --- 準備下一個時間步的輸入 ---
-            # 這是最關鍵的部分，需要根據您的具體數據來決定如何構建下一個輸入
-            # 這裡的邏輯需要模仿 Keras 的 K.concatenate((predicted_1, de_input_1), axis=2)
-            # 假設預測的輸出 (output) 需要和某些已知的未來輸入拼接
-            # 為了示例，我們假設下一個 decoder input 就是當前的預測結果
-            # 您需要根據您的特徵來修改這部分！
+    with torch.no_grad():
+        for en_input, de_inputs, targets in tqdm(loader, desc=f"Predicting on {set_name} set"):
+            en_input = en_input.to(device)
+            all_future_mvs = de_inputs.to(device)
             
-            # 假設 de_input_initial 的特徵維度與 output 的特徵維度相同
-            # current_de_input = output # 這是一個簡化的例子
+            _, encoder_hiddens = model.encoder(en_input)
+            all_preds_tensor = model.decoder(all_future_mvs, encoder_hiddens)
             
-            # 更接近 Keras 的例子 (假設 de_input 的某些欄位是已知的)
-            # known_future_features = current_de_input[:, :, num_predicted_features:]
-            # current_de_input = torch.cat([output, known_future_features], dim=2)
-            
-            # 由於邏輯可能很複雜，我們先在這裡中斷，讓您知道需要在此處定義滾動邏輯
-            pass # 您需要在此處實現如何用 output 構造下一個 current_de_input
+            all_predictions_list.append(all_preds_tensor.cpu().numpy())
+            all_targets_list.append(targets.numpy())
 
+    # 將 list of batches 合併成一個大的 numpy array
+    y_pred_cov = np.concatenate(all_predictions_list, axis=0)
+    y_true_cov = np.concatenate(all_targets_list, axis=0)
+    
+    # 反標準化
+    y_mean_series = mean[y_tags]
+    y_std_series = std[y_tags]
+    y_pred_cov = y_pred_cov * y_std_series.values + y_mean_series.values
+    y_true_cov = y_true_cov * y_std_series.values + y_mean_series.values
+    
+    # 開始繪圖和計算指標
+    pred_len = config['window']['prediction_length']
+    num_output = len(y_tags)
+    
+    for t in tqdm(range(pred_len), desc=f"為 {set_name} 繪圖並計算指標"):
+        metrics = {'R2': [], 'MAPE': [], 'RMSE': [], 'MAE': []}
+        
+        for yi in range(num_output):
+            true = y_true_cov[:, t, yi]
+            pred = y_pred_cov[:, t, yi]
+
+            metrics['RMSE'].append(sqrt(mean_squared_error(true, pred)))
+            metrics['R2'].append(r2_score(true, pred))
+            non_zero_mask = true != 0
+            if np.any(non_zero_mask):
+                metrics['MAPE'].append(mean_absolute_percentage_error(true[non_zero_mask], pred[non_zero_mask]))
+            else:
+                metrics['MAPE'].append(0.0)
+            metrics['MAE'].append(mean_absolute_error(true, pred))
+
+        for metric_name, values in metrics.items():
+            df = pd.DataFrame([values], columns=y_tags, index=[f't+{(t + 1)}'])
+            path = os.path.join(config['output']['results_dir'], prefix, f'{metric_name}_timestep_{set_name}.csv')
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            if t == 0:
+                df.to_csv(path)
+            else:
+                df.to_csv(path, mode='a', header=False)
+
+# one_shot_forecast 函數保持不變，它已經是我們需要的形式了
+def one_shot_forecast(model, encoder_input_initial, decoder_inputs_future, device):
+    model.eval()
+    encoder_input = encoder_input_initial.to(device)
+    decoder_inputs = decoder_inputs_future.to(device)
+    with torch.no_grad():
+        _, encoder_hiddens = model.encoder(encoder_input)
+        predictions = model.decoder(decoder_inputs, encoder_hiddens)
     return predictions
