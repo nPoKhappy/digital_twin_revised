@@ -1,0 +1,36 @@
+# Transformer 實驗的設定檔 # 這個會影響到我儲存模型的名稱 跟 我的最後results 產生出來的資料夾名稱
+exp_name: "Transformer_AT_Rolling_Experiment"
+
+data:
+  path: "./data/"
+  filename: "Train_input.csv" # 這個是給 train.py 使用的 訓練時候的數據
+  variables_num: 30 # mv 4 個 qv 2個 sv 26個 total 30個
+  point: 15000
+  test_data_split: 0.1      
+  valid_data_split: 0.05    
+  
+  test_data:
+    filename: "rolling_data.csv"
+    point: 1500
+
+window:
+  train_window_mins: 180 
+  sampling_interval_min: 10
+  prediction_length: 72 # 18 * 4
+
+# --- 模型特定的設定 ---
+model:
+  name: "transformer" 
+  embedding_dim: 34   
+  hidden_dim: 34
+  n_layers: 3
+
+training:
+  device: "cuda"
+  batch_size: 1024     # 這個數值越大 記憶體需求越高 但是訓練會比較快
+  epochs: 10000     # 訓練的最大迭代次數
+  learning_rate: 0.001 # Adam 的預設值
+  patience: 100 # 早停的耐心值
+  loss_weighting:
+    weights: [1.0, 1.0, 1.0, 1.0]
+  inference_strategy: 'block_replacement'
