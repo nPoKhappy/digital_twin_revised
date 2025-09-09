@@ -161,11 +161,11 @@ def main(config_path):
     # (C) 繪圖
     for i, name in enumerate(y_sv):
         plt.figure(figsize=(20, 6))
-        plt.plot(true_targets_cov[:, i], label='真實值 (True Value)', color='blue', linewidth=2)
-        plt.plot(predictions_cov[:, i], label='預測值 (Predicted Value)', color='red', linestyle='--', linewidth=2)
-        plt.title(f'長期滾動預測結果: {name} (策略: {inference_strategy.upper()})', fontsize=16)
-        plt.xlabel('時間步 (Time Step)', fontsize=12)
-        plt.ylabel('值 (Value)', fontsize=12)
+        plt.plot(true_targets_cov[:, i], label=' (True Value)', color='blue', linewidth=2)
+        plt.plot(predictions_cov[:, i], label=' (Predicted Value)', color='red', linestyle='--', linewidth=2)
+        plt.title(f'{name} (inference: {inference_strategy.upper()})', fontsize=16)
+        plt.xlabel('(Time Step)', fontsize=12)
+        plt.ylabel('(Value)', fontsize=12)
         plt.legend()
         plt.grid(True, which='both', linestyle='--', linewidth=0.5)
         
