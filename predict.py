@@ -85,11 +85,32 @@ def main(config_path):
     cfg_win = config['window']
     W = cfg_win['train_window_mins'] // cfg_win['sampling_interval_min']
     
-    df_raw_train = data_utils.load_data(os.path.join(cfg_data['path'], cfg_data['filename']))
+    # 安全地載入訓練數據，處理可選的 DateTime 索引
+    try:
+        df_raw_train = data_utils.load_data(os.path.join(cfg_data['path'], cfg_data['filename']))
+        print("成功載入訓練數據（帶 DateTime 索引）")
+    except (KeyError, ValueError) as e:
+        print(f"注意：數據中沒有 DateTime 列，使用預設索引載入: {e}")
+        # 如果沒有 DateTime 列，直接讀取 CSV
+        df_raw_train = pd.read_csv(os.path.join(cfg_data['path'], cfg_data['filename']))
+        print("成功載入訓練數據（使用預設索引）")
+    
+    # 清理訓練數據中的缺失值，這是計算統計數據前的關鍵步驟
+    df_raw_train.dropna(inplace=True)
+    
     mean_all, std_all = data_utils.calculate_zscore_stats(df_raw_train)
 
     test_data_cfg = cfg_data['test_data']
-    df_raw_test = data_utils.load_data(os.path.join(cfg_data['path'], test_data_cfg['filename']))
+    # 安全地載入測試數據
+    try:
+        df_raw_test = data_utils.load_data(os.path.join(cfg_data['path'], test_data_cfg['filename']))
+        print("成功載入測試數據（帶 DateTime 索引）")
+    except (KeyError, ValueError) as e:
+        print(f"注意：數據中沒有 DateTime 列，使用預設索引載入: {e}")
+        # 如果沒有 DateTime 列，直接讀取 CSV
+        df_raw_test = pd.read_csv(os.path.join(cfg_data['path'], test_data_cfg['filename']))
+        print("成功載入測試數據（使用預設索引）")
+    
     df_raw_test = df_raw_test.iloc[:test_data_cfg['point']]
     df_raw_test.dropna(inplace=True)
     df_z_test = data_utils.apply_zscore(df_raw_test, mean_all, std_all)

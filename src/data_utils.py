@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 def load_data(file_path, datetime_tag='DateTime', index_tag='DateTime', slice_interval=1):
     """
     載入 CSV 檔案，解析日期並設置索引。
+    如果沒有指定的日期時間列，則使用預設的數值索引。
     
     Args:
         file_path (str): CSV 檔案路径
@@ -21,14 +22,30 @@ def load_data(file_path, datetime_tag='DateTime', index_tag='DateTime', slice_in
         slice_interval (int): 數據採樣間隔（每隔多少行取一次數據）
         
     Returns:
-        pd.DataFrame: 處理後的數據，以日期時間為索引
+        pd.DataFrame: 處理後的數據，以日期時間為索引（如果存在）或數值索引
+        
+    Raises:
+        KeyError: 當指定的日期時間列不存在時
+        ValueError: 當日期時間格式無法解析時
     """
     # 讀取 CSV 檔案
     data = pd.read_csv(file_path)
-    # 將日期字符串轉換為 datetime 對象，格式: '年/月/日 時:分'
-    data[datetime_tag] = pd.to_datetime(data[datetime_tag], format='%Y/%m/%d %H:%M')
-    # 將日期時間欄位設為索引，便於時間序列操作
-    data.set_index(index_tag, inplace=True)
+    
+    # 檢查是否存在指定的日期時間列
+    if datetime_tag in data.columns:
+        try:
+            # 將日期字符串轉換為 datetime 對象，格式: '年/月/日 時:分'
+            data[datetime_tag] = pd.to_datetime(data[datetime_tag], format='%Y/%m/%d %H:%M')
+            # 將日期時間欄位設為索引，便於時間序列操作
+            data.set_index(index_tag, inplace=True)
+            print(f"成功設置 {datetime_tag} 為時間索引")
+        except (ValueError, pd.errors.ParserError) as e:
+            print(f"警告：無法解析日期格式 {datetime_tag}，使用原始數據: {e}")
+            # 如果日期解析失敗，保持原始數據不變
+    else:
+        print(f"注意：數據中沒有找到 '{datetime_tag}' 列，使用數值索引")
+        # 沒有日期時間列時，保持預設的數值索引
+    
     # 根據 slice_interval 進行採樣（例如每2行取1行）
     return data[::slice_interval]
 
@@ -94,6 +111,59 @@ def shift_time(df, delta_minutes, datetime_tag='DateTime', index_tag='DateTime')
     # 重新設定索引
     return df_copy.set_index(index_tag)
 
+def load_data_safe(file_path, datetime_tag='DateTime', index_tag='DateTime', slice_interval=1):
+    """
+    安全地載入 CSV 檔案，自動處理是否存在日期時間列的情況。
+    這是 load_data 的增強版本，提供更好的錯誤處理和靈活性。
+    
+    Args:
+        file_path (str): CSV 檔案路径
+        datetime_tag (str): 包含日期時間的欄位名稱（可選）
+        index_tag (str): 用作索引的欄位名稱（可選）
+        slice_interval (int): 數據採樣間隔
+        
+    Returns:
+        tuple: (pd.DataFrame, bool) - 返回處理後的數據和是否使用了時間索引的標誌
+    """
+    # 讀取 CSV 檔案
+    data = pd.read_csv(file_path)
+    has_datetime_index = False
+    
+    # 檢查是否存在指定的日期時間列
+    if datetime_tag in data.columns:
+        try:
+            # 嘗試多種日期格式
+            date_formats = ['%Y/%m/%d %H:%M', '%Y-%m-%d %H:%M:%S', '%Y-%m-%d', '%d/%m/%Y %H:%M']
+            
+            for fmt in date_formats:
+                try:
+                    data[datetime_tag] = pd.to_datetime(data[datetime_tag], format=fmt)
+                    break
+                except ValueError:
+                    continue
+            else:
+                # 如果所有格式都失敗，使用 pandas 的自動推斷
+                data[datetime_tag] = pd.to_datetime(data[datetime_tag], infer_datetime_format=True)
+            
+            # 設置時間索引
+            data.set_index(index_tag, inplace=True)
+            has_datetime_index = True
+            print(f"✓ 成功設置 {datetime_tag} 為時間索引")
+            
+        except (ValueError, pd.errors.ParserError) as e:
+            print(f"⚠ 警告：無法解析日期格式，保持數值索引: {e}")
+            has_datetime_index = False
+    else:
+        print(f"ℹ 注意：數據中沒有 '{datetime_tag}' 列，使用數值索引")
+        has_datetime_index = False
+    
+    # 根據 slice_interval 進行採樣
+    sampled_data = data[::slice_interval]
+    
+    print(f"✓ 成功載入數據：{sampled_data.shape[0]} 行 × {sampled_data.shape[1]} 列")
+    
+    return sampled_data, has_datetime_index
+
 # ==============================================================================
 # 數據標準化函數
 # ==============================================================================
@@ -125,7 +195,18 @@ def apply_zscore(df, mean, std):
         pd.DataFrame: 標準化後的數據框
     """
     # 加上一個極小值（1e-8）避免除以零的情況
-    return (df - mean) / (std + 1e-8)
+    std_safe = std + 1e-8
+    df_z = (df - mean) / std_safe
+    if df_z.isnull().values.any():
+        # 找出是哪些欄位產生了 NaN
+        nan_cols = df_z.columns[df_z.isnull().any()].tolist()
+        print(f"錯誤：標準化後在以下欄位中發現 NaN: {nan_cols}")
+        
+        # 找出原始 std 中接近零的欄位
+        problem_std_cols = std[std < 1e-9].index.tolist()
+        if problem_std_cols:
+            print(f"原因分析：以下欄位的標準差接近於零，可能導致數值不穩定: {problem_std_cols}")
+    return df_z
 
 def inverse_zscore(df_z, mean, std):
     """

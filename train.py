@@ -44,7 +44,17 @@ def main(config_path):
     H_out = cfg_win['prediction_length']  # 預測窗口長度
     
     # 載入原始數據並進行基本清理
-    df_raw = data_utils.load_data(os.path.join(cfg_data['path'], cfg_data['filename']))
+    # 安全地載入數據，處理可選的 DateTime 索引
+    try:
+        df_raw = data_utils.load_data(os.path.join(cfg_data['path'], cfg_data['filename']))
+        print("成功載入訓練數據（帶 DateTime 索引）")
+    except (KeyError, ValueError) as e:
+        print(f"注意：數據中沒有 DateTime 列，使用預設索引載入: {e}")
+        # 如果沒有 DateTime 列，直接讀取 CSV
+        import pandas as pd
+        df_raw = pd.read_csv(os.path.join(cfg_data['path'], cfg_data['filename']))
+        print("成功載入訓練數據（使用預設索引）")
+    
     df_raw = df_raw.iloc[:cfg_data['point']]  # 截取指定數量的數據點
     df_raw.dropna(inplace=True)               # 移除缺失值
 
