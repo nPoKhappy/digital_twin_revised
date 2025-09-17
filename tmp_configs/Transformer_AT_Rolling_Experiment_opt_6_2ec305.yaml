@@ -1,0 +1,33 @@
+data:
+  filename: Train_input.csv
+  path: ./data/
+  point: 15000
+  test_data:
+    filename: rolling_data.csv
+    point: 1500
+  test_data_split: 0.1
+  valid_data_split: 0.05
+  variables_num: 30
+exp_name: Transformer_AT_Rolling_Experiment_opt_6_2ec305
+model:
+  embedding_dim: 64
+  hidden_dim: 48
+  n_layers: 4
+  name: transformer
+training:
+  batch_size: 512
+  device: cuda
+  epochs: 300
+  inference_strategy: block_replacement
+  learning_rate: 0.0024981918696917235
+  loss_weighting:
+    weights:
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+  patience: 30
+window:
+  prediction_length: 72
+  sampling_interval_min: 10
+  train_window_mins: 180
