@@ -6,10 +6,43 @@ import yaml
 import argparse
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 # 確保你的項目結構中有這些模組
 from src import data_utils
 from src.models import get_model
+
+# ==============================================================================
+# --- 評估指標計算函數 ---
+# ==============================================================================
+
+def calculate_metrics(y_true, y_pred):
+    """
+    計算多種評估指標
+    
+    Args:
+        y_true: 真實值 (numpy array)
+        y_pred: 預測值 (numpy array)
+    
+    Returns:
+        dict: 包含 MAE, RMSE, R², MAPE 的字典
+    """
+    mae = mean_absolute_error(y_true, y_pred)
+    mse = mean_squared_error(y_true, y_pred)
+    rmse = np.sqrt(mse)
+    r2 = r2_score(y_true, y_pred)
+    
+    # MAPE: Mean Absolute Percentage Error
+    # 避免除以零，當真實值為 0 時使用一個小的 epsilon
+    epsilon = 1e-10
+    mape = np.mean(np.abs((y_true - y_pred) / (y_true + epsilon))) * 100
+    
+    return {
+        'MAE': mae,
+        'RMSE': rmse,
+        'R2': r2,
+        'MAPE': mape
+    }
 
 # ==============================================================================
 # --- 核心預測函數 ---
@@ -170,28 +203,69 @@ def main(config_path):
     df_results.to_csv(results_csv_path, index=False)
     print(f"數值預測結果已保存至: {results_csv_path}")
 
-    # (B) 計算 & 保存 MAE
-    mae_results = {}
+    # (B) 計算並保存所有評估指標 (MAE, RMSE, R², MAPE)
+    print("\n計算評估指標...")
+    metrics_results = []
+    
     for i, name in enumerate(y_sv):
-        mae_results[name] = np.mean(np.abs(true_targets_cov[:, i] - predictions_cov[:, i]))
-    df_mae = pd.DataFrame(list(mae_results.items()), columns=["Variable", "MAE"])
-    mae_csv_path = os.path.join(results_dir, 'mae_results.csv')
-    df_mae.to_csv(mae_csv_path, index=False)
-    print(f"MAE 結果已保存至: {mae_csv_path}")
+        y_true_col = true_targets_cov[:, i]
+        y_pred_col = predictions_cov[:, i]
+        
+        metrics = calculate_metrics(y_true_col, y_pred_col)
+        metrics['Variable'] = name
+        metrics_results.append(metrics)
+        
+        print(f"  {name}:")
+        print(f"    MAE:  {metrics['MAE']:.6f}")
+        print(f"    RMSE: {metrics['RMSE']:.6f}")
+        print(f"    R²:   {metrics['R2']:.6f}")
+        print(f"    MAPE: {metrics['MAPE']:.2f}%")
+    
+    # 創建指標彙總表
+    df_metrics = pd.DataFrame(metrics_results)
+    df_metrics = df_metrics[['Variable', 'MAE', 'RMSE', 'R2', 'MAPE']]  # 調整列順序
+    
+    # 保存指標到 CSV
+    metrics_csv_path = os.path.join(results_dir, 'evaluation_metrics.csv')
+    df_metrics.to_csv(metrics_csv_path, index=False)
+    print(f"\n所有評估指標已保存至: {metrics_csv_path}")
+    
+    # 計算平均指標
+    avg_metrics = {
+        'Variable': 'Average',
+        'MAE': df_metrics['MAE'].mean(),
+        'RMSE': df_metrics['RMSE'].mean(),
+        'R2': df_metrics['R2'].mean(),
+        'MAPE': df_metrics['MAPE'].mean()
+    }
+    print(f"\n平均指標:")
+    print(f"  平均 MAE:  {avg_metrics['MAE']:.6f}")
+    print(f"  平均 RMSE: {avg_metrics['RMSE']:.6f}")
+    print(f"  平均 R²:   {avg_metrics['R2']:.6f}")
+    print(f"  平均 MAPE: {avg_metrics['MAPE']:.2f}%")
 
-    # (C) 繪圖
+    # (C) 繪圖 - 添加指標信息
+    print("\n生成預測對比圖...")
     for i, name in enumerate(y_sv):
+        # 獲取該變量的指標
+        var_metrics = metrics_results[i]
+        
         plt.figure(figsize=(20, 6))
-        plt.plot(true_targets_cov[:, i], label=' (True Value)', color='blue', linewidth=2)
-        plt.plot(predictions_cov[:, i], label=' (Predicted Value)', color='red', linestyle='--', linewidth=2)
-        plt.title(f'{name} (inference: {inference_strategy.upper()})', fontsize=16)
-        plt.xlabel('(Time Step)', fontsize=12)
-        plt.ylabel('(Value)', fontsize=12)
-        plt.legend()
-        plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+        plt.plot(true_targets_cov[:, i], label='True Value', color='blue', linewidth=2)
+        plt.plot(predictions_cov[:, i], label='Predicted Value', color='red', linestyle='--', linewidth=2)
+        
+        # 在標題中添加指標信息
+        title = f'{name} (Strategy: {inference_strategy.upper()})\n'
+        title += f'MAE={var_metrics["MAE"]:.4f}, RMSE={var_metrics["RMSE"]:.4f}, R²={var_metrics["R2"]:.4f}, MAPE={var_metrics["MAPE"]:.2f}%'
+        plt.title(title, fontsize=14)
+        
+        plt.xlabel('Time Step', fontsize=12)
+        plt.ylabel('Value', fontsize=12)
+        plt.legend(fontsize=11)
+        plt.grid(True, which='both', linestyle='--', linewidth=0.5, alpha=0.5)
         
         save_path = os.path.join(results_dir, f'prediction_{name}.png')
-        plt.savefig(save_path, dpi=300)
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
         plt.close()
         
     print(f"所有結果圖已保存至: {results_dir}")
