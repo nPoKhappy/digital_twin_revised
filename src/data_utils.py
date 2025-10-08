@@ -281,6 +281,42 @@ def variable_selection(total_variables):
         con_tag = ['qv', 'sv1', 'sv2', 'sv3', 'sv4', 'sv5']  # 簡化的控制標籤
         en_mv_and_sv = ['AI503', 'FI547', 'FI015CA', 'TI508', 'TI502', 'PI131',
                         'FC511', 'HV503A', 'SC020']  # encoder輸入包含所有變量
+    
+    elif total_variables == 10:
+        # ======================================================================
+        # 配置 10: Claus 過程硫回收單元配置（10個變量）
+        # MV: 2個, CV: 2個, DV: 5個, SV: 1個
+        # ======================================================================
+        
+        # Encoder 輸入：包含所有歷史數據（MV + CV + DV + SV）
+        en_mv_and_sv = [
+            'air2_SP',              # MV1: 二次空氣流量 SP
+            'HEATER2_output_T_SP',  # MV2: 第二觸媒反應器的進料溫度 SP
+            'B35_H2S',              # CV1: 尾氣 H2S 濃度
+            'B35_SO2',              # CV2: 尾氣 SO2 濃度
+            'acidgas_Fm',           # DV1: 酸氣進料流量
+            'acidgas_T',            # DV2: 酸氣進料溫度
+            'acidgas_P',            # DV3: 酸氣進料壓力
+            'HEATER1_output_T_PV',  # DV4: 第一觸媒反應器的進料溫度 PV
+            'HEATER2_output_T_PV',  # DV5: 第二觸媒反應器的進料溫度 PV
+            'second_air2'           # SV1: 二次空氣流量 PV
+        ]
+        
+        # Decoder 輸入：只包含未來可控的操縱變數 (MV)
+        de_mv = [
+            'air2_SP',              # MV1: 二次空氣流量 SP
+            'HEATER2_output_T_SP'   # MV2: 第二觸媒反應器的進料溫度 SP
+        ]
+        
+        # 模型預測目標：只預測品質變量 (CV)
+        y_sv = [
+            'B35_H2S',              # CV1: 尾氣 H2S 濃度
+            'B35_SO2'               # CV2: 尾氣 SO2 濃度
+        ]
+        
+        # 控制標籤：通常與預測目標相同
+        con_tag = y_sv
+        
     elif total_variables == 27:
         # ======================================================================
         # 配置 27: 擴展工業過程配置（27個變量）
@@ -384,7 +420,7 @@ def variable_selection(total_variables):
         # 錯誤處理：不支持的變量數量
         # ======================================================================
         print(f'錯誤：不支持的變量總數 {total_variables}')
-        print('支持的配置: 8, 9, 27, 28, 30, 33, 35')
+        print('支持的配置: 8, 9, 10, 27, 28, 30, 33, 35')
         raise ValueError(f'不支持的變量總數: {total_variables}')
         
     return de_mv, y_sv, con_tag, en_mv_and_sv
