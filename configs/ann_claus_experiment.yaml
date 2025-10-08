@@ -1,0 +1,58 @@
+# ANN 實驗的設定檔 - Claus 過程硫回收單元
+exp_name: "ANN_Claus_Experiment"
+
+data:
+  path: "./data/"
+  filename: "Train_input.csv"  # 您的訓練數據文件
+  variables_num: 10  # MV:2, CV:2, DV:5, SV:1
+  point: 45000       # 訓練數據點數
+  test_data_split: 0.1      
+  valid_data_split: 0.05    
+  
+  test_data:
+    filename: "rolling_data.csv"  # 您的測試數據文件
+    point: 5000  # 測試數據點數 (請根據實際調整)
+
+window:
+  train_window_mins: 180   # 訓練窗口 180 分鐘
+  sampling_interval_min: 10  # 每 10 分鐘採樣一次
+  prediction_length: 72    # 預測長度 72 步 (18 * 4)
+
+# --- 模型特定的設定 ---
+# 根據 45,000 筆數據優化的參數配置
+model:
+  name: "ann" 
+  embedding_dim: 34   # 嵌入維度 (針對 45,000 筆數據優化)
+  hidden_dim: 34      # 隱藏層維度 (總參數數: 7,874)
+  n_layers: 2         # 隱藏層數量
+  dropout: 0.2       # Dropout 率 (適中的正則化)
+
+training:
+  device: "cuda"
+  batch_size: 2048    # 45000 / 22 ≈ 2048 (較大的 batch size 提高訓練效率)
+  epochs: 5000        # 最大訓練迭代次數
+  learning_rate: 0.001  # Adam 優化器學習率
+  patience: 50        # 早停耐心值
+  loss_weighting:
+    weights: [1.0, 1.0]  # CV1(H2S) 和 CV2(SO2) 的損失權重
+  inference_strategy: 'block_replacement'
+
+# ANN 特定參數
+ann_config:
+  activation: 'relu'              # 啟用函數
+  batch_norm: false               # 不使用批次正規化 (小模型不需要)
+  layer_norm: false               # 不使用層正規化
+  residual_connections: false     # 不使用殘差連接
+
+# 變量說明
+# Encoder 輸入 (10個變量):
+#   MV (操控變量): air2_SP, HEATER2_output_T_SP
+#   CV (品質變量): B35_H2S, B35_SO2
+#   DV (擾動變量): acidgas_Fm, acidgas_T, acidgas_P, HEATER1_output_T_PV, HEATER2_output_T_PV
+#   SV (狀態變量): second_air2
+#
+# Decoder 輸入 (2個變量):
+#   MV (操控變量): air2_SP, HEATER2_output_T_SP
+#
+# Decoder 輸出 (2個變量):
+#   CV (品質變量): B35_H2S, B35_SO2
