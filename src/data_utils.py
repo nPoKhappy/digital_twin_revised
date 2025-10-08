@@ -308,10 +308,16 @@ def variable_selection(total_variables):
             'HEATER2_output_T_SP'   # MV2: 第二觸媒反應器的進料溫度 SP
         ]
         
-        # 模型預測目標：只預測品質變量 (CV)
+        # 模型預測目標：預測除了 MV 之外的所有變量 (CV + DV + SV) = 8個
         y_sv = [
             'B35_H2S',              # CV1: 尾氣 H2S 濃度
-            'B35_SO2'               # CV2: 尾氣 SO2 濃度
+            'B35_SO2',              # CV2: 尾氣 SO2 濃度
+            'acidgas_Fm',           # DV1: 酸氣進料流量
+            'acidgas_T',            # DV2: 酸氣進料溫度
+            'acidgas_P',            # DV3: 酸氣進料壓力
+            'HEATER1_output_T_PV',  # DV4: 第一觸媒反應器的進料溫度 PV
+            'HEATER2_output_T_PV',  # DV5: 第二觸媒反應器的進料溫度 PV
+            'second_air2'           # SV1: 二次空氣流量 PV
         ]
         
         # 控制標籤：通常與預測目標相同
