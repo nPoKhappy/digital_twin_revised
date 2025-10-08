@@ -10,6 +10,8 @@ import os
 import time
 import yaml
 import argparse
+import pandas as pd
+import matplotlib.pyplot as plt
 
 # 導入自定義模組
 from src import data_utils, engine  # 數據工具和訓練引擎
@@ -137,6 +139,10 @@ def main(config_path):
     best_val_loss = float('inf')  # 記錄最佳驗證損失
     patience_counter = 0          # 早停計數器
     
+    # 用於記錄訓練歷史
+    train_losses = []
+    val_losses = []
+    
     # 創建模型保存目錄
     os.makedirs('./saved_models/', exist_ok=True)
     model_save_path = os.path.join('./saved_models/', f'{prefix}.pth')
@@ -153,6 +159,10 @@ def main(config_path):
             model, val_loader, criterion, device, training_step_fn, config
         )
         
+        # 記錄損失
+        train_losses.append(train_loss)
+        val_losses.append(val_loss)
+        
         print(f'Epoch {epoch+1:03d} | Train Loss: {train_loss:.6f} | Val Loss: {val_loss:.6f}')
         
         # 早停機制：如果驗證損失改善則保存模型，否則增加計數器
@@ -168,6 +178,42 @@ def main(config_path):
         if patience_counter >= cfg_training['patience']:
             print(f"Early stopping at epoch {epoch+1}! (連續 {cfg_training['patience']} 個 epoch 無改善)")
             break
+    
+    # ===========================================================================
+    # 步驟 7: 保存訓練歷史
+    # ===========================================================================
+    print("\n保存訓練歷史...")
+    
+    # 創建結果保存目錄
+    results_dir = f'./results/{prefix}/'
+    os.makedirs(results_dir, exist_ok=True)
+    
+    # 保存損失歷史到 CSV
+    loss_history_df = pd.DataFrame({
+        'epoch': list(range(1, len(train_losses) + 1)),
+        'train_loss': train_losses,
+        'val_loss': val_losses
+    })
+    loss_csv_path = os.path.join(results_dir, 'training_history.csv')
+    loss_history_df.to_csv(loss_csv_path, index=False)
+    print(f"  -> 訓練歷史已保存至: {loss_csv_path}")
+    
+    # 繪製訓練曲線
+    plt.figure(figsize=(10, 6))
+    plt.plot(loss_history_df['epoch'], loss_history_df['train_loss'], label='Train Loss', marker='o', markersize=3)
+    plt.plot(loss_history_df['epoch'], loss_history_df['val_loss'], label='Val Loss', marker='s', markersize=3)
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss (L1)')
+    plt.title(f'Training History - {prefix}')
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    
+    # 保存圖片
+    loss_plot_path = os.path.join(results_dir, 'training_curve.png')
+    plt.savefig(loss_plot_path, dpi=150)
+    print(f"  -> 訓練曲線已保存至: {loss_plot_path}")
+    plt.close()
             
     # 計算並顯示總訓練時間        
     end_time = time.time()
