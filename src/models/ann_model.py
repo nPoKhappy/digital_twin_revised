@@ -38,7 +38,7 @@ class Encoder(nn.Module):
         
         # 將序列展平處理：逐個時間步處理然後平均/最大池化
         # 方法1: 全局平均池化
-        src_flattened = src.view(batch_size, -1)  # (batch_size, seq_len * num_en_input)
+        src_flattened = src.reshape(batch_size, -1)  # (batch_size, seq_len * num_en_input)
         
         # 輸入嵌入
         embedded = F.relu(self.input_embed(src.mean(dim=1)))  # 對時間維度求平均
@@ -194,9 +194,9 @@ class SimpleANN(nn.Module):
     def forward(self, x):
         # x shape: (batch_size, seq_len, features) 或 (batch_size, features)
         if len(x.shape) == 3:
-            # 如果是序列輸入，展平處理
+            # 如果是序列輸入，展平處理 - 使用 reshape() 而非 view()
             batch_size, seq_len, features = x.shape
-            x = x.view(batch_size, -1)  # (batch_size, seq_len * features)
+            x = x.reshape(batch_size, -1)  # (batch_size, seq_len * features)
         
         return self.network(x)
 
@@ -244,9 +244,9 @@ class SimpleANNSeq2Seq(nn.Module):
         
         batch_size = en_input.shape[0]
         
-        # 展平輸入序列
-        en_flat = en_input.view(batch_size, -1)  # (batch_size, encoder_seq_len * num_en_input)
-        de_flat = de_input.view(batch_size, -1)  # (batch_size, decoder_seq_len * num_de_input)
+        # 展平輸入序列 - 使用 reshape() 而非 view() 以處理非連續張量
+        en_flat = en_input.reshape(batch_size, -1)  # (batch_size, encoder_seq_len * num_en_input)
+        de_flat = de_input.reshape(batch_size, -1)  # (batch_size, decoder_seq_len * num_de_input)
         
         # 連接 encoder 和 decoder 輸入
         combined_input = torch.cat([en_flat, de_flat], dim=1)
@@ -254,8 +254,8 @@ class SimpleANNSeq2Seq(nn.Module):
         # 通過 ANN 網絡
         output_flat = self.ann(combined_input)
         
-        # 重塑輸出為序列格式
-        output = output_flat.view(batch_size, self.decoder_seq_len, self.num_output)
+        # 重塑輸出為序列格式 - 使用 reshape() 而非 view()
+        output = output_flat.reshape(batch_size, self.decoder_seq_len, self.num_output)
         
         return output
     
