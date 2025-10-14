@@ -1,27 +1,27 @@
 # ANN 實驗的設定檔 - Claus 過程硫回收單元
-exp_name: "ANN_Claus_Experiment"
+exp_name: "simple_ANN_Claus_Experiment"
 
 data:
-  path: "./data/"
-  filename: "Train_input.csv"  # 您的訓練數據文件
+  path: "./data/senpai_data/"  # 數據文件夾路徑（合併後的文件位置）
+  filename: "training.csv"  # 您的訓練數據文件
   variables_num: 10  # MV:2, CV:2, DV:5, SV:1
-  point: 45000       # 訓練數據點數
+  point: 44640       # 訓練數據點數（實際合併後的數量）
   test_data_split: 0.1      
   valid_data_split: 0.05    
   
   test_data:
-    filename: "rolling_data.csv"  # 您的測試數據文件
-    point: 5000  # 測試數據點數 (請根據實際調整)
+    filename: "testing.csv"  # 您的測試數據文件
+    point: 14400  # 測試數據點數
 
 window:
   train_window_mins: 180   # 訓練窗口 180 分鐘
   sampling_interval_min: 10  # 每 10 分鐘採樣一次
-  prediction_length: 72    # 預測長度 72 步 (18 * 4)
+  prediction_length: 18    # 預測長度 18 步
 
 # --- 模型特定的設定 ---
 # 根據 45,000 筆數據優化的參數配置
 model:
-  name: "ann" 
+  name: "simple_ann" 
   embedding_dim: 34   # 嵌入維度 (針對 45,000 筆數據優化)
   hidden_dim: 34      # 隱藏層維度 (總參數數: 7,874)
   n_layers: 2         # 隱藏層數量
@@ -34,7 +34,7 @@ training:
   learning_rate: 0.001  # Adam 優化器學習率
   patience: 50        # 早停耐心值
   loss_weighting:
-    weights: [1.0, 1.0]  # CV1(H2S) 和 CV2(SO2) 的損失權重
+    weights: [1.0]  # CV1(H2S) 和 CV2(SO2) 的損失權重
   inference_strategy: 'block_replacement'
 
 # ANN 特定參數
