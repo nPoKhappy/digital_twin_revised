@@ -8,7 +8,21 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, m
 import os
 from tqdm import tqdm
 
+# --- 通用評估指標工具 ---
+
+def calculate_metrics(y_true: np.ndarray, y_pred: np.ndarray):
+    """計算單一序列的 MAE, RMSE, R2, MAPE 並回傳字典"""
+    mae = mean_absolute_error(y_true, y_pred)
+    mse = mean_squared_error(y_true, y_pred)
+    rmse = sqrt(mse)
+    r2 = r2_score(y_true, y_pred)
+    # 使用 epsilon 避免除 0
+    epsilon = 1e-10
+    mape = np.mean(np.abs((y_true - y_pred) / (np.maximum(np.abs(y_true), epsilon)))) * 100
+    return {"MAE": mae, "RMSE": rmse, "R2": r2, "MAPE": mape}
+
 def generate_results(model, loader, device, config, mean, std, y_tags, de_mv_tags, prefix, set_name):
+    """沒用到的函數"""
     print(f"開始評估 {set_name}...")
     model.eval()
     

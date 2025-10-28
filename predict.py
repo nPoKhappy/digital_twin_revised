@@ -11,38 +11,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 # 確保你的項目結構中有這些模組
 from src import data_utils
 from src.models import get_model
-
-# ==============================================================================
-# --- 評估指標計算函數 ---
-# ==============================================================================
-
-def calculate_metrics(y_true, y_pred):
-    """
-    計算多種評估指標
-    
-    Args:
-        y_true: 真實值 (numpy array)
-        y_pred: 預測值 (numpy array)
-    
-    Returns:
-        dict: 包含 MAE, RMSE, R², MAPE 的字典
-    """
-    mae = mean_absolute_error(y_true, y_pred)
-    mse = mean_squared_error(y_true, y_pred)
-    rmse = np.sqrt(mse)
-    r2 = r2_score(y_true, y_pred)
-    
-    # MAPE: Mean Absolute Percentage Error
-    # 避免除以零，當真實值為 0 時使用一個小的 epsilon
-    epsilon = 1e-10
-    mape = np.mean(np.abs((y_true - y_pred) / (y_true + epsilon))) * 100
-    
-    return {
-        'MAE': mae,
-        'RMSE': rmse,
-        'R2': r2,
-        'MAPE': mape
-    }
+from src.utils import calculate_metrics
 
 # ==============================================================================
 # --- 核心預測函數 ---
