@@ -1,0 +1,318 @@
+[
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.001__batch_size=512__weight_decay=0.0",
+    "best_val_l1": 0.013364473978678385
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.001__batch_size=512__weight_decay=0.0001",
+    "best_val_l1": 0.01591740796963374
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.001__batch_size=512__weight_decay=0.001",
+    "best_val_l1": 0.009057301717499891
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.001__batch_size=1024__weight_decay=0.0",
+    "best_val_l1": 0.014531292486935854
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.001__batch_size=1024__weight_decay=0.0001",
+    "best_val_l1": 0.01100217318162322
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.001__batch_size=1024__weight_decay=0.001",
+    "best_val_l1": 0.015476416796445847
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.001__batch_size=2048__weight_decay=0.0",
+    "best_val_l1": 0.012448213063180447
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.001__batch_size=2048__weight_decay=0.0001",
+    "best_val_l1": 0.015363041311502457
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.001__batch_size=2048__weight_decay=0.001",
+    "best_val_l1": 0.015593715943396091
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.0003__batch_size=512__weight_decay=0.0",
+    "best_val_l1": 0.015539097599685192
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.0003__batch_size=512__weight_decay=0.0001",
+    "best_val_l1": 0.014441716174284617
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.0003__batch_size=512__weight_decay=0.001",
+    "best_val_l1": 0.008690670598298311
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.0003__batch_size=1024__weight_decay=0.0",
+    "best_val_l1": 0.016406250651925802
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.0003__batch_size=1024__weight_decay=0.0001",
+    "best_val_l1": 0.01650926237925887
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.0003__batch_size=1024__weight_decay=0.001",
+    "best_val_l1": 0.01395952794700861
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.0003__batch_size=2048__weight_decay=0.0",
+    "best_val_l1": 0.015630125999450684
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.0003__batch_size=2048__weight_decay=0.0001",
+    "best_val_l1": 0.01998828537762165
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=relu__learning_rate=0.0003__batch_size=2048__weight_decay=0.001",
+    "best_val_l1": 0.015266641974449158
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.001__batch_size=512__weight_decay=0.0",
+    "best_val_l1": 0.007960125959167877
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.001__batch_size=512__weight_decay=0.0001",
+    "best_val_l1": 0.007845072696606318
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.001__batch_size=512__weight_decay=0.001",
+    "best_val_l1": 0.0061973400103549165
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.001__batch_size=1024__weight_decay=0.0",
+    "best_val_l1": 0.007479282096028328
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.001__batch_size=1024__weight_decay=0.0001",
+    "best_val_l1": 0.009886458981782198
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.001__batch_size=1024__weight_decay=0.001",
+    "best_val_l1": 0.006815791362896562
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.001__batch_size=2048__weight_decay=0.0",
+    "best_val_l1": 0.00795234926044941
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.001__batch_size=2048__weight_decay=0.0001",
+    "best_val_l1": 0.0064238389022648335
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.001__batch_size=2048__weight_decay=0.001",
+    "best_val_l1": 0.006545667070895433
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.0003__batch_size=512__weight_decay=0.0",
+    "best_val_l1": 0.0067255909865101176
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.0003__batch_size=512__weight_decay=0.0001",
+    "best_val_l1": 0.006460860061148803
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.0003__batch_size=512__weight_decay=0.001",
+    "best_val_l1": 0.0076750400476157665
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.0003__batch_size=1024__weight_decay=0.0",
+    "best_val_l1": 0.009263982297852635
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.0003__batch_size=1024__weight_decay=0.0001",
+    "best_val_l1": 0.007368387188762426
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.0003__batch_size=1024__weight_decay=0.001",
+    "best_val_l1": 0.007880125194787979
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.0003__batch_size=2048__weight_decay=0.0",
+    "best_val_l1": 0.008404514752328396
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.0003__batch_size=2048__weight_decay=0.0001",
+    "best_val_l1": 0.008298421278595924
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.0__activation=gelu__learning_rate=0.0003__batch_size=2048__weight_decay=0.001",
+    "best_val_l1": 0.007646892685443163
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.001__batch_size=512__weight_decay=0.0",
+    "best_val_l1": 0.03498632957537969
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.001__batch_size=512__weight_decay=0.0001",
+    "best_val_l1": 0.024925384670495987
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.001__batch_size=512__weight_decay=0.001",
+    "best_val_l1": 0.016326103980342548
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.001__batch_size=1024__weight_decay=0.0",
+    "best_val_l1": 0.02886564750224352
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.001__batch_size=1024__weight_decay=0.0001",
+    "best_val_l1": 0.03832940198481083
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.001__batch_size=1024__weight_decay=0.001",
+    "best_val_l1": 0.017271315678954124
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.001__batch_size=2048__weight_decay=0.0",
+    "best_val_l1": 0.027698293328285217
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.001__batch_size=2048__weight_decay=0.0001",
+    "best_val_l1": 0.0352398119866848
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.001__batch_size=2048__weight_decay=0.001",
+    "best_val_l1": 0.01699802838265896
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.0003__batch_size=512__weight_decay=0.0",
+    "best_val_l1": 0.027068743482232094
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.0003__batch_size=512__weight_decay=0.0001",
+    "best_val_l1": 0.0300975510229667
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.0003__batch_size=512__weight_decay=0.001",
+    "best_val_l1": 0.024824760854244232
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.0003__batch_size=1024__weight_decay=0.0",
+    "best_val_l1": 0.027017703279852867
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.0003__batch_size=1024__weight_decay=0.0001",
+    "best_val_l1": 0.033810198307037354
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.0003__batch_size=1024__weight_decay=0.001",
+    "best_val_l1": 0.021528824232518673
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.0003__batch_size=2048__weight_decay=0.0",
+    "best_val_l1": 0.028271831572055817
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.0003__batch_size=2048__weight_decay=0.0001",
+    "best_val_l1": 0.03106703795492649
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=relu__learning_rate=0.0003__batch_size=2048__weight_decay=0.001",
+    "best_val_l1": 0.022832414135336876
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.001__batch_size=512__weight_decay=0.0",
+    "best_val_l1": 0.010833436623215675
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.001__batch_size=512__weight_decay=0.0001",
+    "best_val_l1": 0.013436008555193743
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.001__batch_size=512__weight_decay=0.001",
+    "best_val_l1": 0.025450846180319786
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.001__batch_size=1024__weight_decay=0.0",
+    "best_val_l1": 0.013444267679005861
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.001__batch_size=1024__weight_decay=0.0001",
+    "best_val_l1": 0.014229604508727789
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.001__batch_size=1024__weight_decay=0.001",
+    "best_val_l1": 0.021875500679016113
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.001__batch_size=2048__weight_decay=0.0",
+    "best_val_l1": 0.015818960964679718
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.001__batch_size=2048__weight_decay=0.0001",
+    "best_val_l1": 0.015295891091227531
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.001__batch_size=2048__weight_decay=0.001",
+    "best_val_l1": 0.023230088874697685
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.0003__batch_size=512__weight_decay=0.0",
+    "best_val_l1": 0.016709046438336372
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.0003__batch_size=512__weight_decay=0.0001",
+    "best_val_l1": 0.013999829379220804
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.0003__batch_size=512__weight_decay=0.001",
+    "best_val_l1": 0.022399467105666798
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.0003__batch_size=1024__weight_decay=0.0",
+    "best_val_l1": 0.01666342932730913
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.0003__batch_size=1024__weight_decay=0.0001",
+    "best_val_l1": 0.021079854108393192
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.0003__batch_size=1024__weight_decay=0.001",
+    "best_val_l1": 0.02543974481523037
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.1__activation=gelu__learning_rate=0.0003__batch_size=2048__weight_decay=0.0",
+    "best_val_l1": 0.02116052620112896
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[256,128]__dropout=0.0__activation=relu__learning_rate=0.0003__batch_size=1024__weight_decay=0.001",
+    "best_val_l1": 0.011685387697070837
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[128,64]__dropout=0.1__activation=relu__learning_rate=0.001__batch_size=512__weight_decay=0.001",
+    "best_val_l1": 0.014917718867460886
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[128,64]__dropout=0.1__activation=relu__learning_rate=0.0003__batch_size=1024__weight_decay=0.0001",
+    "best_val_l1": 0.017847473733127117
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[128,64]__dropout=0.0__activation=gelu__learning_rate=0.001__batch_size=1024__weight_decay=0.001",
+    "best_val_l1": 0.0068791930098086596
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[128,64]__dropout=0.1__activation=gelu__learning_rate=0.001__batch_size=1024__weight_decay=0.0001",
+    "best_val_l1": 0.012248857878148556
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[128,64]__dropout=0.0__activation=gelu__learning_rate=0.001__batch_size=2048__weight_decay=0.001",
+    "best_val_l1": 0.008224694058299065
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[128,64]__dropout=0.2__activation=relu__learning_rate=0.001__batch_size=512__weight_decay=0.001",
+    "best_val_l1": 0.02026994215945403
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[64,64]__dropout=0.2__activation=relu__learning_rate=0.001__batch_size=1024__weight_decay=0.001",
+    "best_val_l1": 0.023312033154070377
+  },
+  {
+    "run": "Tabular_MLP_Claus__hidden_dims=[128,64]__dropout=0.2__activation=gelu__learning_rate=0.001__batch_size=2048__weight_decay=0.0001",
+    "best_val_l1": 0.020509272813796997
+  }
+]

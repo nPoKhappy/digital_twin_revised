@@ -1,0 +1,41 @@
+# Tabular MLP 設定檔（非時間序列）
+exp_name: "Tabular_MLP_Claus"
+
+data:
+  path: "./data/my_own_data/"
+  filename: "training.csv"
+  point: 32004
+  test_data_split: 0.1
+  valid_data_split: 0.05
+
+  test_data:
+    filename: "testing.csv"
+    point: 8001
+
+# FNN/MLP 模型設定
+model:
+  hidden_dims: [64, 64]
+  dropout: 0.1
+  activation: "gelu"
+
+training:
+  device: "cuda"
+  batch_size: 512
+  epochs: 10000
+  learning_rate: 0.001
+  patience: 100
+  weight_decay: 0.001  # L2 正則化係數，可在 sweep 中調參
+
+# 指定非時間序列的輸入/輸出欄位
+# 注意：target_cols 中的 "Total_S" 需存在於資料 CSV，或請先離線生成後再訓練
+tabular:
+  input_cols:
+    - acidgas_Fm          # 酸氣流量
+    - acidgas_T           # 酸氣溫度
+    - acidgas_P           # 酸氣壓力
+    - air2_SP             # MV1
+    - HEATER2_output_T_SP # MV2
+  target_cols:
+    - B35_H2S             # H2S
+    - B35_SO2             # SO2
+    - Total_S             # 全部 S 濃度（請確認欄位已存在）
