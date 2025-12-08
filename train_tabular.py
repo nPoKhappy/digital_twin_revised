@@ -30,8 +30,46 @@ def main(config_path: str):
     # 讀訓練資料與標準化
     df_raw = data_utils.load_data(os.path.join(cfg_data['path'], cfg_data['filename']))
     df_raw = df_raw.iloc[:cfg_data['point']].dropna()
+    
+    # Apply unit conversion to air2_SP: new_x = 17.228 * old_x - 0.09
+    # This formula converts from old units to new units based on:
+    # old=8.13 -> new=140 and old=17.4219 -> new=300
+    if 'air2_SP' in df_raw.columns:
+        print(f"[Info] Applying unit conversion to air2_SP: new = 17.228 * old - 0.09")
+        print(f"[Info] air2_SP range before: [{df_raw['air2_SP'].min():.2f}, {df_raw['air2_SP'].max():.2f}]")
+        df_raw['air2_SP'] = 17.228 * df_raw['air2_SP'] - 0.09
+        print(f"[Info] air2_SP range after: [{df_raw['air2_SP'].min():.2f}, {df_raw['air2_SP'].max():.2f}]")
+    
+    # Scale Total_S (×1000) for better numerical stability
+    # This helps the model learn small changes more effectively
+    if 'Total_S' in df_raw.columns:
+        print(f"[Info] Scaling Total_S (×1000)")
+        print(f"[Info] Total_S range before: [{df_raw['Total_S'].min():.4f}, {df_raw['Total_S'].max():.4f}]")
+        df_raw['Total_S'] = df_raw['Total_S'] * 1000
+        print(f"[Info] Total_S range after: [{df_raw['Total_S'].min():.2f}, {df_raw['Total_S'].max():.2f}]")
+    
+    # Calculate z-score stats AFTER air2_SP conversion and Total_S scaling
+    # Each variable (inputs and targets) will have its own mean and std
     mean_all, std_all = data_utils.calculate_zscore_stats(df_raw)
     df_z = data_utils.apply_zscore(df_raw, mean_all, std_all)
+    
+    # Store all preprocessing stats for later use in prediction/evaluation
+    os.makedirs('./saved_models', exist_ok=True)
+    import json
+    # Save stats including air2_SP conversion info and all variable stats
+    stats_dict = {
+        'air2_SP_converted': True,
+        'air2_SP_conversion_formula': 'new = 17.228 * old - 0.09',
+        'Total_S_scaled': True,
+        'Total_S_scale_factor': 1000.0,
+        'mean': {col: float(mean_all[col]) for col in mean_all.index},
+        'std': {col: float(std_all[col]) for col in std_all.index},
+    }
+    
+    with open(f'./saved_models/{exp}_preprocessing_stats.json', 'w') as f:
+        json.dump(stats_dict, f, indent=2)
+    print(f"[Info] Saved preprocessing stats to ./saved_models/{exp}_preprocessing_stats.json")
+    print(f"[Info] Stored mean/std for {len(mean_all)} variables (inputs + targets)")
 
     # 變量選擇或從設定覆寫
     tab_cfg = config.get('tabular', {})
