@@ -17,3 +17,45 @@
 空氣質量流率跟體積流率的單位轉換
 
 y = 17.228*x -0.09
+
+20251121 
+計算輸入參數相關矩陣熱力圖
+
+20251126
+我要將train 跟 predict 輸出的total_s 也要做z-score標準化
+然後我要將入口的酸氣流量去做m^3 不要用質量流率 => 所以我要去做線性轉化 training 跟 testing 的 sheet
+然後我可能可以做得更密 去畫出操作點的圖 只能用python 看能不能用肉眼去看到他是最低的
+
+我在想不要weight decay 單純dropout 就好 或是不要dropout 純粹神經網路
+
+要找學長確認操作條件的點 => 明天要把它標示出來
+
+
+
+正負指的是 "增益"
+左中的點 空氣 H2S看不出來 SO2 都是正的 溫度都是負的
+中下 空氣 都是正的 溫度都是負的
+右中 空氣 都是正的 溫度都是負的
+上中 空氣 H2S 負的 SO2 正的 溫度都是正的
+
+我希望那幾個 H2S 跟 SO2 的圖的X軸 也就是空氣流量也要去做單位改變 
+我希望這幾個點直接用PYTHON(manually draw cuz there is only one operating condition) 去標出來 免得我手去標 還有可能錯的
+
+20251127 
+the generated code seems pretty correct in train and predict tabular target Total_s z-score標準化
+and i also change the the different operating codition plot x-axis unit to m^3/h 
+
+
+
+and i also need to label the air2 gain direction because its more consistent than t2 mv direction done
+
+20251128
+i also need to label the air2 gain direction because its more consistent than t2 mv direction done (done)
+i need to approve the generated code change and start to train (done), but with Exception i already did the output z-score conversion 
+so i only do the air2 unit conversion and store the mean and std while training into json in the ./save_models 
+
+my next step is to run predict_gain_compare 
+and commit the compute_correlation 
+
+i need to check my code and push to remote codebase
+
