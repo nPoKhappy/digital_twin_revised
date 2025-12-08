@@ -65,10 +65,15 @@ def predict_rows(model: TabularMLP, Xz: np.ndarray, device: str) -> np.ndarray:
 
 def main():
     ap = argparse.ArgumentParser(description='Compare model-derived gains vs. ground-truth on selected gain points')
-    ap.add_argument('--config', default='configs/tabular_mlp_claus.yaml')
-    ap.add_argument('--selected', default='data/my_own_data/selected_gain_points.csv')
-    ap.add_argument('--output', default=None)
+    ap.add_argument('--config', default='configs/tabular_mlp_claus_air2_unit_conversion_output_rescaled.yaml',
+                    help='Path to config YAML file')
+    ap.add_argument('--selected', default='data/my_own_data/selected_gain_points.csv',
+                    help='Path to selected gain points CSV')
+    ap.add_argument('--output', default=None,
+                    help='Output path for gain comparison CSV')
     args = ap.parse_args()
+    
+    print(f"[Info] Config: {args.config}")
 
     cfg = load_config(args.config)
     tab = cfg['tabular']
@@ -80,21 +85,34 @@ def main():
     comp_target = 'Total_S'
     comp_target_idx = trained_target_cols.index(comp_target)
 
-    data_cfg = cfg['data']
-    train_csv = os.path.join(data_cfg['path'], data_cfg['filename'])
-    if not os.path.exists(train_csv):
-        raise FileNotFoundError(f"Training CSV not found: {train_csv}")
-
-    # Load training stats for z-score
-    df_train = pd.read_csv(train_csv)
-    # keep only necessary columns and dropna
-    needed_cols = [c for c in input_cols + trained_target_cols if c in df_train.columns]
-    missing_targets = [c for c in trained_target_cols if c not in df_train.columns]
-    if missing_targets:
-        print(f"[Warn] Training CSV missing target columns (will skip in comparison): {missing_targets}")
-    df_train = df_train[needed_cols].dropna()
-
-    mean_all, std_all = zscore_fit(df_train, needed_cols)
+    # Load preprocessing stats saved during training
+    import json
+    exp = cfg['exp_name']
+    stats_path = f'./saved_models/{exp}_preprocessing_stats.json'
+    if os.path.exists(stats_path):
+        with open(stats_path, 'r') as f:
+            preprocess_stats = json.load(f)
+        print(f"[Info] Loaded preprocessing stats from {stats_path}")
+        mean_all = pd.Series(preprocess_stats['mean'])
+        std_all = pd.Series(preprocess_stats['std'])
+        air2_converted = preprocess_stats.get('air2_SP_converted', False)
+    else:
+        # Fallback: calculate from training data if stats not found
+        print(f"[Warn] Preprocessing stats not found at {stats_path}, calculating from training data")
+        preprocess_stats = None
+        data_cfg = cfg['data']
+        train_csv = os.path.join(data_cfg['path'], data_cfg['filename'])
+        if not os.path.exists(train_csv):
+            raise FileNotFoundError(f"Training CSV not found: {train_csv}")
+        
+        df_train = pd.read_csv(train_csv)
+        needed_cols = [c for c in input_cols + trained_target_cols if c in df_train.columns]
+        missing_targets = [c for c in trained_target_cols if c not in df_train.columns]
+        if missing_targets:
+            print(f"[Warn] Training CSV missing target columns (will skip in comparison): {missing_targets}")
+        df_train = df_train[needed_cols].dropna()
+        mean_all, std_all = zscore_fit(df_train, needed_cols)
+        air2_converted = False
 
     # Load selected points
     sel_path = args.selected
@@ -104,6 +122,19 @@ def main():
 
     # Ensure inputs are available (map air2_SP_m3 -> air2_SP if needed)
     df_sel = ensure_input_columns(df_sel, input_cols)
+    
+    # Apply air2_SP unit conversion if it was applied during training
+    if air2_converted and 'air2_SP' in df_sel.columns:
+        print(f"[Info] Applying air2_SP conversion to selected points: new = 17.228 * old - 0.09")
+        print(f"[Info] air2_SP range before: [{df_sel['air2_SP'].min():.2f}, {df_sel['air2_SP'].max():.2f}]")
+        df_sel['air2_SP'] = 17.228 * df_sel['air2_SP'] - 0.09
+        print(f"[Info] air2_SP range after: [{df_sel['air2_SP'].min():.2f}, {df_sel['air2_SP'].max():.2f}]")
+    
+    # Check if Total_S scaling was applied during training (for model output inverse scaling)
+    total_s_scaled = preprocess_stats.get('Total_S_scaled', False) if preprocess_stats else False
+    total_s_scale_factor = preprocess_stats.get('Total_S_scale_factor', 100.0) if preprocess_stats else 100.0
+    # Note: We do NOT scale df_sel['Total_S'] here - keep true values in original scale
+    # Model outputs will be inverse-scaled to match
 
     # Device
     device = 'cuda' if (torch.cuda.is_available() and cfg['training'].get('device', 'cpu') == 'cuda') else 'cpu'
@@ -191,11 +222,29 @@ def main():
         base_total_s_model = float(base_pred[comp_target_idx]) if base_pred is not None else np.nan
         air2_total_s_model = float(a_pred[comp_target_idx]) if a_pred is not None else np.nan
         t2_total_s_model = float(t_pred[comp_target_idx]) if t_pred is not None else np.nan
+        
+        # Inverse scale model outputs if Total_S was scaled during training
+        if total_s_scaled:
+            base_total_s_model = base_total_s_model / total_s_scale_factor
+            air2_total_s_model = air2_total_s_model / total_s_scale_factor
+            t2_total_s_model = t2_total_s_model / total_s_scale_factor
+
+        # Print model outputs before subtraction
+        print(f"[Group flow={keys[0]}, air2={keys[1]}, t2={keys[2]}] "
+              f"Model Total_S: base={base_total_s_model:.6f}, air2={air2_total_s_model:.6f}, t2={t2_total_s_model:.6f}")
+        # Print deltas (base - below)
+        delta_air2_model = base_total_s_model - air2_total_s_model if not np.isnan(air2_total_s_model) else np.nan
+        delta_t2_model = base_total_s_model - t2_total_s_model if not np.isnan(t2_total_s_model) else np.nan
+        print(f"  -> Model Delta: air2={delta_air2_model:.6f}, t2={delta_t2_model:.6f}")
 
         # True Total_S for each point (from selected CSV)
         base_total_s_true = float(base_row.get(comp_target, np.nan))
         air2_total_s_true = float(a_below_row.get(comp_target, np.nan)) if a_below_row is not None else np.nan
         t2_total_s_true = float(t_below_row.get(comp_target, np.nan)) if t_below_row is not None else np.nan
+        # Print true deltas
+        delta_air2_true = base_total_s_true - air2_total_s_true if not np.isnan(air2_total_s_true) else np.nan
+        delta_t2_true = base_total_s_true - t2_total_s_true if not np.isnan(t2_total_s_true) else np.nan
+        print(f"  -> True  Delta: air2={delta_air2_true:.6f}, t2={delta_t2_true:.6f}")
 
         if have_truth:
             y = comp_target
@@ -237,6 +286,12 @@ def main():
         y_idx = comp_target_idx  # index of Total_S in trained targets
         mg_a = a_gain_model[y_idx] if a_gain_model is not None else np.nan
         mg_t = t_gain_model[y_idx] if t_gain_model is not None else np.nan
+        # Inverse scale model deltas if Total_S was scaled during training
+        if total_s_scaled:
+            if not np.isnan(mg_a):
+                mg_a = mg_a / total_s_scale_factor
+            if not np.isnan(mg_t):
+                mg_t = mg_t / total_s_scale_factor
         rec['Total_S_model_air2_delta'] = mg_a
         rec['Total_S_model_t2_delta'] = mg_t
         # per-unit model gains (ΔTotal_S / ΔMV)
@@ -287,6 +342,7 @@ def main():
 
     out_df = pd.DataFrame(results)
 
+    
     # Output path
     if args.output:
         out_path = args.output
