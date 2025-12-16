@@ -59,3 +59,13 @@ and commit the compute_correlation
 
 i need to check my code and push to remote codebase
 
+20251211
+i would need to check the under the normal acid_gas flow condition 140.5, the pressure and temperature impaction on the 
+output tail gas total_s concentration
+
+i would need to check OOD 140.5 condition
+
+whether the dynamic units operating conditions are the same as steady state condition 
+
+write comments 
+
