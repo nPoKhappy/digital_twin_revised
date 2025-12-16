@@ -1,4 +1,5 @@
-# ANN 實驗的設定檔 - Claus 過程硫回收單元
+# ANN 時間序列預測 實驗配置文件
+
 exp_name: "simple_ANN_Claus_Experiment"
 
 data:
@@ -56,3 +57,4 @@ ann_config:
 #
 # Decoder 輸出 (2個變量):
 #   CV (品質變量): B35_H2S, B35_SO2
+

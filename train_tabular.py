@@ -1,3 +1,4 @@
+# train_tabular.py - Train a tabular MLP model on steady-state data (穩態數據)
 import os
 import argparse
 import yaml

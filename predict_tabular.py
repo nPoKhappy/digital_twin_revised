@@ -1,3 +1,4 @@
+# predict_tabular.py - Predict tabular data using a trained MLP model (穩態數據)
 import os
 import argparse
 import yaml

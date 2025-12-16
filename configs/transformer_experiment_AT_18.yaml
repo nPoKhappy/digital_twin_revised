@@ -1,4 +1,4 @@
-# Transformer 實驗的設定檔 # 這個會影響到我儲存模型的名稱 跟 我的最後results 產生出來的資料夾名稱
+# Transformer 時間序列預測實驗設定檔 - 滾動預測 18 步長 - autoregressive training loss # PRU 製程
 exp_name: "Transformer_AT_Rolling_Experiment_18"
 
 data:

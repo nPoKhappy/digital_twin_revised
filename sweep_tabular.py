@@ -1,3 +1,4 @@
+# sweep_tabular.py - Hyperparameter sweep for tabular MLP models (穩態數據) 找出最佳超參數組合
 import os
 import copy
 import yaml

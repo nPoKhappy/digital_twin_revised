@@ -1,3 +1,4 @@
+# predict.py - Long-term rolling prediction using trained models with sliding window or block replacement strategies (動態數據)
 import torch
 import numpy as np
 import pandas as pd

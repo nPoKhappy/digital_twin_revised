@@ -1,4 +1,4 @@
-# Tabular MLP 設定檔（非時間序列）
+# Tabular MLP 設定檔（非時間序列 穩態預測）
 exp_name: "Tabular_MLP_Claus"
 
 data:

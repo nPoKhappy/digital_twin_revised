@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
-# merge_csv_data.py - 合併多個 CSV 文件
-
+# merge_csv_data.py - 合併多個 CSV 文件 # 合併3個訓練文件和1個測試文件 (測試數據是訓練數據分布外的 動態數據)
+# claus 製程專用
 import pandas as pd
 import os
 from pathlib import Path

@@ -1,4 +1,4 @@
-# Tabular MLP 設定檔（非時間序列）
+# Tabular MLP 設定檔（非時間序列 穩態預測 - air2 單位轉換後 輸出重標定）
 exp_name: "Tabular_MLP_Claus_air2_unit_conversion_output_rescaled"
 
 data:

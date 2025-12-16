@@ -1,3 +1,5 @@
+# remerge_shuffle_split.py - Load one CSV/Excel (optionally multi-sheet), shuffle, and split into training/testing
+# 確保數據被重新混洗並分割為訓練和測試集 for claus 製程用 (穩態數據)
 import argparse
 import os
 import sys

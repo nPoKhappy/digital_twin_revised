@@ -1,4 +1,4 @@
-# GRU 實驗的設定檔 # 這個會影響到我儲存模型的名稱 跟 我的最後results 產生出來的資料夾名稱
+# GRU 時間序列預測 實驗配置文件
 exp_name: "Rolling_Training_Final"
 
 data:

@@ -1,3 +1,5 @@
+# scripts/select_gain_points.py - Select rows near specified MV pairs and flow groups for process gain validation
+# 主要是為了驗證 claus 製程的 process gain 使用
 import argparse
 import os
 import sys

@@ -1,3 +1,4 @@
+# predict_gain_compare.py - Compare model-predicted gains vs. ground-truth on selected gain points (穩態數據驗證)
 import argparse
 import os
 import yaml
