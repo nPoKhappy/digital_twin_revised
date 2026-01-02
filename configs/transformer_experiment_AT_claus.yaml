@@ -2,10 +2,18 @@
 exp_name: "Transformer_AT_Rolling_Claus_Experiment"
 
 data:
-  path: "./data/senpai_data/"  # 這個是給 data_utils.py 使用的 數據文件夾路徑（合併後的文件位置）
-  filename: "training.csv" # 這個是給 train.py 使用的 訓練時候的數據
+  path: "./data/Claus_dynamic/"  # 數據文件夾路徑
+  # 多段訓練數據（不同操作條件的獨立模擬）
+  training_files:
+    - "training_segment_1.csv"
+    - "training_segment_2.csv"
+    - "training_segment_3.csv"
+  # 每段的數據點數（與 training_files 對應）
+  segment_points: [14400, 14400, 14400]
+  # 單一檔案模式（如果 training_files 不存在則使用這個）
+  filename: "training.csv"
   variables_num: 10 # mv 2 個 qv 2個 dv 5個 sv 1個 total 10個
-  point: 44640
+  point: 14400  # 單一檔案模式時使用
   test_data_split: 0.1      
   valid_data_split: 0.05    
   
@@ -33,4 +41,4 @@ training:
   patience: 100 # 早停的耐心值
   loss_weighting:
     weights: [1.0, 1.0, 1.0, 1.0]
-  inference_strategy: 'block_replacement'
+  inference_strategy: 'sliding_window' # rolling prediction
