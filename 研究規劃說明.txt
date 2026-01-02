@@ -69,3 +69,27 @@ whether the dynamic units operating conditions are the same as steady state cond
 
 write comments 
 
+20251219
+"""
+need to find where the training region at  (see by eyes or use python to distinguish) 
+(simple => just use min and max func in excel for the two manipulated variable)
+
+
+and find three pts where the change in response variable (H2S SO2 S) is obvious see from the plot 
+(180, 150) (225, 150) (260, 150) in training data distribution range
+do air2 +20 m^3 / hr and t2 +10 c
+
+after we choose the pts we want to start a step change we run the model first and deal with the aspen dynamic part 
+we need to cope with how to make step change in predict.py (basically need some degree of changes in the scripts)
+(i need to do the aspen dynamic part first)
+
+and we must set the aspen dynamic the starting points where we want 
+"""
+that's basically the whole idea of plan 
+
+20251223 
+next i would need to deal with the senpai data to extract the same data length for my trained model to predict
+
+20251226
+use trained model to predict the outcomes
+
