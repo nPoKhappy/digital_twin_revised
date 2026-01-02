@@ -1,0 +1,41 @@
+exp_name: "Transformer_Memory_Claus_Experiment"
+
+data:
+  path: "./data/Claus_dynamic/"
+  training_files:
+    - "training_segment_1.csv"
+    - "training_segment_2.csv"
+    - "training_segment_3.csv"
+  segment_points: [14400, 14400, 14400]
+  filename: "training.csv"
+  variables_num: 10
+  point: 14400
+  test_data_split: 0.1
+  valid_data_split: 0.05
+  test_data:
+    filename: "testing.csv"
+    point: 14400
+
+window:
+  train_window_mins: 180
+  sampling_interval_min: 10
+  prediction_length: 72
+
+model:
+  name: "transformer_memory" # Switching to the new user-defined model
+  embedding_dim: 34
+  hidden_dim: 34
+  n_layers: 3
+  num_heads: 2 # 34 is divisible by 2
+  w: 18
+  activation: 'tanh'
+
+training:
+  device: "cuda"
+  batch_size: 1024
+  epochs: 10000
+  learning_rate: 0.001
+  patience: 100
+  loss_weighting:
+    weights: [1.0, 1.0, 1.0, 1.0]
+  inference_strategy: 'sliding_window'
