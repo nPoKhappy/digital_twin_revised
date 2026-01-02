@@ -19,6 +19,12 @@ from src.utils import calculate_metrics
 # ==============================================================================
 
 def predict_sliding_window(model, initial_en_input, future_de_inputs, device, num_output_features):
+    """Sliding window 預測策略
+    
+    每一步：
+    1. 用 encoder 歷史窗口 + 當前 MV 預測下一步的 y_sv
+    2. 將 [MV, y_sv] 合併，加入 encoder 窗口（滑動）
+    """
     model.eval()
     
     num_pred_steps = future_de_inputs.shape[1]
@@ -31,14 +37,22 @@ def predict_sliding_window(model, initial_en_input, future_de_inputs, device, nu
             single_step_prediction = model(current_en_input, single_step_de_input)
             predictions[:, t, :] = single_step_prediction
 
+            # 滑動窗口：移除最舊的一步，加入新的一步
             next_en_input_history = current_en_input[:, 1:, :]
-            new_step_features = torch.cat([single_step_prediction, single_step_de_input], dim=2)
+            # 合併順序：[MV, y_sv] 以匹配 en_mv_and_sv 的順序
+            new_step_features = torch.cat([single_step_de_input, single_step_prediction], dim=2)
             current_en_input = torch.cat([next_en_input_history, new_step_features], dim=1)
     
     return predictions
 
 
 def predict_block_replacement(model, initial_en_input, future_de_inputs, device, config):
+    """Block replacement 預測策略
+    
+    每個窗口：
+    1. 用 encoder 輸入 + 當前窗口 MV 預測整個窗口的 y_sv
+    2. 將 [MV, y_sv] 合併，作為下一個窗口的 encoder 輸入（整塊替換）
+    """
     model.eval()
     
     H = config['window']['train_window_mins'] // config['window']['sampling_interval_min']
@@ -63,7 +77,8 @@ def predict_block_replacement(model, initial_en_input, future_de_inputs, device,
             prediction_block = model(current_en_input, de_input_block)
             predictions_all_windows.append(prediction_block)
 
-            current_en_input = torch.cat([prediction_block, de_input_block], dim=2)
+            # 合併順序：[MV, y_sv] 以匹配 en_mv_and_sv 的順序
+            current_en_input = torch.cat([de_input_block, prediction_block], dim=2)
 
     return torch.cat(predictions_all_windows, dim=1)
 
