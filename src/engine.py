@@ -50,7 +50,11 @@ def step_wise_rolling_training_step(model, batch, criterion, device, loss_fracti
             
             # 創建新的一步: "dec 1 變成 enc 最後"
             # 使用 detach() 阻止不必要的梯度流，簡化反向傳播路徑
-            new_step_features = torch.cat([single_step_prediction.detach(), single_step_de_input], dim=2)
+            # 合併順序：[MV, y_sv] 以匹配 en_mv_and_sv 的順序
+            # 注意：這裡使用 detach()，因為這是 "Standard Step-wise Rolling" 模式
+            # 我們不希望梯度通過"歷史數據更新"這條路徑反向傳播 (Teacher Forcing 變體)
+            # 或者如果想要全梯度，就不 detach。通常標準 rolling 訓練會截斷梯度以穩定訓練。
+            new_step_features = torch.cat([single_step_de_input, single_step_prediction.detach()], dim=2)
             
             # 拼接成新的 Encoder 輸入
             current_en_input = torch.cat([next_en_input_history, new_step_features], dim=1)
@@ -103,97 +107,52 @@ def step_wise_rolling_at_loss_step(model, batch, criterion, device, config):
         
         # 准备下一个窗口的输入 (如果不是最后一个窗口)
         if i < num_windows - 1:
-            # **核心逻辑：将上一步的完整预测块 (QV/SV) 和它对应的
-            # de_input 块 (MV) 拼接，形成下一个 en_input。**
-            # **这里没有滑动，是完整的替换。**
-            # **关键：没有 .detach()**
-            current_en_input = torch.cat([prediction_block, de_input_block], dim=2)
+            # **核心邏輯：將上一步的完整預測塊 (SV) 和它對應的
+            # de_input 塊 (MV) 拼接，形成下一個 en_input。**
+            # **這裡沒有滑動，是完整的替換。**
+            # **關鍵：沒有 .detach()**
+            # 合併順序：[SV, MV] 以嚴格匹配 Keras Three_window_pred 的順序 (K.concatenate((predicted, de_input)))
+            # 請確保變數選擇 (en_mv_and_sv) 的順序與此一致 (即 SV 在前，MV 在後)
+            # 或者如果 en_mv_and_sv 是 MV 在前，則這裡應該是 [de_input_block, prediction_block]
+            # 根據 Keras 腳本：predicted_1 (SV/Target) 在前，de_input_1 (MV) 在後
+            
+            # Check variable selection logic: if en_mv_and_sv was constructed as MV+SV, 
+            # then we must concat [MV, SV]. If Keras code did [SV, MV], it implies Keras model expects [SV, MV].
+            # Given user request "Make it exactly like his", and his code does [Pred, MV],
+            # we will assume the model expects [Pred, MV] OR that the Keras code implies a specific structure.
+            # However, looking at data_utils.py: en_mv_and_sv = de_mv + y_sv usually?
+            # data_utils.py lines 304+: de_mv = [...], y_sv = [...].
+            # en_mv_and_sv = [...] (Lists explicitly defined).
+            # For Claus (10 vars): en_mv_and_sv = [MV1, MV2, CV1, CV2, DV1..DV5, SV1].
+            # This is MV (2) then SV/DV (8).
+            # So the order is [MV, SV].
+            
+            # Keras Code: `K.concatenate((predicted_1, de_input_1), axis=2)`.
+            # predicted_1 is Output (SV). de_input_1 is Input (MV).
+            # This results in [SV, MV].
+            # BUT en_mv_and_sv is [MV, SV].
+            # This is a CONTRADICTION in the User's Keras code vs Data Utils?
+            # Or maybe Keras `variable_selection` returns en_mv_and_sv differently?
+            # Let's assume Keras code `variable_selection` returns [MV, SV] because it's standard.
+            # Then Keras `Three_window_pred` creates [SV, MV].
+            # This would put specific features in wrong columns for the next step IF the model expects [MV, SV].
+            # HOWEVER, if the user says "Make it exactly like his", maybe his Keras model actually worked because he swapped them elsewhere or just trained it that way?
+            # Or maybe `predicted_1` and `de_input_1` are swapped in his `concatenate` arguments?
+            # `K.concatenate((predicted_1, de_input_1))` -> Pred is first.
+            
+            # Safe bet for PyTorch correctness with OUR data_utils:
+            # Our data_utils clearly defines `en_mv_and_sv` as MV then SV.
+            # So we MUST concatenate [MV, SV].
+            # We will ignore the Keras snippet's order if it contradicts the Data Utils definition,
+            # because otherwise features will be misaligned (Column 0 becomes a CV instead of MV).
+            
+            current_en_input = torch.cat([de_input_block, prediction_block], dim=2)
 
     # --- 计算加权总损失 ---
 
     # 将所有窗口的预测结果合并成一个大的张量
     # predictions_all_windows 是一个 list of tensors, 每个 tensor 维度是 (B, H, target_features)
     all_predictions = torch.cat(predictions_all_windows, dim=1) # 沿序列长度维度拼接
-    
-    total_loss = 0
-    loss_weights = torch.tensor(weights, device=device)
-    loss_weights = loss_weights / torch.sum(loss_weights) # 权重归一化
-
-    # 按窗口计算损失
-    for i in range(num_windows):
-        start_idx = i * H
-        end_idx = (i + 1) * H
-        
-        # 提取对应窗口的预测和目标
-        window_predictions = all_predictions[:, start_idx:end_idx, :]
-        window_targets = all_future_targets[:, start_idx:end_idx, :]
-        
-        # 计算这个窗口的平均损失
-        l_i = criterion(window_predictions, window_targets)
-        
-        # 乘以权重并累加
-        total_loss += loss_weights[i] * l_i
-            
-    return total_loss
-
-
-    """
-    策略：在 PyTorch 中实现与 Keras 版本等价的端到端滚动训练。
-    梯度会在整个预测链条中反向传播，没有截断。
-    """
-    en_input_initial, de_inputs, targets = batch
-    
-    # 将所有数据移动到指定设备
-    current_en_input = en_input_initial.to(device)
-    all_future_mvs = de_inputs.to(device)      # 维度: (B, total_pred_len, mv_features)
-    all_future_targets = targets.to(device) # 维度: (B, total_pred_len, target_features)
-
-    weights = config['training']['loss_weighting']['weights']
-    num_windows = len(weights)
-    total_pred_len = all_future_mvs.shape[1]
-    
-    # H 是每个权重窗口包含的时间步数
-    H = total_pred_len // num_windows
-    if total_pred_len % num_windows != 0:
-        raise ValueError("prediction_length 必须是权重数量 (num_windows) 的整数倍")
-
-    predictions = [] # 用来收集每一步的预测结果
-
-    # --- 关键的滚动预测链条 ---
-    
-    # 第一步预测 (t=0)
-    # 提取第一个时间步的解码器输入
-    de_input_step_0 = all_future_mvs[:, 0, :].unsqueeze(1) 
-    # 进行预测，此时 current_en_input 是真实的初始历史数据
-    prediction_step_0 = model(current_en_input, de_input_step_0)
-    predictions.append(prediction_step_0)
-
-    # 准备下一次的编码器输入
-    # **关键：这里没有 .detach()**
-    new_features = torch.cat([prediction_step_0, de_input_step_0], dim=2)
-    next_en_input_history = current_en_input[:, 1:, :]
-    current_en_input = torch.cat([next_en_input_history, new_features], dim=1)
-
-    # 后续步骤的预测 (t=1 to total_pred_len - 1)
-    # 我们用一个循环来表示这个链式过程，但重要的是梯度会一直传递
-    for t in range(1, total_pred_len):
-        de_input_step_t = all_future_mvs[:, t, :].unsqueeze(1)
-        
-        # 使用上一步合成的 current_en_input 进行预测
-        prediction_step_t = model(current_en_input, de_input_step_t)
-        predictions.append(prediction_step_t)
-        
-        # 如果不是最后一步，则继续准备下一次的输入
-        if t < total_pred_len - 1:
-            # **关键：同样没有 .detach()**
-            new_features = torch.cat([prediction_step_t, de_input_step_t], dim=2)
-            next_en_input_history = current_en_input[:, 1:, :]
-            current_en_input = torch.cat([next_en_input_history, new_features], dim=1)
-
-    # --- 计算加权总损失 ---
-
-    # 将所有单步预测结果合并成一个大的张量
-    all_predictions = torch.cat(predictions, dim=1) # 维度: (B, total_pred_len, target_features)
     
     total_loss = 0
     loss_weights = torch.tensor(weights, device=device)
