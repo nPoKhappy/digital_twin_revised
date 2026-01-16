@@ -128,7 +128,7 @@ def get_activation(activation_func):
         return nn.Identity()
 
 class TransformerModel(nn.Module):
-    def __init__(self, num_input, num_output, num_embs, intermediate_dim, num_heads, num_layers=1, activation_func='tanh'):
+    def __init__(self, num_input, num_output, num_embs, intermediate_dim, num_heads, num_layers=1, activation_func='tanh', dropout=0.1):
         super().__init__()
         self.num_layers = num_layers
         self.activation = get_activation(activation_func)
@@ -138,12 +138,12 @@ class TransformerModel(nn.Module):
         self.dec_dense = nn.Linear(num_input - num_output, num_embs)
         
         self.enc_layers = nn.ModuleList([
-            nn.TransformerEncoderLayer(d_model=num_embs, nhead=num_heads, dim_feedforward=intermediate_dim, batch_first=True)
+            nn.TransformerEncoderLayer(d_model=num_embs, nhead=num_heads, dim_feedforward=intermediate_dim, dropout=dropout, batch_first=True)
             for _ in range(num_layers)
         ])
         
         self.dec_layers = nn.ModuleList([
-            nn.TransformerDecoderLayer(d_model=num_embs, nhead=num_heads, dim_feedforward=intermediate_dim, batch_first=True)
+            nn.TransformerDecoderLayer(d_model=num_embs, nhead=num_heads, dim_feedforward=intermediate_dim, dropout=dropout, batch_first=True)
             for _ in range(num_layers)
         ])
         

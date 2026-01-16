@@ -36,7 +36,9 @@ def get_model(config):
             num_output=num_output,
             embedding_dim=model_params['embedding_dim'],
             hidden_dim=model_params['hidden_dim'],
-            n_layers=model_params['n_layers']
+            n_layers=model_params['n_layers'],
+            n_heads=model_params.get('num_heads', 1),
+            dropout=model_params.get('dropout', 0.1)
         )
     elif model_name == 'ann':
         return ANNModel(
@@ -67,7 +69,8 @@ def get_model(config):
             intermediate_dim=model_params['hidden_dim'] * 4, # Assuming inter_dim is 4x hidden
             num_heads=model_params.get('num_heads', 8), # Default to 8 if not in config
             num_layers=model_params['n_layers'],
-            activation_func=model_params.get('activation', 'tanh')
+            activation_func=model_params.get('activation', 'tanh'),
+            dropout=model_params.get('dropout', 0.1)
         )
     elif model_name == 'transformer_memory_connect':
         return TransformerThreeLayersMemoryConnect(
