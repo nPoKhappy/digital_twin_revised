@@ -15,7 +15,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # 導入自定義模組
-from src import data_utils, engine
+# 導入自定義模組
+from src import utils as data_utils  # 為了最小化代碼改動，將 utils 別名為 data_utils
+from src import engine
+from src import variable_selection  # 新的變量選擇模組
 from src.dataset import MultiStepS2SDataset
 from src.models import get_model
 
@@ -43,8 +46,9 @@ def main(config_path):
     W = cfg_win['train_window_mins'] // cfg_win['sampling_interval_min']
     H_out = cfg_win['prediction_length']
     
-    # 變量選擇
-    de_mv, y_sv, _, en_mv_and_sv = data_utils.variable_selection(cfg_data['variables_num'])
+    # 變量選擇：分離輸入變量和目標變量
+    # 注意：現在從 variable_selection 模組調用
+    de_mv, y_sv, _, en_mv_and_sv = variable_selection.variable_selection(cfg_data['variables_num'])
     
     config['data']['num_en_input'] = len(en_mv_and_sv)
     config['data']['num_de_input'] = len(de_mv)
@@ -114,6 +118,15 @@ def main(config_path):
         mean_all, std_all = data_utils.calculate_zscore_stats(df_raw)
         all_dfs_z = [data_utils.apply_zscore(df_raw, mean_all, std_all)]
     
+    # [Added] Downsampling Logic based on sampling_interval_min
+    interval = config['window']['sampling_interval_min']
+    if interval > 1:
+        print(f"\n[Data Processing] Downsampling data by interval: {interval}")
+        print("  (Note: Mean/Std for Z-score were calculated using FULL 1-min data for better accuracy)")
+        all_dfs_z = [df.iloc[::interval].reset_index(drop=True) for df in all_dfs_z]
+        for idx, df in enumerate(all_dfs_z):
+            print(f"  File {idx}: Reduced length = {len(df)}")
+
     # 保存 Z-score 參數供預測使用
     zscore_dir = f'./results/{prefix}/'
     os.makedirs(zscore_dir, exist_ok=True)
@@ -172,6 +185,10 @@ def main(config_path):
     
     model = get_model(config).to(device)
     
+    # [Added] Calculate Parameter Count
+    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"  模型總參數量: {total_params:,}")
+
     optimizer = optim.Adam(model.parameters(), lr=cfg_training['learning_rate'])
     criterion = nn.L1Loss()
     
@@ -179,8 +196,19 @@ def main(config_path):
     # 步驟 5: 選擇訓練策略
     # ===========================================================================
     if 'loss_weighting' in cfg_training and cfg_training['loss_weighting']['weights']:
-        training_step_fn = engine.step_wise_rolling_at_loss_step
-        print(f"訓練模式: Step-wise Rolling with AT Loss (權重: {cfg_training['loss_weighting']['weights']})")
+        weights = cfg_training['loss_weighting']['weights']
+        num_windows = len(weights)
+        H_block = H_out // num_windows
+        
+        # 自動選擇策略
+        if W > H_block:
+            training_step_fn = engine.step_wise_sliding_at_loss_step
+            print(f"訓練模式: Sliding Window AT Loss (W={W} > H_block={H_block})")
+            print(f"權重: {weights}")
+        else:
+            training_step_fn = engine.step_wise_rolling_at_loss_step
+            print(f"訓練模式: Block Replacement AT Loss (W={W} <= H_block={H_block})")
+            print(f"權重: {weights}")
     else:
         training_step_fn = engine.step_wise_rolling_training_step
         print("訓練模式: Standard Step-wise Rolling")
