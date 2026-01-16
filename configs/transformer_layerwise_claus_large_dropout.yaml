@@ -1,0 +1,50 @@
+exp_name: "Transformer_AT_Rolling_Claus_Large_Dropout"
+
+data:
+  path: "./data/Claus_dynamic/"
+  training_files:
+    - "Test_dataform_change_air2_R=5.csv"     # Training Set 1
+    - "Test_dataform_change_air2_R=5-2.csv"   # Training Set 2
+  # segment_points: [] # Removed to use full length of files
+  filename: "training.csv" # Fallback/unused
+  variables_num: 10
+  point: 15000 # Default point limit if needed
+  test_data_split: 0.1
+  valid_data_split: 0.05
+  test_data:
+    filename: "Test_dataform_change_air2_R=5-6.csv" # Default for single run
+    point: 15000
+  
+  # New: Define multiple inference datasets
+  inference_files:
+    - name: "ID_Testing_R5-6"
+      filename: "Test_dataform_change_air2_R=5-6.csv"
+      point: 15000
+    - name: "OOD_Testing_R5-1"
+      filename: "Test_dataform_change_air2_R=5-1.csv"
+      point: 15000
+
+window:
+  train_window_mins: 180
+  sampling_interval_min: 10
+  prediction_length: 72 # Covers the rolling length
+
+model:
+  name: "transformer_layerwise" # Corresponds to `TransformerModel` in user_defined_transformer.py
+  embedding_dim: 64 # Large size
+  hidden_dim: 64    # Large size
+  
+  n_layers: 3 # Matches `model_arc_Threelayers`
+  num_heads: 4 # Increased from 1 to 4 for better feature extraction
+  activation: 'tanh' # Matches Keras script
+  dropout: 0.1 # Moderate regularization to prevent overfitting on large model
+
+training:
+  device: "cuda"
+  batch_size: 4096 # Matches Keras `1024*4`
+  epochs: 10000 
+  learning_rate: 0.001
+  patience: 100
+  loss_weighting:
+    weights: [1.0, 1.0, 1.0, 1.0]
+  inference_strategy: 'sliding_window'

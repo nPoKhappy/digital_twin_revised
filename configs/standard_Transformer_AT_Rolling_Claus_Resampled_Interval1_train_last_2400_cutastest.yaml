@@ -1,0 +1,62 @@
+exp_name: "Standard_Transformer_AT_Rolling_Claus_Resampled_Interval1_train_last_2400_cutastest"
+
+data:
+  path: "./data/Claus_dynamic/"
+  training_files:
+    - "R5_Train_Part.csv"     # Training Set 1
+
+  filename: "training.csv" # Fallback/unused
+  variables_num: 8 # Changed from 10 to 8 (Removed SPs)
+  point: 12000 
+  test_data_split: 0.0
+  valid_data_split: 0.15
+  test_data:
+    filename: "R5_ID_Test_Part.csv" 
+    point: 2400
+    
+  inference_files:
+    - name: "ID_Testing_Held_Out"
+      filename: "R5_ID_Test_Part.csv" # The physical last 20%
+      point: 2400
+    - name: "OOD_Testing_R5-1"
+      filename: "Test_dataform_change_air2_R=5-1.csv"
+      point: 2400
+    - name: "OOD_Testing_R5-2"
+      filename: "Test_dataform_change_air2_R=5-2.csv"
+      name: "OOD_Testing_R5-3"
+      filename: "Test_dataform_change_air2_R=5-3.xlsx"
+      point: 2400
+    - name: "OOD_Testing_R5-4"
+      filename: "Test_dataform_change_air2_R=5-4.xlsx"
+      point: 2400
+    - name: "OOD_Testing_R5-5"
+      filename: "Test_dataform_change_air2_R=5-5.xlsx"
+      point: 2400
+    - name: "OOD_Testing_R5-6"
+      filename: "Test_dataform_change_air2_R=5-6.csv"
+      point: 2400
+
+window:
+  train_window_mins: 18
+  sampling_interval_min: 1
+  prediction_length: 72 
+
+model:
+  name: "transformer" 
+  embedding_dim: 32 # Medium
+  hidden_dim: 32    # Medium
+  
+  n_layers: 3 
+  num_heads: 1 # Standard single head
+  activation: 'tanh' 
+  dropout: 0.0 # No dropout initially
+
+training:
+  device: "cuda"
+  batch_size: 1024 
+  epochs: 10000 
+  learning_rate: 0.001
+  patience: 100
+  loss_weighting:
+    weights: [1.0, 1.0, 1.0, 1.0] # AT Loss
+  inference_strategy: 'sliding_window'

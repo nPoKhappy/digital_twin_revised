@@ -1,20 +1,28 @@
-exp_name: "Transformer_AT_Rolling_Claus_Experiment_Replicated"
+exp_name: "Transformer_AT_Rolling_Claus_Large"
 
 data:
   path: "./data/Claus_dynamic/"
   training_files:
-    - "training_segment_1.csv"
-    - "training_segment_2.csv"
-    - "training_segment_3.csv"
-  segment_points: [14400, 14400, 14400]
-  filename: "training.csv"
+    - "Test_dataform_change_air2_R=5.csv"     # Training Set 1
+    - "Test_dataform_change_air2_R=5-2.csv"   # Training Set 2
+  # segment_points: [] # Removed to use full length of files
+  filename: "training.csv" # Fallback/unused
   variables_num: 10
-  point: 14400
+  point: 15000 # Default point limit if needed
   test_data_split: 0.1
   valid_data_split: 0.05
   test_data:
-    filename: "testing.csv"
-    point: 14400
+    filename: "Test_dataform_change_air2_R=5-6.csv" # Default for single run
+    point: 15000
+  
+  # New: Define multiple inference datasets
+  inference_files:
+    - name: "ID_Testing_R5-6"
+      filename: "Test_dataform_change_air2_R=5-6.csv"
+      point: 15000
+    - name: "OOD_Testing_R5-1"
+      filename: "Test_dataform_change_air2_R=5-1.csv"
+      point: 15000
 
 window:
   train_window_mins: 180
@@ -23,8 +31,8 @@ window:
 
 model:
   name: "transformer_layerwise" # Corresponds to `TransformerModel` in user_defined_transformer.py
-  embedding_dim: 34
-  hidden_dim: 34
+  embedding_dim: 64 # Increased from 14 to 64
+  hidden_dim: 64    # Increased from 14 to 64
   # Based on Keras script: INTERMEDIATE_DIM=128, NUM_EMBS=variables_num+4 (~34).
   # My `TransformerModel` uses embedding_dim for d_model, and `hidden_dim * 4` for intermediate if not overridden.
   # The Keras script sets `intermediate_dim` to 128 explicitly.

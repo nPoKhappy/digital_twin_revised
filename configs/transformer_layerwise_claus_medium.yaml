@@ -1,0 +1,81 @@
+exp_name: "Transformer_AT_Rolling_Claus_Medium"
+
+data:
+  path: "./data/Claus_dynamic/"
+  training_files:
+    - "Test_dataform_change_air2_R=5.csv"     # Training Set 1
+    - "Test_dataform_change_air2_R=5-2.csv"   # Training Set 2
+  # segment_points: [] # Removed to use full length of files
+  filename: "training.csv" # Fallback/unused
+  variables_num: 10
+  point: 15000 # Default point limit if needed
+  test_data_split: 0.1
+  valid_data_split: 0.05
+  test_data:
+    filename: "Test_dataform_change_air2_R=5-6.csv" # Default for single run
+    point: 15000
+  
+  # New: Define multiple inference datasets
+  inference_files:
+    - name: "ID_Testing_R5-6"
+      filename: "Test_dataform_change_air2_R=5-6.csv"
+      point: 15000
+    - name: "OOD_Testing_R5-1"
+      filename: "Test_dataform_change_air2_R=5-1.csv"
+      point: 15000
+
+window:
+  train_window_mins: 180
+  sampling_interval_min: 10
+  prediction_length: 72 # Covers the rolling length
+
+model:
+  name: "transformer_layerwise" # Corresponds to `TransformerModel` in user_defined_transformer.py
+  embedding_dim: 32 # Medium size
+  hidden_dim: 32
+  # Based on Keras script: INTERMEDIATE_DIM=128, NUM_EMBS=variables_num+4 (~34).
+  # My `TransformerModel` uses embedding_dim for d_model, and `hidden_dim * 4` for intermediate if not overridden.
+  # The Keras script sets `intermediate_dim` to 128 explicitly.
+  # Wait, in the Python code for `TransformerLayerwise`:
+  # `intermediate_dim=model_params['hidden_dim'] * 4`
+  # If hidden_dim is 34, then 34*4 = 136, close to 128.
+  n_layers: 3 # Matches `model_arc_Threelayers`
+  num_heads: 1 # Matches Keras script `NUM_HEADS = 1`
+  activation: 'tanh' # Matches Keras script
+
+training:
+  device: "cuda"
+  batch_size: 4096 # Matches Keras `1024*4`
+  epochs: 10000 
+  learning_rate: 0.001
+  patience: 100
+  loss_weighting:
+    # Matches Keras script: `Loss_fraction = [1, 0, 0, 0]` initially, but the loop shows:
+    # `loss_weights={'transformer': Loss_fraction[0], ...}`
+    # Wait, the Keras script says: `Loss_fraction = [1, 0, 0, 0]` explicitly in the hyperparameters section.
+    # But later it loops `batch_names` which have names like `AT_3`, `AT_4`, `AT_5`.
+    # AND `tried_SET` includes `loss_fraction`.
+    # However, the user request shows `Loss_fraction = [1, 0, 0, 0]` is active.
+    # BUT, the `Three_window_pred` creates 4 outputs.
+    # If weights are [1, 0, 0, 0], it only trains the first step?
+    # Actually, the user might want standard recursive training or this specific AT with specific weights.
+    # IMPORTANT: The user said "跟它一樣". The Keras script has `Loss_fraction = [1, 0, 0, 0]`.
+    # This effectively means validataion on first step? Or training only first step?
+    # If training only first step, `Three_window_pred` construction is wasteful but the loss function ignores others.
+    # Let's set weights to [1.0, 0.0, 0.0, 0.0] to maximize fidelity,
+    # OR if the user implied the "Autoregressive Training" which typically uses [1,1,1,1] in other contexts...
+    # The snippet shows `batch_names = ['transformer_3_...']` (Standard Transformer) later?
+    # Ah, lines 47-50:
+    # batch_names = ['transformer_AT_3...'] commented out.
+    # batch_names = ['transformer_3...'] ACTIVE.
+    # AND `model_names = ['Transformer']`.
+    # And inside loop:
+    # `rolling_model ... = transformer_structure.Three_window_pred(...)`
+    # `rolling_model.compile(..., loss_weights={...})`
+    # So even for 'Transformer' batch name, it constructs the rolling model.
+    # With weights [1,0,0,0].
+    # This means it calculates 4 steps but only optimizes L1 loss (first step).
+    # This effectively trains a simple 1-step-ahead model but evaluating on rollout?
+    # I will replicate this config.
+    weights: [1.0, 1.0, 1.0, 1.0]
+  inference_strategy: 'sliding_window'
