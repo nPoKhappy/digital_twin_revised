@@ -95,19 +95,20 @@ def variable_selection(total_variables):
         ]
         
         # Decoder 輸入：只包含操縱變量 (MV)
+        # Decoder 輸入：只包含操縱變量 (MV)，Keras GRU 模型只用了 SPs
         de_mv = [
             'air2_SP', 
-            'HEATER2_output_T_SP', 
-            'acidgas_Fm', 
-            'acidgas_T', 
-            'acidgas_P'
+            'HEATER2_output_T_SP'
+            # 'acidgas_Fm', # Removed to match Keras GRU
+            # 'acidgas_T', 
+            # 'acidgas_P'
         ]
         
-        # 模型預測目標：預測所有狀態和質量變量 (SV + QV)
+        # 模型預測目標：Keras GRU 模型只預測 H2S 和 SO2
         y_sv = [
-            'HEATER1_output_T_PV', 
-            'HEATER2_output_T_PV', 
-            'second_air2', 
+            # 'HEATER1_output_T_PV', # Removed to match Keras GRU
+            # 'HEATER2_output_T_PV', 
+            # 'second_air2', 
             'B35_H2S', 
             'B35_SO2'
         ]
