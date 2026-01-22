@@ -1,0 +1,79 @@
+exp_name: "Transformer_layerwise_AT_Rolling_Aligned_GRU_Interval10_median_r5-1_r5-2_test"
+
+data:
+  path: "./data/Claus_dynamic/"
+  training_files:
+    - "Test_dataform_change_air2_R=5.csv"
+    - "Test_dataform_change_air2_R=5-6.csv"
+  
+  # Variables & Data Config
+  variables_num: 8 
+  # point: 12000 # No need to force point limit, use full files like GRU (Or set a large number)
+  
+  test_data_split: 0.0 
+  valid_data_split: 0.2 # Matches GRU validation split
+  
+  test_data:
+    filename: "Test_dataform_change_air2_R=5-1.xlsx" # First Test File from GRU
+    point: 2400
+    
+  inference_files:
+    # Training Check
+    - name: "Training_Analysis_R5_Horizon"
+      filename: "Test_dataform_change_air2_R=5.csv"
+      inference_strategy: 'horizon_reinit' 
+    - name: "Training_Analysis_R5_Rolling"
+      filename: "Test_dataform_change_air2_R=5.csv"
+      point: 1440 
+      inference_strategy: 'sliding_window'
+    # Training Check - 2
+    - name: "Training_Analysis_R5-6_Horizon"
+      filename: "Test_dataform_change_air2_R=5-6.csv"
+      inference_strategy: 'horizon_reinit' 
+    - name: "Training_Analysis_R5-6_Rolling"
+      filename: "Test_dataform_change_air2_R=5-6.csv"
+      point: 1440 
+      inference_strategy: 'sliding_window' 
+    # GRU Test Set 1
+    - name: "Test_R5-1_Horizon"
+      filename: "Test_dataform_change_air2_R=5-1.csv"
+      inference_strategy: 'horizon_reinit'
+    - name: "Test_R5-1_Rolling"
+      filename: "Test_dataform_change_air2_R=5-1.csv"
+      point: 1440
+      inference_strategy: 'sliding_window'
+      
+    # GRU Test Set 2
+    - name: "Test_R5-2_Horizon"
+      filename: "Test_dataform_change_air2_R=5-2.csv"
+      inference_strategy: 'horizon_reinit'
+    - name: "Test_R5-2_Rolling"
+      filename: "Test_dataform_change_air2_R=5-2.csv"
+      point: 1440
+      inference_strategy: 'sliding_window'
+
+window:
+  train_window_mins: 180    # 18 steps * 10 min
+  sampling_interval_min: 10 
+  use_median_downsampling: true 
+  prediction_length: 18       # 18 steps * 4 windows = 72 steps (12 hours Total)
+# 參數從 Optuna(bayesian optimization) 調整得來
+model:
+  name: "transformer_layerwise"      # Use our new PyTorch GRU implementation
+  embedding_dim: 16
+  hidden_dim: 16
+  n_layers: 1
+  num_heads: 1
+  activation: 'relu'     # Matches GRU
+  dropout: 0.10007419275159551
+  ffn_expansion: 2
+training:
+  device: "cuda"
+  batch_size: 128        # Matches GRU
+  epochs: 600            # Matches GRU
+  learning_rate:  0.0009047814706569744  # Matches GRU (1e-4) -> Adam(lr=0.0001)
+  patience: 50           # Matches GRU
+  loss_function: 'mae'   # Matches GRU (model.compile(loss='mse'))
+  loss_weighting:
+    weights: [1.0, 1.0, 1.0, 1.0]       
+  inference_strategy: 'block_replacement'
