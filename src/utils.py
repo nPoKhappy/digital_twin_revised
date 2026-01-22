@@ -94,6 +94,61 @@ def load_data_safe(file_path, datetime_tag='DateTime', index_tag='DateTime', sli
     print(f"✓ 成功載入數據：{sampled_data.shape[0]} 行 × {sampled_data.shape[1]} 列")
     return sampled_data, has_datetime_index
 
+def load_data_resample_median(file_path, interval_minutes=10, datetime_tag='DateTime', index_tag='DateTime'):
+    """
+    載入數據並進行移動窗口中位數重採樣 (無重疊窗口)。
+    例如 interval_minutes=10, 則每 10 行取一個中位數作為代表。
+    原數據頻率若為 1 分鐘，則輸出後時間跨度變為原來的 1/10，行數減少為 1/10。
+    """
+    if file_path.endswith('.xlsx'):
+        data = pd.read_excel(file_path)
+    else:
+        try:
+            data = pd.read_csv(file_path)
+        except:
+             data = pd.read_csv(file_path, engine='python')
+             
+    has_datetime_index = False
+    
+    # 嘗試解析時間列
+    if datetime_tag in data.columns:
+        try:
+            date_formats = ['%Y/%m/%d %H:%M', '%Y-%m-%d %H:%M:%S', '%Y-%m-%d', '%d/%m/%Y %H:%M']
+            for fmt in date_formats:
+                try:
+                    data[datetime_tag] = pd.to_datetime(data[datetime_tag], format=fmt)
+                    break
+                except ValueError:
+                    continue
+            else:
+                data[datetime_tag] = pd.to_datetime(data[datetime_tag], infer_datetime_format=True)
+            
+            data.set_index(index_tag, inplace=True)
+            has_datetime_index = True
+            
+        except (ValueError, pd.errors.ParserError):
+            print(f"⚠ 警告：無法解析日期格式，保持數值索引")
+    
+    # --- 核心邏輯：滾動中位數重採樣 ---
+    # 使用 rolling().median() 會產生每一行的滾動中位數
+    # 我們需要的是無重疊的窗口 (Non-overlapping window)
+    # 所以先 rolling，然後按照間隔切片 (slicing)
+    
+    # 注意：numeric_only=True 是為了防止非數值列報錯
+    resampled_data = data.rolling(window=interval_minutes, min_periods=interval_minutes).median()
+    
+    # 取樣：從第 interval_minutes-1 行開始取，每隔 interval_minutes 取一次
+    # 例如 10 分鐘窗口，第 9 行是第一個完整窗口的中位數 (0-9)，第 19 行是第二個 (10-19)...
+    resampled_data = resampled_data.iloc[interval_minutes-1::interval_minutes].copy()
+    
+    # 重設索引以保持連續性 (如果需要的話，或者保留原來的時間標籤)
+    # 如果原本有時間索引，這裡切片後時間索引會是該窗口的最後一個時間點，這通常是合理的
+    
+    resampled_data.dropna(inplace=True)
+    print(f"✓ 成功載入並重採樣 ({interval_minutes} min Median)：{resampled_data.shape[0]} 行 (原 {data.shape[0]} 行)")
+    
+    return resampled_data, has_datetime_index
+
 def calculate_zscore_stats(df):
     """計算 Z-score 標準化所需的均值和標準差。"""
     return df.mean(), df.std()
@@ -110,9 +165,43 @@ def apply_zscore(df, mean, std):
             print(f"原因分析：以下欄位的標準差接近於零，可能導致數值不穩定: {problem_std_cols}")
     return df_z
 
-def inverse_zscore(df_z, mean, std):
-    """還原 Z-score 標準化。"""
-    return df_z * std + mean
+def inverse_zscore(df_scaled, mean, std):
+    """還原 Z-score 標準化: x * std + mean"""
+    return df_scaled * std + mean
+
+def calculate_robust_stats(df):
+    """計算 Robust Scaling 所需的中位數和 IQR (Q75-Q25)。"""
+    median = df.median()
+    q75 = df.quantile(0.75)
+    q25 = df.quantile(0.25)
+    iqr = q75 - q25
+    return median, iqr
+
+def apply_robust_scale(df, median, iqr):
+    """應用 Robust Scaling: (x - median) / iqr"""
+    iqr_safe = iqr.replace(0, 1) # 避免除以零
+    return (df - median) / iqr_safe
+
+def inverse_robust_scale(df_scaled, median, iqr):
+    """還原 Robust Scaling"""
+    return df_scaled * iqr + median
+
+def apply_log_transform(df, columns):
+    """對指定欄位應用 Log 變換 (log(x))。注意：需確保 x > 0"""
+    df_new = df.copy()
+    for col in columns:
+        if col in df_new.columns:
+            # 加上一個極小值防止 log(0)
+            df_new[col] = np.log(df_new[col] + 1e-9)
+    return df_new
+
+def inverse_log_transform(df, columns):
+    """還原 Log 變換 (exp(x))"""
+    df_new = df.copy()
+    for col in columns:
+        if col in df_new.columns:
+            df_new[col] = np.exp(df_new[col])
+    return df_new
 
 # ==============================================================================
 # --- 評估與預測工具 (來自原 utils.py) ---
