@@ -158,7 +158,6 @@ class TransformerModel(nn.Module):
         for layer in self.enc_layers:
             curr_e = layer(curr_e)
             enc_outputs.append(curr_e)
-        # return last state and list of states (context)
         return curr_e, enc_outputs
 
     def decoder(self, decoder_input, memory):
@@ -166,10 +165,8 @@ class TransformerModel(nn.Module):
         d = self.pos_enc(d)
         curr_d = d
         for i, layer in enumerate(self.dec_layers):
-            tgt_seq_len = curr_d.size(1)
-            tgt_mask = torch.triu(torch.ones(tgt_seq_len, tgt_seq_len) * float('-inf'), diagonal=1).to(curr_d.device)
-            # Use corresponding encoder layer output
-            curr_d = layer(curr_d, memory[i], tgt_mask=tgt_mask)
+            # [MODIFIED] No Causal Mask. Model can see all future MVs.
+            curr_d = layer(curr_d, memory[i], tgt_mask=None)
         output = self.layer_norm(curr_d)
         output = self.output_dense(output)
         return output
