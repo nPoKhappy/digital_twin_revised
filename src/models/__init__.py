@@ -1,4 +1,5 @@
 from .gru_model import Seq2Seq as GRUModel
+from .gru_s2s import GRUSeq2Seq as GRUExact
 from .transformer_model import Seq2Seq as TransformerModel
 from .ann_model import Seq2Seq as ANNModel
 from .ann_model import SimpleANNSeq2Seq as SimpleANNModel
@@ -16,11 +17,15 @@ def get_model(config):
     model_params = config['model']
     
     # 獲取輸入輸出的維度 (這些參數是通用的)
-    num_en_input = config['data']['num_en_input']
-    num_de_input = config['data']['num_de_input']
-    num_output = config['data']['num_output']
+    # 注意：GRUExact 的維度可能在 config['variables_num'] 裡，需要在 GRUExact 內部處理
+    # 這裡只提取通用參數傳給舊模型接口
+    num_en_input = config['data'].get('num_en_input', 10)
+    num_de_input = config['data'].get('num_de_input', 2)
+    num_output = config['data'].get('num_output', 2)
     
-    if model_name == 'gru':
+    if model_name == 'gru_exact':
+        return GRUExact(config)
+    elif model_name == 'gru':
         return GRUModel(
             num_en_input=num_en_input,
             num_de_input=num_de_input,
@@ -66,7 +71,7 @@ def get_model(config):
             num_input=num_en_input,
             num_output=num_output,
             num_embs=model_params['embedding_dim'],
-            intermediate_dim=model_params['hidden_dim'] * 4, # Assuming inter_dim is 4x hidden
+            intermediate_dim=model_params['hidden_dim'] * model_params.get('ffn_expansion', 2),
             num_heads=model_params.get('num_heads', 8), # Default to 8 if not in config
             num_layers=model_params['n_layers'],
             activation_func=model_params.get('activation', 'tanh'),
