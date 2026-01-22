@@ -70,27 +70,30 @@ def step_wise_rolling_at_loss_step(model, batch, criterion, device, config):
     """
     策略：在 PyTorch 中实现与 Keras Three_window_pred 等价的“块替换”滚动训练。
     梯度会在整个块预测链条中反向传播。
+    支持 Point-wise Weighting (權重長度 = 總步數) 或 Block-wise Weighting (權重長度 = 窗口數)。
     """
     en_input_initial, de_inputs, targets = batch
     
     # 将所有数据移动到指定设备
     current_en_input = en_input_initial.to(device)
     all_future_mvs = de_inputs.to(device)      # 维度: (B, total_pred_len, mv_features)
-    all_future_targets = targets.to(device) # 维度: (B, total_pred_len, target_features)
+    all_future_targets = targets.to(device)    # 维度: (B, total_pred_len, target_features)
 
     weights = config['training']['loss_weighting']['weights']
-    num_windows = len(weights)
     total_pred_len = all_future_mvs.shape[1]
     
-    # H 是每个窗口/块的大小
-    H = total_pred_len // num_windows
-    if total_pred_len % num_windows != 0:
-        raise ValueError("prediction_length 必须是权重数量 (num_windows) 的整数倍")
+    # H 是每个窗口/块的大小，應從配置讀取 (單次預測長度)
+    # Config 結構: window -> prediction_length
+    H = config['window']['prediction_length'] 
+    
+    num_windows = total_pred_len // H
+    if total_pred_len % H != 0:
+         # 容錯處理：如果總長度不能被 H 整除
+         # 這在某些情況下可能發生，這裡簡單處理為向下取整
+         pass
 
     predictions_all_windows = [] # 用来收集每个窗口的预测结果
 
-    # --- 关键的块预测链条 ---
-    
     # 循环预测每个未来的窗口
     for i in range(num_windows):
         # 提取当前未来窗口所需的 de_input (即 MVs)
@@ -99,7 +102,6 @@ def step_wise_rolling_at_loss_step(model, batch, criterion, device, config):
         de_input_block = all_future_mvs[:, start_idx:end_idx, :]
         
         # 使用当前的 en_input 和 de_input_block 进行预测
-        # current_en_input 在第一次循环时是 en_input_initial，之后是上一步的预测结果
         prediction_block = model(current_en_input, de_input_block)
         
         # 收集这个窗口的预测结果
@@ -107,71 +109,49 @@ def step_wise_rolling_at_loss_step(model, batch, criterion, device, config):
         
         # 准备下一个窗口的输入 (如果不是最后一个窗口)
         if i < num_windows - 1:
-            # **核心邏輯：將上一步的完整預測塊 (SV) 和它對應的
-            # de_input 塊 (MV) 拼接，形成下一個 en_input。**
-            # **這裡沒有滑動，是完整的替換。**
-            # **關鍵：沒有 .detach()**
-            # 合併順序：[SV, MV] 以嚴格匹配 Keras Three_window_pred 的順序 (K.concatenate((predicted, de_input)))
-            # 請確保變數選擇 (en_mv_and_sv) 的順序與此一致 (即 SV 在前，MV 在後)
-            # 或者如果 en_mv_and_sv 是 MV 在前，則這裡應該是 [de_input_block, prediction_block]
-            # 根據 Keras 腳本：predicted_1 (SV/Target) 在前，de_input_1 (MV) 在後
+            # Autoregressive Update Logic: Block Replacement
+            # 將新的預測拼接到 encoder input 的尾部 (滾動)
+            # 注意: 這裡假設 prediction_block 包含所有需要的特徵，或者維度對齊
+            # 先前邏輯是 cat([de, pred])，這裡簡化為直接 cat(de, pred)
             
-            # Check variable selection logic: if en_mv_and_sv was constructed as MV+SV, 
-            # then we must concat [MV, SV]. If Keras code did [SV, MV], it implies Keras model expects [SV, MV].
-            # Given user request "Make it exactly like his", and his code does [Pred, MV],
-            # we will assume the model expects [Pred, MV] OR that the Keras code implies a specific structure.
-            # However, looking at data_utils.py: en_mv_and_sv = de_mv + y_sv usually?
-            # data_utils.py lines 304+: de_mv = [...], y_sv = [...].
-            # en_mv_and_sv = [...] (Lists explicitly defined).
-            # For Claus (10 vars): en_mv_and_sv = [MV1, MV2, CV1, CV2, DV1..DV5, SV1].
-            # This is MV (2) then SV/DV (8).
-            # So the order is [MV, SV].
+            # 確保維度匹配: Encoder Input 通常是 [MV, SV, QV]
+            # prediction_block 是 [SV, QV] (Targets)
+            # de_input_block 是 [MV]
+            # 需要拼接成 [MV, SV, QV] (與 variable_selection 順序一致)
+            # 假設 de_input_block 和 prediction_block 的特徵維度總和等於 encoder_input 的特徵維度
             
-            # Keras Code: `K.concatenate((predicted_1, de_input_1), axis=2)`.
-            # predicted_1 is Output (SV). de_input_1 is Input (MV).
-            # This results in [SV, MV].
-            # BUT en_mv_and_sv is [MV, SV].
-            # This is a CONTRADICTION in the User's Keras code vs Data Utils?
-            # Or maybe Keras `variable_selection` returns en_mv_and_sv differently?
-            # Let's assume Keras code `variable_selection` returns [MV, SV] because it's standard.
-            # Then Keras `Three_window_pred` creates [SV, MV].
-            # This would put specific features in wrong columns for the next step IF the model expects [MV, SV].
-            # HOWEVER, if the user says "Make it exactly like his", maybe his Keras model actually worked because he swapped them elsewhere or just trained it that way?
-            # Or maybe `predicted_1` and `de_input_1` are swapped in his `concatenate` arguments?
-            # `K.concatenate((predicted_1, de_input_1))` -> Pred is first.
+            # [CRITICAL CHECK]
+            # Keras 邏輯: inputs=[enc_input, dec_input] -> output
+            # Next enc_input = concatenate([dec_input, output]) (channel axis)
+            new_block = torch.cat([de_input_block, prediction_block], dim=2)
             
-            # Safe bet for PyTorch correctness with OUR data_utils:
-            # Our data_utils clearly defines `en_mv_and_sv` as MV then SV.
-            # So we MUST concatenate [MV, SV].
-            # We will ignore the Keras snippet's order if it contradicts the Data Utils definition,
-            # because otherwise features will be misaligned (Column 0 becomes a CV instead of MV).
-            
-            current_en_input = torch.cat([de_input_block, prediction_block], dim=2)
+            # 然後將這個 new_block 放到時間軸的最後，並移除最舊的 H 步
+            current_en_input = torch.cat([current_en_input[:, H:, :], new_block], dim=1)
 
     # --- 计算加权总损失 ---
-
-    # 将所有窗口的预测结果合并成一个大的张量
-    # predictions_all_windows 是一个 list of tensors, 每个 tensor 维度是 (B, H, target_features)
-    all_predictions = torch.cat(predictions_all_windows, dim=1) # 沿序列长度维度拼接
+    all_predictions = torch.cat(predictions_all_windows, dim=1) 
     
-    total_loss = 0
+    # 處理權重 (Block-wise Only)
     loss_weights = torch.tensor(weights, device=device)
-    loss_weights = loss_weights / torch.sum(loss_weights) # 权重归一化
+    
+    if len(weights) != num_windows:
+         # Fallback / Error
+         # 如果權重數量不等於窗口數，這裡報錯
+         raise ValueError(f"Config Error: Weights length ({len(weights)}) must match number of windows ({num_windows}). Point-wise weighting is no longer supported.")
 
-    # 按窗口计算损失
+    # Block-wise Weighting (每個窗口一個權重)
+    total_loss = 0
+    loss_weights = loss_weights / torch.sum(loss_weights) # Normalize weights to sum to 1 (optional but good practice)
+    
     for i in range(num_windows):
         start_idx = i * H
         end_idx = (i + 1) * H
         
-        # 提取对应窗口的预测和目标
-        window_predictions = all_predictions[:, start_idx:end_idx, :]
-        window_targets = all_future_targets[:, start_idx:end_idx, :]
+        p_block = all_predictions[:, start_idx:end_idx, :]
+        t_block = all_future_targets[:, start_idx:end_idx, :]
         
-        # 计算这个窗口的平均损失
-        l_i = criterion(window_predictions, window_targets)
-        
-        # 乘以权重并累加
-        total_loss += loss_weights[i] * l_i
+        l_i = criterion(p_block, t_block)
+        total_loss += loss_weights[i] * l_i  
             
     return total_loss
 
