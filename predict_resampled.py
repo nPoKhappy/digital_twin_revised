@@ -223,7 +223,8 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
         if use_median:
             print(f"Downsampling test data by MEDIAN resampling: interval={interval}")
             # New Logic: Rolling Median + Slice
-            df_median = df_raw_test.rolling(window=interval, min_periods=interval).median()
+            # Fix: numeric_only=True to prevent DataError on non-numeric columns
+            df_median = df_raw_test.rolling(window=interval, min_periods=interval).median(numeric_only=True)
             df_raw_test = df_median.iloc[interval-1::interval].reset_index(drop=True)
             print(f"  -> Applied Rolling Median Filter (Window={interval})")
         else:
@@ -255,9 +256,122 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
     print("Applying Z-score Scaling (Mean/Std)...")
     df_z_test = data_utils.apply_zscore(df_raw_test, mean_all, std_all)
 
-    # ... (skipping unchanged lines) ...
+    # [Step 4: Prepare Tensors]
+    # Align columns
+    test_en_input = df_z_test[en_mv_and_sv].values
+    test_de_input = df_z_test[de_mv].values
+    test_target = df_z_test[y_sv].values
+    
+    # Needs at least W steps
+    if len(df_z_test) <= W:
+        print(f"數據長度 ({len(df_z_test)}) 不足 W ({W})，跳過。")
+        return
 
-    # 1. 準備歷史數據 (反標準化 + 反Log)
+    # Initial History (First W steps)
+    initial_history_np = test_en_input[:W]
+    initial_en_input = torch.tensor(initial_history_np, dtype=torch.float32).unsqueeze(0) # (1, W, F_en)
+    
+    # Future Inputs (W to End)
+    future_de_inputs = torch.tensor(test_de_input[W:], dtype=torch.float32).unsqueeze(0) # (1, H_total, F_de)
+    
+    # True Targets (W to End) for evaluation
+    true_targets_np = test_target[W:]
+    
+    # Full Encoder Inputs (for Horizon Reinit if needed)
+    full_en_inputs = torch.tensor(test_en_input, dtype=torch.float32).unsqueeze(0)
+
+    # --- 執行預測策略 ---
+    strategy = test_cfg.get('inference_strategy', 'sliding_window')
+    print(f"預測策略: {strategy}")
+    
+    if strategy == 'sliding_window':
+        # 標準滑動窗口
+        predictions_tensor = predict_sliding_window(
+            model, initial_en_input, future_de_inputs, device, config['data']['num_output']
+        )
+    elif strategy == 'block_replacement':
+        # 塊替換
+        predictions_tensor = predict_block_replacement(
+            model, initial_en_input, future_de_inputs, device, config
+        )
+    elif strategy == 'horizon_reinit':
+        # Horizon Re-initialization
+        predictions_tensor = predict_horizon_reinit(
+            model, initial_en_input, future_de_inputs, None, full_en_inputs, device, config
+        )
+    else:
+        print(f"未知的策略: {strategy}")
+        return
+
+    # --- 處理預測結果 (Tensor -> Numpy) ---
+    predictions_cov = predictions_tensor.cpu().numpy().squeeze(0)
+    
+    # Align True Targets
+    pred_len = predictions_cov.shape[0]
+    true_targets_cov = true_targets_np[:pred_len]
+    original_index = df_raw_test.index[W : W+pred_len] 
+
+    # --- 計算指標 ---
+    metrics_results = []
+    
+    # 1. Reverse Z-Score for Preds and Targets
+    pred_df_z = pd.DataFrame(predictions_cov, columns=y_sv)
+    true_df_z = pd.DataFrame(true_targets_cov, columns=y_sv)
+    
+    # Filter mean/std to only include target variables y_sv
+    mean_y = mean_all[y_sv]
+    std_y = std_all[y_sv]
+    
+    pred_df_inv = data_utils.inverse_zscore(pred_df_z, mean_y, std_y)
+    true_df_inv = data_utils.inverse_zscore(true_df_z, mean_y, std_y)
+    
+    # 2. Reverse Log Transform (if applied)
+    target_log_cols = [c for c in valid_log_cols if c in y_sv]
+    if target_log_cols:
+         pred_df_inv = data_utils.inverse_log_transform(pred_df_inv, target_log_cols)
+         true_df_inv = data_utils.inverse_log_transform(true_df_inv, target_log_cols)
+         
+    # Save Metrics
+    results_dir = os.path.join(config.get('output', {}).get('results_dir', './results'), config['exp_name'], test_name)
+    os.makedirs(results_dir, exist_ok=True)
+    
+    metrics_list = []
+    for i, col in enumerate(y_sv):
+        y_true = true_df_inv[col].values
+        y_pred = pred_df_inv[col].values
+        
+        # 使用 np.isfinite 同時過濾 NaN 和 Inf，並過濾極大值防止 Overflow
+        # numpy float64 max is ~1.8e308, square is inf. 
+        # sklearn MSE might square 1e154 -> overflow. 1e100 is a safe upper bound.
+        mask = np.isfinite(y_true) & np.isfinite(y_pred) & (np.abs(y_pred) < 1e100)
+        
+        ignored_count = len(y_true) - np.sum(mask)
+        if ignored_count > 0:
+             print(f"  [警告] 變數 {col}: 過濾了 {ignored_count} 個 NaN/Inf/Extreme 數值。")
+
+        if np.sum(mask) == 0:
+             metrics = {"MAE": 0, "RMSE": 0, "R2": 0, "MAPE": 0}
+        else:
+             metrics = calculate_metrics(y_true[mask], y_pred[mask])
+        metrics['Variable'] = col
+        metrics_list.append(metrics)
+        metrics_results.append(metrics)
+        
+    metrics_df = pd.DataFrame(metrics_list)
+    metrics_path = os.path.join(results_dir, 'evaluation_metrics.csv')
+    metrics_df.to_csv(metrics_path, index=False)
+    print(f"指標已保存: {metrics_path}")
+    print(metrics_df)
+    
+    # Save Predictions CSV
+    pred_df_inv.index = original_index
+    pred_path = os.path.join(results_dir, 'prediction_results.csv')
+    pred_df_inv.to_csv(pred_path)
+    
+    predictions_cov = pred_df_inv.values 
+    true_targets_cov = true_df_inv.values 
+
+    # 1. 準備歷史數據用於繪圖 (反標準化)
     # initial_history_np 是 Scaled 的 (W, Enc_Feat)
     df_hist_scaled = pd.DataFrame(initial_history_np, columns=en_mv_and_sv)
     df_hist = data_utils.inverse_zscore(df_hist_scaled, mean_all, std_all) 
@@ -265,8 +379,15 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
     if valid_log_cols:
          df_hist = data_utils.inverse_log_transform(df_hist, valid_log_cols)
     
+    # [Modified] Only plot targets H2S and SO2
+    target_plot_cols = ['B35_H2S', 'B35_SO2']
+    
     for i, name in enumerate(y_sv):
         var_metrics = metrics_results[i]
+        
+        # --- Plotting Constraint ---
+        if name not in target_plot_cols:
+            continue
         
         # 獲取該變數的歷史數據 (如果存在於 Encoder Input 中)
         if name in df_hist.columns:
@@ -295,9 +416,22 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
         plt.plot(x_future, future_pred, label='Pred (Future)', color='red', linestyle='--')
         
         # 連接點視覺優化 (讓 History 和 Pred 連起來)
+        # Connect points for visual continuity
         if len(hist_vals) > 0:
             plt.plot([x_hist[-1], x_future[0]], [hist_vals[-1], future_pred[0]], color='red', linestyle='--', alpha=0.5)
             plt.plot([x_hist[-1], x_future[0]], [hist_vals[-1], future_true[0]], color='blue', alpha=0.5)
+
+        # Set Y-Axis Limits based on Valid Data (History + True Future)
+        # prevents the plot from being unreadable due to massive outlier predictions (e.g. 1e292)
+        valid_plot_data = np.concatenate([hist_vals, future_true])
+        valid_plot_data = valid_plot_data[np.isfinite(valid_plot_data)]
+        
+        if len(valid_plot_data) > 0:
+            y_data_min = np.min(valid_plot_data)
+            y_data_max = np.max(valid_plot_data)
+            y_margin = (y_data_max - y_data_min) * 0.2
+            if y_margin == 0: y_margin = 1.0
+            plt.ylim(y_data_min - y_margin, y_data_max + y_margin)
 
         title = f'{name} ({test_name})\nR2={var_metrics["R2"]:.4f}, MAPE={var_metrics["MAPE"]:.2f}%'
         plt.title(title)
@@ -305,8 +439,218 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
         plt.grid(True, alpha=0.3)
         plt.savefig(os.path.join(results_dir, f'{name}.png'))
         plt.close()
+
+        # ==========================================
+        # Parity Plot
+        # ==========================================
+        plt.figure(figsize=(6, 6))
+        
+        # Filter finite values for plotting checks
+        mask_plot = np.isfinite(future_true) & np.isfinite(future_pred) 
+        if np.sum(mask_plot) > 0:
+            p_true = future_true[mask_plot]
+            p_pred = future_pred[mask_plot]
+            
+            # Scatter Plot
+            plt.scatter(p_true, p_pred, alpha=0.5, s=10, label='Data', color='blue')
+            
+            # Diagonal line (Reference)
+            # Find min/max across both true and pred to draw a proper diagonal
+            all_vals = np.concatenate([p_true, p_pred])
+            if len(all_vals) > 0:
+                min_val = np.min(all_vals)
+                max_val = np.max(all_vals)
+                margin = (max_val - min_val) * 0.05
+                plt.plot([min_val - margin, max_val + margin], 
+                         [min_val - margin, max_val + margin], 
+                         'r--', label='Perfect Prediction')
+                
+                plt.xlim(min_val - margin, max_val + margin)
+                plt.ylim(min_val - margin, max_val + margin)
+            
+            plt.xlabel('True Values')
+            plt.ylabel('Predicted Values')
+            
+            # Use same metrics in title
+            title_parity = f'Parity Plot: {name}\nR2={var_metrics["R2"]:.4f}, MAPE={var_metrics["MAPE"]:.2f}%'
+            plt.title(title_parity)
+            plt.legend()
+            plt.grid(True, alpha=0.3)
+            plt.axis('equal') # Aspect ratio 1:1 important for parity
+            
+            plt.savefig(os.path.join(results_dir, f'{name}_parity.png'))
+            plt.close()
     
     print(f"完成測試: {test_name}. 結果存在: {results_dir}")
+
+    # ==========================================
+    # Random 5 Case Studies (72-step Horizon) -> Now Horizon Analysis (1-18)
+    # ==========================================
+    analyze_horizon_performance(model, df_z_test, config, results_dir, 
+                           mean_all, std_all, valid_log_cols,
+                           en_mv_and_sv, de_mv, y_sv, W, device)
+
+def analyze_horizon_performance(model, df_z, config, results_dir, mean_all, std_all, log_cols,
+                           en_cols, de_cols, y_cols, W, device):
+    """
+    對 t+1 至 t+18 步進行滾動預測評估 (Rolling Evaluation)。
+    針對每一個時間點生成預測，並統計特定步長 (Horizon) 的預測表現。
+    """
+    print(f"\n[Horizon Analysis] 執行 t+1 至 t+18 步的全面滾動評估...")
+    
+    # 1. 準備 DataLoader (Sliding Window)
+    # 我們需要每個時間點的預測，所以使用 Dataset
+    # 預測長度 H 設為 max(prediction_length, 18) 以確保有足夠步數，或者取決於模型訓練設定
+    # 如果模型訓練時 H=12，那只能測到 12。
+    H_model = config['window']['prediction_length']
+    analyze_steps = 18
+    
+    if H_model < analyze_steps:
+        print(f"  注意: 模型訓練預測長度 ({H_model}) 小於要求的分析長度 ({analyze_steps})。")
+        print(f"  將只分析 t+1 至 t+{H_model}。")
+        analyze_steps = H_model
+    
+    # 建立 Dataset
+    # 使用 MultiStepS2SDataset 進行滑動窗口
+    from src.dataset import MultiStepS2SDataset
+    
+    dataset = MultiStepS2SDataset(
+        df_z, 
+        en_cols, de_cols, y_cols, 
+        W, H_model
+    )
+    
+    # 避免 OOM，使用適當 Batch Size
+    loader = torch.utils.data.DataLoader(dataset, batch_size=256, shuffle=False, drop_last=False)
+    
+    all_preds_list = []
+    all_targets_list = []
+    
+    model.eval()
+    with torch.no_grad():
+        for curr_en, curr_de, curr_target in tqdm(loader, desc="Rolling Prediction"):
+            curr_en = curr_en.to(device)
+            curr_de = curr_de.to(device)
+            
+            # Predict
+            # output: [Batch, H, F_out]
+            out = model(curr_en, curr_de)
+            
+            all_preds_list.append(out.cpu().numpy())
+            # target is [Batch, H, F_out] (Dataset returns slice)
+            all_targets_list.append(curr_target.numpy())
+            
+    # Concatenate
+    if len(all_preds_list) == 0:
+        print("沒有產生任何預測 (數據過短?)")
+        return
+
+    all_preds = np.concatenate(all_preds_list, axis=0)     # (N_samples, H, F_out)
+    all_targets = np.concatenate(all_targets_list, axis=0) # (N_samples, H, F_out)
+    
+    # 2. Inverse Transform Helper
+    N, H, F = all_preds.shape
+    
+    # 用於 Inverse 的 Helper
+    def inverse_full(arr_3d):
+        # arr_3d: (N, H, F)
+        # Reshape to 2D for inverse
+        arr_flat = arr_3d.reshape(-1, F)
+        df_flat = pd.DataFrame(arr_flat, columns=y_cols)
+        
+        # Determine mean/std for y_cols
+        mu = mean_all[y_cols]
+        sigma = std_all[y_cols]
+        
+        # Inverse Z-score
+        df_inv = data_utils.inverse_zscore(df_flat, mu, sigma)
+        
+        # Inverse Log
+        valid_log = [c for c in log_cols if c in y_cols]
+        if valid_log:
+             df_inv = data_utils.inverse_log_transform(df_inv, valid_log)
+             
+        return df_inv.values.reshape(N, H, F)
+
+    print("  反標準化中...")
+    all_preds_inv = inverse_full(all_preds)
+    all_targets_inv = inverse_full(all_targets)
+    
+    # 3. Generating Plots by Horizon
+    analysis_dir = os.path.join(results_dir, 'horizon_analysis_18step')
+    os.makedirs(analysis_dir, exist_ok=True)
+    
+    target_plot_cols = ['B35_H2S', 'B35_SO2'] # Only analyze these
+    
+    print(f"  正在生成 t+1 ~ t+{analyze_steps} 的時序圖與 Parity Plot...")
+    
+    for t_idx in range(analyze_steps):
+        step_num = t_idx + 1
+        step_name = f"t+{step_num}"
+        step_dir = os.path.join(analysis_dir, step_name)
+        os.makedirs(step_dir, exist_ok=True)
+        
+        # Extract data for this step
+        # Shape: (N, F)
+        preds_t = all_preds_inv[:, t_idx, :]
+        targets_t = all_targets_inv[:, t_idx, :]
+        
+        for v_idx, var_name in enumerate(y_cols):
+            if var_name not in target_plot_cols:
+                continue
+                
+            y_p = preds_t[:, v_idx]
+            y_t = targets_t[:, v_idx]
+            
+            # Filter NaN/Inf
+            # 過濾極端值以避免 Plot 顯示問題
+            mask = np.isfinite(y_p) & np.isfinite(y_t) & (np.abs(y_p) < 1e100)
+            y_p = y_p[mask]
+            y_t = y_t[mask]
+            
+            if len(y_p) == 0:
+                continue
+                
+            # Metrics
+            rmse = np.sqrt(np.mean((y_t - y_p)**2))
+            r2 = r2_score(y_t, y_p)
+            
+            # --- 1. Parity Plot ---
+            plt.figure(figsize=(6, 6))
+            # 降低 alpha 值因為點數可能非常多
+            plt.scatter(y_t, y_p, alpha=0.5, s=10, color='blue') 
+            
+            # Range
+            if len(y_t) > 0:
+                min_val = min(y_t.min(), y_p.min())
+                max_val = max(y_t.max(), y_p.max())
+                margin = (max_val - min_val) * 0.05
+                if margin == 0: margin = 1
+                plt.plot([min_val, max_val], [min_val, max_val], 'r--', label='Ideal')
+            
+            plt.title(f'{var_name} ({step_name}) Parity\nRMSE={rmse:.4f}, R2={r2:.4f}')
+            plt.xlabel('True Value')
+            plt.ylabel('Predicted Value')
+            plt.grid(True, alpha=0.3)
+            plt.axis('equal')
+            plt.savefig(os.path.join(step_dir, f'parity_{var_name}.png'), dpi=100)
+            plt.close()
+            
+            # --- 2. Time Series Plot ---
+            # 畫成 Line Plot，顯示整個測試集的該步預測
+            plt.figure(figsize=(15, 6))
+            plt.plot(y_t, label='True', color='black', linewidth=0.8)
+            plt.plot(y_p, label='Pred', color='red', linewidth=0.8)
+            
+            plt.title(f'{var_name} ({step_name}) Time Series\nRMSE={rmse:.4f}, R2={r2:.4f}')
+            plt.xlabel('Sample Index')
+            plt.ylabel(var_name)
+            plt.legend()
+            plt.grid(True, alpha=0.3)
+            plt.savefig(os.path.join(step_dir, f'timeseries_{var_name}.png'), dpi=100)
+            plt.close()
+            
+    print(f"Horizon analysis saved to {analysis_dir}")
 
 
 def main(config_path):
