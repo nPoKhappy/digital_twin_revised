@@ -65,7 +65,7 @@ class Seq2Seq(nn.Module): # 我們保持類名不變，這樣 train.py 不用改
     def __init__(self, num_en_input, num_de_input, num_output, embedding_dim, hidden_dim, n_layers, n_heads=1, dropout=0.1):
         super().__init__()
         # 注意：我們復用 hidden_dim 作為 n_heads 和 intermediate_dim 的基礎
-        intermediate_dim = hidden_dim * 2  # 這是 Transformer 的常見配置 # feedforward dimension
+        intermediate_dim = hidden_dim * 4  # 這是 Transformer 的常見配置 # feedforward dimension
         
         self.encoder = Encoder(num_en_input, embedding_dim, n_heads, n_layers, intermediate_dim, dropout)
         self.decoder = Decoder(num_de_input, num_output, embedding_dim, n_heads, n_layers, intermediate_dim, dropout)
