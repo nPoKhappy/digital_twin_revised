@@ -162,9 +162,9 @@ def process_single_file(filepath, model, config, mean_all, std_all, device,
     predictions_cov = predictions_np * y_std_safe + y_mean
     true_targets_cov = true_targets_np * y_std_safe + y_mean
     
-    # 檢查是否有 NaN
-    if np.isnan(predictions_cov).any() or np.isnan(true_targets_cov).any():
-        print(f"  [WARN] {filename}: 預測結果包含 NaN，跳過")
+    # 檢查是否有 NaN 或 Inf
+    if not np.isfinite(predictions_cov).all() or not np.isfinite(true_targets_cov).all():
+        print(f"  [WARN] {filename}: 預測結果包含 NaN 或 Inf，跳過")
         return None
     
     # 計算指標
@@ -173,8 +173,8 @@ def process_single_file(filepath, model, config, mean_all, std_all, device,
         y_true_col = true_targets_cov[:, i]
         y_pred_col = predictions_cov[:, i]
         
-        # 跳過包含 NaN 的列
-        if np.isnan(y_true_col).any() or np.isnan(y_pred_col).any():
+        # 跳過包含 NaN 或 Inf 的列
+        if not np.isfinite(y_true_col).all() or not np.isfinite(y_pred_col).all():
             metrics = {'MAE': np.nan, 'RMSE': np.nan, 'R2': np.nan, 'MAPE': np.nan}
         else:
             metrics = calculate_metrics(y_true_col, y_pred_col)
