@@ -104,7 +104,8 @@ def main(config_path):
                 if interval > 1:
                     if use_median:
                         # 用 10min 窗口的中位數代表這 10min
-                        df_seg = df_seg.rolling(window=interval, min_periods=interval).median()
+                        # Fix: numeric_only=True to avoid error on DateTime column
+                        df_seg = df_seg.rolling(window=interval, min_periods=interval).median(numeric_only=True)
                         df_seg = df_seg.iloc[interval-1::interval].reset_index(drop=True)
                     else:
                         df_seg = df_seg.iloc[::interval].reset_index(drop=True)
@@ -130,7 +131,8 @@ def main(config_path):
         # [Step 2: Downsample]
         if interval > 1:
             if use_median:
-                df_raw = df_raw.rolling(window=interval, min_periods=interval).median()
+                # Fix: numeric_only=True
+                df_raw = df_raw.rolling(window=interval, min_periods=interval).median(numeric_only=True)
                 df_raw = df_raw.iloc[interval-1::interval].reset_index(drop=True)
             else:
                 df_raw = df_raw.iloc[::interval].reset_index(drop=True)
@@ -247,6 +249,8 @@ def main(config_path):
     # [Added] Calculate Parameter Count
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"  模型總參數量: {total_params:,}")
+    print("\n[Model Architecture]")
+    print(model) # Print model architecture for reference
 
     optimizer = optim.Adam(model.parameters(), lr=cfg_training['learning_rate'])
     
