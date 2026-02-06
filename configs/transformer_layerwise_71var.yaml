@@ -1,0 +1,79 @@
+exp_name: "transformer_layerwise_71var"
+
+data:
+  path: "./data/Claus_dynamic/"
+  training_files:
+    - "Test_dataform_change_air2_R=5_converted.csv"
+    - "Test_dataform_change_air2_R=5-1_converted.csv"
+    - "Test_dataform_change_air2_R=5-2_converted.csv"
+    - "Test_dataform_change_air2_R=5-6_converted.csv"
+  
+  variables_num: 71
+  
+  test_data_split: 0.1
+  valid_data_split: 0.1
+  
+  inference_files: 
+    - name: "R5_converted"
+      filename: "Test_dataform_change_air2_R=5_converted.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-1_converted"
+      filename: "Test_dataform_change_air2_R=5-1_converted.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-2_converted"
+      filename: "Test_dataform_change_air2_R=5-2_converted.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-6_converted"
+      filename: "Test_dataform_change_air2_R=5-6_converted.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5_test_split"
+      filename: "Test_dataform_change_air2_R=5_converted_test_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-1_test_split"
+      filename: "Test_dataform_change_air2_R=5-1_converted_test_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-2_test_split"
+      filename: "Test_dataform_change_air2_R=5-2_converted_test_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-6_test_split"
+      filename: "Test_dataform_change_air2_R=5-6_converted_test_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5_valid_split"
+      filename: "Test_dataform_change_air2_R=5_converted_valid_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-1_valid_split"
+      filename: "Test_dataform_change_air2_R=5-1_converted_valid_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-2_valid_split"
+      filename: "Test_dataform_change_air2_R=5-2_converted_valid_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-6_valid_split"
+      filename: "Test_dataform_change_air2_R=5-6_converted_valid_split.csv"
+      inference_strategy: 'sliding_window'
+
+
+window:
+  train_window_mins: 180    # 18 steps * 10 min
+  sampling_interval_min: 10 
+  use_median_downsampling: true 
+  prediction_length: 18       # 18 steps
+
+model:
+  name: "transformer_layerwise"
+  embedding_dim: 74     # 71 + 4 + 1 for positional encoding
+  hidden_dim: 74       
+  n_layers: 2
+  num_heads: 1
+  activation: 'relu'
+  dropout: 0.0
+  ffn_expansion: 4      # Match vanilla intermediate_dim = 4 * hidden
+
+training:
+  device: "cuda"
+  batch_size: 32
+  epochs: 10000
+  learning_rate: 0.0005
+  patience: 100
+  loss_function: 'mae'
+  loss_weighting:
+    weights: [1.0, 1.0, 1.0, 1.0] 
