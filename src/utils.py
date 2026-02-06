@@ -191,8 +191,10 @@ def apply_log_transform(df, columns):
     df_new = df.copy()
     for col in columns:
         if col in df_new.columns:
-            # 加上一個極小值防止 log(0)
-            df_new[col] = np.log(df_new[col] + 1e-9)
+            # Handle negative values or zeros by clipping to a small positive value
+            # This prevents log(<=0) -> NaN/Inf
+            data_clipped = df_new[col].clip(lower=1e-9) 
+            df_new[col] = np.log(data_clipped)
     return df_new
 
 def inverse_log_transform(df, columns):
