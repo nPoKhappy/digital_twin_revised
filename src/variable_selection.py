@@ -214,12 +214,105 @@ def variable_selection(total_variables):
                         'SV13', 'SV14', 'SV15', 'SV16', 'SV17', 'SV18', 'SV19', 'SV20', 'SV21', 'SV22', 'SV23', 'SV24', 'SV25',
                         'MV1_CC1SP', 'MV2_CC2SP', 'MV3_HV503_Pos',]  # 包含所有30個變量作為encoder輸入
         
+    elif total_variables == 17:
+        # ======================================================================
+        # 配置 17: Claus Plant Data (17 變量)
+        # ======================================================================
+        
+        # Decoder 輸入：未來已知的操作變數 (MVs)
+        de_mv = [
+            'acidgas_Fm', 
+            'acidgas_T', 
+            'acidgas_P',
+            'second_air2',
+            'air'
+        ]
+        
+        # 預測目標：其餘所有狀態變數 (SVs) 和質量變數 (QVs)
+        y_sv = [
+            'cat1_input_temp',
+            'cat2_input_temp',
+            'B35_H2S',
+            'B35_SO2',
+            'burner_output_T_PV',
+            'fur_temp',
+            'cat1_output_temp',
+            'cat1_deltaP',
+            'cat1_bed_temp',
+            'cat2_output_temp',
+            'cat2_deltaP',
+            'cat2_bed_temp'
+        ]
+        
+        # Encoder 輸入：包含所有 17 個變數
+        # 順序建議：先放 de_mv 變數，再放其他，或者依照物理意義排序
+        # 這裡簡單起見將 de_mv 和 y_sv 串接，或是依照數據中的順序
+        # 為了保證對應正確，這裡明確列出所有
+        en_mv_and_sv = de_mv + y_sv
+        
+        con_tag = y_sv
+
+    elif total_variables == 71:
+        # ======================================================================
+        # 配置 71: Claus 過程全變量配置 (from simulation data)
+        # ======================================================================
+        de_mv = [
+            'acidgas_Fm', 'acidgas_CO2', 'acidgas_H2O', 'acidgas_H2S', 'acidgas_T', 'acidgas_P', 
+            'air', 'air_SP', 'second_air2', 'air2_SP', 'COG', 'COG_SP'
+        ]
+        y_sv = [
+            'burner_input_T_SP', 'burner_input_T_PV', 'burner_inputP', 
+            'burner_output_T_SP', 'burner_output_T_PV', 'burner_output_P_SP', 'burner_output_P_PV', 
+            'fur_F', 'fur_inputT', 'fur_inputP', 'fur_temp', 'fur_outputT', 'fur_outputP_SP', 'fur_outputP_PV', 
+            'WHB_F', 'WHB_inputT', 'WHB_inputP', 'WHB_outputT', 'WHB_outputP', 
+            'SEP1_F', 'SEP1_P_SP', 'SEP1_P_PV', 'SEP1_T', 
+            'HEATER1_F', 'HEATER1_input_T', 'HEATER1_input_P', 'HEATER1_output_T_SP', 'HEATER1_output_T_PV', 'HEATER1_output_P', 
+            'cat1_F', 'cat1_input_temp', 'cat1_output_temp', 'cat1_input_P', 'cat1_output_P_SP', 'cat1_output_P_PV', 'cat1_deltaP', 
+            'SEP2_F', 'SEP2_P_SP', 'SEP2_P_PV', 'SEP2_T', 
+            'HEATER2_F', 'HEATER2_input_T', 'HEATER2_input_P', 'HEATER2_output_T_SP', 'HEATER2_output_T_PV', 'HEATER2_output_P', 
+            'cat2_F', 'cat2_input_temp', 'cat2_output_temp', 'cat2_input_P', 'cat2_output_P_SP', 'cat2_output_P_PV', 'cat2_deltaP', 
+            'SEP3_F', 'SEP3_P_SP', 'SEP3_P_PV', 'SEP3_T', 
+            'B35_H2S', 'B35_SO2'
+        ]
+        con_tag = y_sv
+        en_mv_and_sv = de_mv + y_sv
+
+    elif total_variables == 57:
+        # ======================================================================
+        # 配置 57: Claus 過程 (移除 SP，使用 PV 作為未來輸入)
+        # ======================================================================
+        de_mv = [
+            # 原 de_mv (移除 SP)
+            'acidgas_Fm', 'acidgas_CO2', 'acidgas_H2O', 'acidgas_H2S', 'acidgas_T', 'acidgas_P', 
+            'air', 'second_air2', 'COG',
+            # 從 y_sv 移來的 PV (原 SP 對應)
+            'burner_input_T_PV', 'burner_output_T_PV', 'burner_output_P_PV', 
+            'fur_outputP_PV', 'SEP1_P_PV', 'HEATER1_output_T_PV', 
+            'cat1_output_P_PV', 'SEP2_P_PV', 'HEATER2_output_T_PV', 
+            'cat2_output_P_PV', 'SEP3_P_PV'
+        ]
+        y_sv = [
+            'burner_inputP', 
+            'fur_F', 'fur_inputT', 'fur_inputP', 'fur_temp', 'fur_outputT', 
+            'WHB_F', 'WHB_inputT', 'WHB_inputP', 'WHB_outputT', 'WHB_outputP', 
+            'SEP1_F', 'SEP1_T', 
+            'HEATER1_F', 'HEATER1_input_T', 'HEATER1_input_P', 'HEATER1_output_P', 
+            'cat1_F', 'cat1_input_temp', 'cat1_output_temp', 'cat1_input_P', 'cat1_deltaP', 
+            'SEP2_F', 'SEP2_T', 
+            'HEATER2_F', 'HEATER2_input_T', 'HEATER2_input_P', 'HEATER2_output_P', 
+            'cat2_F', 'cat2_input_temp', 'cat2_output_temp', 'cat2_input_P', 'cat2_deltaP', 
+            'SEP3_F', 'SEP3_T', 
+            'B35_H2S', 'B35_SO2'
+        ]
+        con_tag = y_sv
+        en_mv_and_sv = de_mv + y_sv
+
     else:
         # ======================================================================
         # 錯誤處理：不支持的變量數量
         # ======================================================================
         print(f'錯誤：不支持的變量總數 {total_variables}')
-        print('支持的配置: 8, 9, 10, 27, 28, 30, 33, 35')
+        print('支持的配置: 8, 9, 10, 17, 27, 28, 30, 33, 35, 57, 71')
         raise ValueError(f'不支持的變量總數: {total_variables}')
         
     return de_mv, y_sv, con_tag, en_mv_and_sv
