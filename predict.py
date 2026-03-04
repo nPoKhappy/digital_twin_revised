@@ -582,7 +582,9 @@ def analyze_horizon_performance(model, df_z, config, results_dir, mean_all, std_
     
     target_plot_cols = ['B35_H2S', 'B35_SO2'] # Only analyze these
     
-    print(f"  正在生成 t+1 ~ t+{analyze_steps} 的時序圖與 Parity Plot...")
+    print(f"  正在計算 t+1 ~ t+{analyze_steps} 指標，並生成時序圖與 Parity Plot...")
+
+    horizon_metrics_rows = []
     
     for t_idx in range(analyze_steps):
         step_num = t_idx + 1
@@ -612,8 +614,19 @@ def analyze_horizon_performance(model, df_z, config, results_dir, mean_all, std_
                 continue
                 
             # Metrics
-            rmse = np.sqrt(np.mean((y_t - y_p)**2))
-            r2 = r2_score(y_t, y_p)
+            metric_values = calculate_metrics(y_t, y_p)
+            rmse = metric_values['RMSE']
+            r2 = metric_values['R2']
+
+            horizon_metrics_rows.append({
+                'Horizon': step_num,
+                'Step': step_name,
+                'Variable': var_name,
+                'MAE': metric_values['MAE'],
+                'RMSE': metric_values['RMSE'],
+                'R2': metric_values['R2'],
+                'MAPE': metric_values['MAPE'],
+            })
             
             # --- 1. Parity Plot ---
             plt.figure(figsize=(6, 6))
@@ -650,6 +663,11 @@ def analyze_horizon_performance(model, df_z, config, results_dir, mean_all, std_
             plt.savefig(os.path.join(step_dir, f'timeseries_{var_name}.png'), dpi=100)
             plt.close()
             
+    # Save horizon metrics CSV
+    metrics_df = pd.DataFrame(horizon_metrics_rows)
+    metrics_path = os.path.join(analysis_dir, f'horizon_metrics_t1_to_t{analyze_steps}.csv')
+    metrics_df.to_csv(metrics_path, index=False)
+    print(f"  已保存逐步指標: {metrics_path}")
     print(f"Horizon analysis saved to {analysis_dir}")
 
 
