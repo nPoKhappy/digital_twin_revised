@@ -70,4 +70,8 @@ def split_partitions(config_path):
         print(f"  Saved TEST split to:  {test_filename}")
 
 if __name__ == "__main__":
-    split_partitions('configs/transformer_layerwise_71var.yaml')
+    parser = argparse.ArgumentParser(description="Split dataset into valid/test partitions")
+    parser.add_argument('--config', type=str, default='configs/transformer_layerwise_57var.yaml',
+                        help='Path to YAML config file')
+    args = parser.parse_args()
+    split_partitions(args.config)
