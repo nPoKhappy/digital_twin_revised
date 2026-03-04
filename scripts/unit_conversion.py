@@ -3,75 +3,65 @@ import numpy as np
 import glob
 import os
 
-def calculate_conversion_factor():
-    # User provided points for Air: kmol/hr -> m^3/hr
-    # (kmol_val, m3_val)
-    points = [
-        (123.295, 2326.15),
-        (140.4, 2649),
-        (149.5, 2814),
-        (158, 2980),
-        (166.7, 3145)
-    ]
-    
-    # Calculate ratios
-    ratios = [m3 / kmol for kmol, m3 in points]
-    factor = np.mean(ratios)
-    
-    # Optional: Check consistency
-    print("Conversion Factor Calculation:")
-    for (kmol, m3), r in zip(points, ratios):
-        print(f"  {kmol} -> {m3} (Ratio: {r:.4f})")
-    print(f"  Average Factor: {factor:.6f}")
-    
-    return factor
+# 換算係數：kmol/hr -> m³/hr，依據莫耳密度 0.05637 kmol/m³
+# 1 / 0.05637 ≈ 17.740
+FLOW_FACTOR = 1.0 / 0.05637   # ≈ 17.740
 
-def convert_units():
-    search_pattern = 'data/Claus_dynamic/Test_dataform_change_air2_R=*.csv'
-    files = glob.glob(search_pattern)
-    
-    if not files:
-        print(f"No files found matching {search_pattern}")
-        return
+# 要換算的欄位
+COLS_TO_CONVERT = ['acidgas_Fm', 'air']
 
-    factor = calculate_conversion_factor()
-    
-    # Columns to convert
-    # User asked for 'acidgas_Fm' and 'air'
-    # 'acidgas_Fm' logic is inferred to use the same factor as 'air' based on request context.
-    cols_to_convert = ['acidgas_Fm', 'air']
-    
-    for file_path in files:
-        print(f"\nProcessing {file_path}...")
+# Step change 資料夾
+STEP_CHANGE_DIRS = [
+    'data/Claus_dynamic/step_change/in_training_distribution',
+    'data/Claus_dynamic/step_change/out_of_training_distribution',
+    'data/Claus_dynamic/step_change/acidgas_fm=170',
+]
+
+# 訓練資料原始檔 (只抓非 _converted)
+TRAIN_DATA_PATTERN = 'data/Claus_dynamic/Test_dataform_change_air2_R=*.csv'
+
+
+def convert_files(file_list, label=''):
+    print(f"\n{'='*60}")
+    print(f"{label}  ({len(file_list)} 個原始檔)")
+    print(f"{'='*60}")
+    for file_path in file_list:
         try:
             df = pd.read_csv(file_path)
-            
-            # Check if columns exist
-            processing_cols = [c for c in cols_to_convert if c in df.columns]
-            
-            if not processing_cols:
-                print(f"  Skipping: Targeted columns {cols_to_convert} not found.")
+            converted_cols = []
+            for col in COLS_TO_CONVERT:
+                if col in df.columns:
+                    df[col] = df[col] * FLOW_FACTOR
+                    converted_cols.append(col)
+            if not converted_cols:
+                print(f"  [SKIP] {os.path.basename(file_path)}: 找不到目標欄位")
                 continue
-                
-            for col in processing_cols:
-                print(f"  Converting column '{col}'...")
-                # Apply conversion
-                df[col] = df[col] * factor
-                
-            # Save the file (Overwrite or new file?)
-            # I will save to a new file to be safe: filename_converted.csv
-            # But the user might want inplace. Let's create a new file for now.
-            
-            # Construct output path
-            dir_name, file_name = os.path.split(file_path)
-            base_name, ext = os.path.splitext(file_name)
-            output_path = os.path.join(dir_name, f"{base_name}_converted{ext}")
-            
+            base, ext = os.path.splitext(file_path)
+            output_path = f"{base}_converted{ext}"
             df.to_csv(output_path, index=False)
-            print(f"  Saved converted file to: {output_path}")
-            
+            print(f"  [OK] {os.path.basename(file_path)}  ->  {os.path.basename(output_path)}"
+                  f"  (換算: {converted_cols})")
         except Exception as e:
-            print(f"  Error processing {file_path}: {e}")
+            print(f"  [ERROR] {file_path}: {e}")
+
+
+def main():
+    print(f"換算係數: 1 / 0.05637 = {FLOW_FACTOR:.6f}  (kmol/hr -> m³/hr)")
+    print(f"換算欄位: {COLS_TO_CONVERT}")
+
+    # 1. 訓練資料
+    all_train = sorted(glob.glob(TRAIN_DATA_PATTERN))
+    orig_train = [f for f in all_train if '_converted' not in os.path.basename(f)]
+    convert_files(orig_train, label='訓練資料 Test_dataform')
+
+    # 2. Step change 資料
+    for data_dir in STEP_CHANGE_DIRS:
+        all_files = sorted(glob.glob(os.path.join(data_dir, '*.csv')))
+        orig_files = [f for f in all_files if '_converted' not in os.path.basename(f)]
+        convert_files(orig_files, label=f'Step change: {data_dir}')
+
+    print("\n完成！  ⚠️  訓練資料已重新換算，需重新訓練模型。")
+
 
 if __name__ == "__main__":
-    convert_units()
+    main()
