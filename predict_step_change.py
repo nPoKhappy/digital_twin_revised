@@ -5,6 +5,7 @@ import torch
 import numpy as np
 import pandas as pd
 import os
+import re
 import yaml
 import argparse
 from tqdm import tqdm
@@ -14,7 +15,8 @@ import sys
 # 添加父目錄到路徑
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src import data_utils
+from src import utils as data_utils
+from src.variable_selection import variable_selection
 from src.models import get_model
 from src.utils import calculate_metrics
 
@@ -22,14 +24,15 @@ from src.utils import calculate_metrics
 # --- 配置 ---
 # ==============================================================================
 
-CONFIG_PATH = "configs/transformer_experiment_AT_claus.yaml"
+CONFIG_PATH = "configs/transformer_layerwise_57var.yaml"  # default, override with --config
 STEP_CHANGE_BASE_DIR = "data/Claus_dynamic/step_change"
 OUTPUT_BASE_DIR = "results/step_change_predictions"
 
-# 兩個分類目錄
+# 分類目錄
 DISTRIBUTION_DIRS = {
     'in_training': 'in_training_distribution',
-    'out_of_training': 'out_of_training_distribution'
+    'out_of_training': 'out_of_training_distribution',
+    'acidgas_fm_170': 'acidgas_fm=170',
 }
 
 # ==============================================================================
@@ -107,7 +110,18 @@ def process_single_file(filepath, model, config, mean_all, std_all, device,
     
     # 讀取數據
     df_raw = pd.read_csv(filepath)
-    
+
+    # --- 降採樣 (與 train pipeline 一致) ---
+    interval = config['window'].get('sampling_interval_min', 1)
+    use_median = config['window'].get('use_median_downsampling', True)
+    if interval > 1:
+        if use_median:
+            df_raw = df_raw.rolling(window=interval, min_periods=interval).median(numeric_only=True)
+            df_raw = df_raw.iloc[interval-1::interval].reset_index(drop=True)
+        else:
+            df_raw = df_raw.iloc[::interval].reset_index(drop=True)
+        df_raw.dropna(inplace=True)
+
     # 檢查是否有足夠的數據
     if len(df_raw) <= W:
         print(f"  [SKIP] 數據長度 {len(df_raw)} 不足，需要至少 {W+1} 行")
@@ -122,12 +136,26 @@ def process_single_file(filepath, model, config, mean_all, std_all, device,
     
     # 只取需要的欄位進行正規化，避免不相關欄位的 NaN 問題
     df_subset = df_raw[all_needed_cols].copy()
-    
+
+    # --- 單位換算 (僅當讀取的是原始檔而非 _converted 檔時才換算)
+    # acidgas_Fm 和 air: kmol/hr -> m3/hr
+    # 係數 1/0.05637 ≈ 17.740 (莫耳密度 0.05637 kmol/m³)
+    if '_converted' not in filepath:
+        FLOW_CONVERSION = 1.0 / 0.05637  # ≈ 17.740
+        for col in ['acidgas_Fm', 'air']:
+            if col in df_subset.columns:
+                df_subset[col] = df_subset[col] * FLOW_CONVERSION
+
     # 檢查是否有 NaN
     if df_subset.isnull().any().any():
         print(f"  [WARN] 數據包含 NaN，嘗試填補...")
-        df_subset = df_subset.fillna(method='ffill').fillna(method='bfill')
-    
+        df_subset = df_subset.ffill().bfill()
+
+    # --- Log Transform (與 train pipeline 一致) ---
+    log_cols = [c for c in ['B35_H2S', 'B35_SO2'] if c in df_subset.columns]
+    if log_cols:
+        df_subset = data_utils.apply_log_transform(df_subset, log_cols)
+
     # 應用 z-score 正規化 (只對需要的欄位)
     mean_subset = mean_all[all_needed_cols]
     std_subset = std_all[all_needed_cols]
@@ -161,6 +189,16 @@ def process_single_file(filepath, model, config, mean_all, std_all, device,
     y_std_safe = np.where(y_std == 0, 1, y_std)
     predictions_cov = predictions_np * y_std_safe + y_mean
     true_targets_cov = true_targets_np * y_std_safe + y_mean
+
+    # --- Inverse Log Transform ---
+    log_cols_inv = [c for c in ['B35_H2S', 'B35_SO2'] if c in y_sv]
+    if log_cols_inv:
+        pred_df_tmp = pd.DataFrame(predictions_cov, columns=y_sv)
+        true_df_tmp = pd.DataFrame(true_targets_cov, columns=y_sv)
+        pred_df_tmp = data_utils.inverse_log_transform(pred_df_tmp, log_cols_inv)
+        true_df_tmp = data_utils.inverse_log_transform(true_df_tmp, log_cols_inv)
+        predictions_cov = pred_df_tmp.values
+        true_targets_cov = true_df_tmp.values
     
     # 檢查是否有 NaN 或 Inf
     if not np.isfinite(predictions_cov).all() or not np.isfinite(true_targets_cov).all():
@@ -191,14 +229,94 @@ def process_single_file(filepath, model, config, mean_all, std_all, device,
     }
 
 
+def parse_scenario_conditions(filename):
+    """從檔名解析操作條件，例如 air2_180_t2_150_air2_change_10.csv"""
+    name = filename.replace('.csv', '')
+    m = re.match(r'air2_(-?\d+)_t2_(-?\d+)_(\w+)_change_(-?\d+)', name)
+    if m:
+        return {
+            'air2': int(m.group(1)),
+            't2':   int(m.group(2)),
+            'change_var': m.group(3),
+            'change_val': int(m.group(4)),
+        }
+    return {'air2': '?', 't2': '?', 'change_var': '?', 'change_val': '?'}
+
+
+def print_conditions_table(csv_files):
+    """印出所有場景的操作條件表格"""
+    print(f"\n{'No.':<5} {'air2':>6} {'t2':>6} {'change_var':<12} {'change_val':>10}  檔名")
+    print('-' * 75)
+    for i, f in enumerate(csv_files, 1):
+        c = parse_scenario_conditions(f)
+        print(f"{i:<5} {c['air2']:>6} {c['t2']:>6} {c['change_var']:<12} {c['change_val']:>10}  {f}")
+    print('-' * 75)
+
+
+def plot_combined_h2s_so2(dist_results, y_sv, dist_key, output_dir, exp_name):
+    """繪製所有 step change 場景的 B35_H2S 和 B35_SO2 綜合圖，每 4 個場景一張圖"""
+    key_vars = [v for v in ['B35_H2S', 'B35_SO2'] if v in y_sv]
+    if not key_vars or not dist_results:
+        return
+
+    n_vars = len(key_vars)
+    chunk_size = 4  # 每張圖最多 4 個場景
+    dist_label = dist_key.replace('_', ' ').title()
+
+    chunks = [dist_results[i:i + chunk_size] for i in range(0, len(dist_results), chunk_size)]
+
+    for fig_idx, chunk in enumerate(chunks):
+        n_rows = len(chunk)
+        fig, axes = plt.subplots(n_rows, n_vars, figsize=(8 * n_vars, 4 * n_rows),
+                                 squeeze=False)
+
+        for row_idx, result in enumerate(chunk):
+            cond = parse_scenario_conditions(result['filename'])
+            cond_str = (f"air2={cond['air2']}  t2={cond['t2']}  "
+                        f"Δ{cond['change_var']}={cond['change_val']:+d}")
+            for col_idx, var in enumerate(key_vars):
+                ax = axes[row_idx, col_idx]
+                var_idx = y_sv.index(var)
+                m = result['metrics'][var_idx]
+
+                ax.plot(result['true_values'][:, var_idx], label='True (Aspen)',
+                        color='steelblue', linewidth=1.5)
+                ax.plot(result['predictions'][:, var_idx], label='Predicted',
+                        color='tomato', linestyle='--', linewidth=1.5)
+
+                ax.set_title(
+                    f'[{cond_str}]\n{var}   R²={m["R2"]:.4f}  RMSE={m["RMSE"]:.4f}  MAE={m["MAE"]:.4f}',
+                    fontsize=9)
+                ax.set_xlabel('Time Step')
+                ax.set_ylabel(var)
+                ax.legend(fontsize=8)
+                ax.grid(True, alpha=0.3)
+
+        part_label = f'Part {fig_idx + 1}/{len(chunks)}'
+        fig.suptitle(
+            f'{exp_name}  —  {dist_label}  ({part_label})\nB35_H2S & B35_SO2  Step-Change Predictions',
+            fontsize=13, y=1.01)
+        plt.tight_layout()
+
+        save_path = os.path.join(output_dir, f'H2S_SO2_combined_part{fig_idx + 1}.png')
+        plt.savefig(save_path, dpi=150, bbox_inches='tight')
+        plt.close()
+        print(f"  綜合圖已保存: {save_path}")
+
+
 def main():
+    parser = argparse.ArgumentParser(description="Step Change Prediction")
+    parser.add_argument('--config', type=str, default=CONFIG_PATH,
+                        help='Path to YAML config file')
+    args = parser.parse_args()
+
     print("=" * 70)
     print("Step Change Prediction using Trained Transformer Model")
     print("=" * 70)
     
     # --- 載入配置 ---
-    print(f"\n[1] 載入配置: {CONFIG_PATH}")
-    with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+    print(f"\n[1] 載入配置: {args.config}")
+    with open(args.config, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
     
     prefix = config['exp_name']
@@ -208,17 +326,40 @@ def main():
     
     cfg_data = config['data']
     cfg_win = config['window']
-    W = cfg_win['train_window_mins'] // cfg_win['sampling_interval_min']  # 窗口大小
-    H = W  # block replacement 的塊大小
+    W = cfg_win['train_window_mins'] // cfg_win['sampling_interval_min']  # encoder 歷史長度
+    H = cfg_win['prediction_length']  # block size (單次預測步數)
     
-    # --- 載入訓練數據統計 ---
+    # --- 載入訓練數據統計 (從 train pipeline 儲存的 zscore stats) ---
     print(f"\n[2] 載入訓練數據統計...")
-    df_raw_train = pd.read_csv(os.path.join(cfg_data['path'], cfg_data['filename']))
-    df_raw_train.dropna(inplace=True)
-    mean_all, std_all = data_utils.calculate_zscore_stats(df_raw_train)
-    
+    prefix = config['exp_name']
+    zscore_mean_path = os.path.join('./results', prefix, 'zscore_mean.csv')
+    zscore_std_path  = os.path.join('./results', prefix, 'zscore_std.csv')
+
+    if os.path.exists(zscore_mean_path) and os.path.exists(zscore_std_path):
+        mean_all = pd.read_csv(zscore_mean_path, index_col=0).squeeze()
+        std_all  = pd.read_csv(zscore_std_path,  index_col=0).squeeze()
+        print(f"    已載入儲存的 zscore stats: {zscore_mean_path}")
+    else:
+        print(f"    [WARN] 找不到 {zscore_mean_path}，從訓練資料重新計算...")
+        train_dfs = []
+        for fname in cfg_data['training_files']:
+            fpath = os.path.join(cfg_data['path'], fname)
+            if os.path.exists(fpath):
+                df_t = pd.read_csv(fpath)
+                interval = cfg_win.get('sampling_interval_min', 1)
+                if interval > 1:
+                    df_t = df_t.rolling(window=interval, min_periods=interval).median(numeric_only=True)
+                    df_t = df_t.iloc[interval-1::interval].reset_index(drop=True)
+                df_t.dropna(inplace=True)
+                train_dfs.append(df_t)
+        df_all = pd.concat(train_dfs, ignore_index=True)
+        log_cols = [c for c in ['B35_H2S', 'B35_SO2'] if c in df_all.columns]
+        if log_cols:
+            df_all = data_utils.apply_log_transform(df_all, log_cols)
+        mean_all, std_all = data_utils.calculate_zscore_stats(df_all)
+
     # --- 獲取變數配置 ---
-    de_mv, y_sv, _, en_mv_and_sv = data_utils.variable_selection(cfg_data['variables_num'])
+    de_mv, y_sv, _, en_mv_and_sv = variable_selection(cfg_data['variables_num'])
     
     config['data']['num_en_input'] = len(en_mv_and_sv)
     config['data']['num_de_input'] = len(de_mv)
@@ -242,28 +383,38 @@ def main():
     print(f"    運行設備: {device}")
     
     # --- 處理兩個分類目錄 ---
+    output_base_dir = os.path.join('./results', prefix, 'step_change_predictions')
     print(f"\n[4] 開始處理 step change 數據...")
-    
+    print(f"    結果保存至: {output_base_dir}")
+
     all_results = {}
     
     for dist_key, dist_dir in DISTRIBUTION_DIRS.items():
         data_dir = os.path.join(STEP_CHANGE_BASE_DIR, dist_dir)
-        output_dir = os.path.join(OUTPUT_BASE_DIR, dist_dir)
+        output_dir = os.path.join(output_base_dir, dist_dir)
         os.makedirs(output_dir, exist_ok=True)
         
         print(f"\n{'='*60}")
         print(f"處理: {dist_key.upper()} ({dist_dir})")
         print(f"{'='*60}")
         
-        # 找所有 CSV 檔案
-        csv_files = [f for f in os.listdir(data_dir) if f.endswith('.csv')]
+        # 找所有 CSV 檔案（只取原始檔，排除 _converted）
+        csv_files = sorted([f for f in os.listdir(data_dir)
+                            if f.endswith('.csv') and '_converted' not in f])
         print(f"找到 {len(csv_files)} 個檔案")
-        
+        print_conditions_table(csv_files)
+
         dist_results = []
-        
+
         for csv_file in tqdm(csv_files, desc=f"預測 {dist_key}"):
-            filepath = os.path.join(data_dir, csv_file)
-            
+            # 優先使用已預先換算的 _converted 檔
+            base, ext = os.path.splitext(csv_file)
+            converted_file = os.path.join(data_dir, f"{base}_converted{ext}")
+            orig_file      = os.path.join(data_dir, csv_file)
+            filepath = converted_file if os.path.exists(converted_file) else orig_file
+            if os.path.exists(converted_file):
+                tqdm.write(f"  [converted] {csv_file}")
+
             result = process_single_file(
                 filepath, model, config, mean_all, std_all, device,
                 de_mv, y_sv, en_mv_and_sv, W, H, inference_strategy
@@ -387,7 +538,10 @@ def main():
             df_summary = pd.DataFrame(summary_rows)
             df_summary.to_csv(os.path.join(output_dir, 'summary_metrics.csv'), index=False)
             print(f"  匯總指標已保存至: {output_dir}/summary_metrics.csv")
-    
+
+            # 繪製 H2S & SO2 綜合圖
+            plot_combined_h2s_so2(dist_results, y_sv, dist_key, output_dir, prefix)
+
     # --- 比較 in vs out of training distribution ---
     print(f"\n{'='*70}")
     print("比較: In-Training vs Out-of-Training Distribution")
@@ -407,7 +561,7 @@ def main():
             print(f"  Out-of-training R2: {np.mean(out_r2):.4f} +/- {np.std(out_r2):.4f}")
     
     print(f"\n{'='*70}")
-    print("預測完成！結果保存至: " + OUTPUT_BASE_DIR)
+    print(f"預測完成！結果保存至: {output_base_dir}")
     print(f"{'='*70}")
 
 
