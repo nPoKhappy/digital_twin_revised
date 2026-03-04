@@ -307,6 +307,36 @@ def variable_selection(total_variables):
         con_tag = y_sv
         en_mv_and_sv = de_mv + y_sv
 
+    elif total_variables == 54:
+        # ======================================================================
+        # 配置 54: Claus 過程 (57 變量基礎上移除酸氣組成變量)
+        # ======================================================================
+        de_mv = [
+            # 57 變量配置移除 acidgas_CO2/H2O/H2S
+            'acidgas_Fm', 'acidgas_T', 'acidgas_P', 
+            'air', 'second_air2', 'COG',
+            # 同樣使用 PV 作為未來已知量
+            'burner_input_T_PV', 'burner_output_T_PV', 'burner_output_P_PV', 
+            'fur_outputP_PV', 'SEP1_P_PV', 'HEATER1_output_T_PV', 
+            'cat1_output_P_PV', 'SEP2_P_PV', 'HEATER2_output_T_PV', 
+            'cat2_output_P_PV', 'SEP3_P_PV'
+        ]
+        y_sv = [
+            'burner_inputP', 
+            'fur_F', 'fur_inputT', 'fur_inputP', 'fur_temp', 'fur_outputT', 
+            'WHB_F', 'WHB_inputT', 'WHB_inputP', 'WHB_outputT', 'WHB_outputP', 
+            'SEP1_F', 'SEP1_T', 
+            'HEATER1_F', 'HEATER1_input_T', 'HEATER1_input_P', 'HEATER1_output_P', 
+            'cat1_F', 'cat1_input_temp', 'cat1_output_temp', 'cat1_input_P', 'cat1_deltaP', 
+            'SEP2_F', 'SEP2_T', 
+            'HEATER2_F', 'HEATER2_input_T', 'HEATER2_input_P', 'HEATER2_output_P', 
+            'cat2_F', 'cat2_input_temp', 'cat2_output_temp', 'cat2_input_P', 'cat2_deltaP', 
+            'SEP3_F', 'SEP3_T', 
+            'B35_H2S', 'B35_SO2'
+        ]
+        con_tag = y_sv
+        en_mv_and_sv = de_mv + y_sv
+
     else:
         # ======================================================================
         # 錯誤處理：不支持的變量數量
