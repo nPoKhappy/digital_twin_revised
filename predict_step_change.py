@@ -103,8 +103,13 @@ def predict_sliding_window(model, initial_en_input, future_de_inputs, device, nu
 # ==============================================================================
 
 def process_single_file(filepath, model, config, mean_all, std_all, device, 
-                        de_mv, y_sv, en_mv_and_sv, W, H, inference_strategy):
-    """處理單一 step change 檔案"""
+                        de_mv, y_sv, en_mv_and_sv, W, H, inference_strategy, warmup_steps=0):
+    """處理單一 step change 檔案
+    
+    Args:
+        warmup_steps: encoder 初始窗口往後滑移的步數。
+                      sliding_window 下，pre-step 完全 autoregressive，de_mv 不變時 drift 慢。
+    """
     
     filename = os.path.basename(filepath)
     
@@ -123,8 +128,8 @@ def process_single_file(filepath, model, config, mean_all, std_all, device,
         df_raw.dropna(inplace=True)
 
     # 檢查是否有足夠的數據
-    if len(df_raw) <= W:
-        print(f"  [SKIP] 數據長度 {len(df_raw)} 不足，需要至少 {W+1} 行")
+    if len(df_raw) < W + H:
+        print(f"  [SKIP] 數據長度 {len(df_raw)} 不足，需要至少 {W + H} 行")
         return None
     
     # 檢查是否有必要的欄位
@@ -161,23 +166,47 @@ def process_single_file(filepath, model, config, mean_all, std_all, device,
     std_subset = std_all[all_needed_cols]
     
     # 避免除以零
-    std_safe = std_subset.replace(0, 1)
+    std_safe = std_subset.mask(std_subset.abs() < 1e-6, 1.0)
     df_z = (df_subset - mean_subset) / std_safe
     
-    # 準備數據
-    initial_history_np = df_z.iloc[0:W][en_mv_and_sv].values
-    future_mvs_np = df_z.iloc[W:][de_mv].values
-    true_targets_np = df_z.iloc[W:][y_sv].values
-    
+    # ========== Warm-up：encoder 初始 = SS1 第一行複製 W 次 ==========
+    # 在真實數據前，先插入 warmup_steps 步的 SS1 de_mv（複製第一行）
+    # 讓模型全程 autoregressive 但 de_mv 一直不變，直到自然收斂到 SS1 穩態
+    # 之後接上真實數據（含 step change），只記錄真實段的預測結果
+
+    # z-score 空間的 SS1 值（第一行）
+    ss1_en_z  = df_z.iloc[0][en_mv_and_sv].values   # shape (n_en,)
+    ss1_de_z  = df_z.iloc[0][de_mv].values           # shape (n_de,)
+
+    # 初始 encoder = SS1 第一行複製 W 次
+    initial_history_np = np.tile(ss1_en_z, (W, 1))  # shape (W, n_en)
+
+    # 前段：warmup_steps 步的 SS1 de_mv（複製）
+    warmup_de_np = np.tile(ss1_de_z, (warmup_steps, 1))  # shape (warmup_steps, n_de)
+
+    # 後段：真實數據的 de_mv（從 row 0 開始，包含 step change）
+    real_de_np      = df_z.iloc[0:][de_mv].values
+    real_targets_np = df_z.iloc[0:][y_sv].values
+
+    # 合併：[warmup SS1 de_mv] + [真實 de_mv]
+    full_de_np = np.concatenate([warmup_de_np, real_de_np], axis=0)
+
     initial_en_input = torch.tensor(initial_history_np, dtype=torch.float32).unsqueeze(0)
-    future_de_inputs = torch.tensor(future_mvs_np, dtype=torch.float32).unsqueeze(0)
-    
-    # 執行預測
+    full_de_inputs   = torch.tensor(full_de_np, dtype=torch.float32).unsqueeze(0)
+
+    if warmup_steps > 0:
+        print(f"  [WARM-UP] encoder=SS1×{W}，先跑 {warmup_steps} 步 SS1 de_mv 讓模型收斂")
+
+    # 執行預測（全程 autoregressive，warmup_steps 步後才取結果）
     if inference_strategy == 'block_replacement':
-        predictions_z = predict_block_replacement(model, initial_en_input, future_de_inputs, device, H)
+        all_preds_z = predict_block_replacement(model, initial_en_input, full_de_inputs, device, H)
     else:
-        predictions_z = predict_sliding_window(model, initial_en_input, future_de_inputs, device, len(y_sv))
-    
+        all_preds_z = predict_sliding_window(model, initial_en_input, full_de_inputs, device, len(y_sv))
+
+    # 只保留真實數據段的預測（丟棄 warmup 段）
+    predictions_z   = all_preds_z[:, warmup_steps:, :]
+    true_targets_np = real_targets_np
+
     num_actual_preds = predictions_z.shape[1]
     true_targets_np = true_targets_np[:num_actual_preds, :]
     
@@ -186,7 +215,7 @@ def process_single_file(filepath, model, config, mean_all, std_all, device,
     y_mean = mean_all[y_sv].values
     y_std = std_all[y_sv].values
     # 避免除以零的情況
-    y_std_safe = np.where(y_std == 0, 1, y_std)
+    y_std_safe = np.where(np.abs(y_std) < 1e-6, 1.0, y_std)
     predictions_cov = predictions_np * y_std_safe + y_mean
     true_targets_cov = true_targets_np * y_std_safe + y_mean
 
@@ -308,6 +337,8 @@ def main():
     parser = argparse.ArgumentParser(description="Step Change Prediction")
     parser.add_argument('--config', type=str, default=CONFIG_PATH,
                         help='Path to YAML config file')
+    parser.add_argument('--warmup-steps', type=int, default=0,
+                        help='encoder 初始窗口往後滑移的步數（sliding_window下 pre-step 完全autoregressive）')
     args = parser.parse_args()
 
     print("=" * 70)
@@ -417,7 +448,8 @@ def main():
 
             result = process_single_file(
                 filepath, model, config, mean_all, std_all, device,
-                de_mv, y_sv, en_mv_and_sv, W, H, inference_strategy
+                de_mv, y_sv, en_mv_and_sv, W, H, inference_strategy,
+                warmup_steps=args.warmup_steps
             )
             
             if result is None:
