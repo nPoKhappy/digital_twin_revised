@@ -154,8 +154,10 @@ def calculate_zscore_stats(df):
     return df.mean(), df.std()
 
 def apply_zscore(df, mean, std):
-    """應用 Z-score 標準化。"""
-    std_safe = std + 1e-8
+    if isinstance(std, pd.Series):
+        std_safe = std.mask(std.abs() < 1e-6, 1.0)
+    else:
+        std_safe = np.where(np.abs(std) < 1e-6, 1.0, std)
     df_z = (df - mean) / std_safe
     if df_z.isnull().values.any():
         nan_cols = df_z.columns[df_z.isnull().any()].tolist()
@@ -166,8 +168,11 @@ def apply_zscore(df, mean, std):
     return df_z
 
 def inverse_zscore(df_scaled, mean, std):
-    """還原 Z-score 標準化: x * std + mean"""
-    return df_scaled * std + mean
+    if isinstance(std, pd.Series):
+        std_safe = std.mask(std.abs() < 1e-6, 1.0)
+    else:
+        std_safe = np.where(np.abs(std) < 1e-6, 1.0, std)
+    return df_scaled * std_safe + mean
 
 def calculate_robust_stats(df):
     """計算 Robust Scaling 所需的中位數和 IQR (Q75-Q25)。"""
