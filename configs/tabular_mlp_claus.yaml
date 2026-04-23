@@ -1,41 +1,43 @@
-# Tabular MLP 設定檔（非時間序列 穩態預測）
-exp_name: "Tabular_MLP_Claus"
+# Tabular MLP 最終優化設定
+exp_name: "Tabular_MLP_Claus_Final"
 
 data:
   path: "./data/my_own_data/"
   filename: "training.csv"
-  point: 32004
+  point: 36405
   test_data_split: 0.1
-  valid_data_split: 0.05
+  valid_data_split: 0.1 # 稍微增加驗證集比例以確保模型泛化性
 
   test_data:
     filename: "testing.csv"
-    point: 8001
+    point: 9101
 
-# FNN/MLP 模型設定
+# 模型架構調整：針對化學平衡曲線優化
 model:
-  hidden_dims: [64, 64]
-  dropout: 0.1
-  activation: "gelu"
+  hidden_dims: [256, 128, 64] # 三層遞減架構，增強非線性表達力
+  dropout: 0.00               # 數據量足夠，降低 Dropout 以保留更多特徵
+  activation: "gelu"          # GELU 在處理連續物理數值時比 ReLU 更平滑
 
 training:
   device: "cuda"
-  batch_size: 512
-  epochs: 10000
-  learning_rate: 0.001
+  batch_size: 128             # 提高 Batch Size 增加收斂穩定度
+  epochs: 2000                # 配合 Patience，2000 已足夠
+  learning_rate: 0.0005       # 稍微降低學習率，防止在反應平衡點附近震盪
   patience: 100
-  weight_decay: 0.001  # L2 正則化係數，可在 sweep 中調參
+  weight_decay: 0.00001       # 降低 L2 正則化，讓模型能更細膩地貼合數據轉折
 
-# 指定非時間序列的輸入/輸出欄位
-# 注意：target_cols 中的 "Total_S" 需存在於資料 CSV，或請先離線生成後再訓練
 tabular:
   input_cols:
-    - acidgas_Fm          # 酸氣流量
-    - acidgas_T           # 酸氣溫度
-    - acidgas_P           # 酸氣壓力
-    - air2_SP             # MV1
-    - HEATER2_output_T_SP # MV2
+    - acidgas_Fv          
+    - acidgas_T           
+    - acidgas_P           
+    - air2_SP_m3          
+    - HEATER2_output_T_SP 
+    - acidgas_CO2         
+    - acidgas_H2O         
+    - acidgas_H2S         
   target_cols:
-    - B35_H2S             # H2S
-    - B35_SO2             # SO2
-    - Total_S             # 全部 S 濃度（請確認欄位已存在）
+    - B35_H2S             
+    - B35_SO2
+
+  
