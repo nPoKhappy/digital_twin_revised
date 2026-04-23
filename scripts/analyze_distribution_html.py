@@ -6,6 +6,14 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import os
 import glob
+import sys
+from pathlib import Path
+
+# Ensure project root is on sys.path so `from src...` works when running this file directly.
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 from src.utils import load_data, calculate_zscore_stats, apply_zscore
 from src.variable_selection import variable_selection
 
@@ -16,23 +24,47 @@ def analyze_distribution():
     # 定義四個獨立的檔案
     # 定義檔案配置
     file_configs = [
-        {"name": "Train (R5 Part)", "file": "R5_Train_Part.csv", "group": "Train", "color": "blue", "marker": "circle"},
-        {"name": "ID Test (R5 Part)", "file": "R5_ID_Test_Part.csv", "group": "ID", "color": "cyan", "marker": "circle"}, # ID is same distribution
+        {"name": "Train (R5)", "file": "Test_dataform_change_air2_R=5_converted.csv", "group": "Train", "color": "blue", "marker": "circle"},
         # OOD Datasets
-        {"name": "OOD (R5-1)", "file": "Test_dataform_change_air2_R=5-1.csv", "group": "OOD", "color": "red", "marker": "diamond"},
-        {"name": "OOD (R5-2)", "file": "Test_dataform_change_air2_R=5-2.csv", "group": "OOD", "color": "orange", "marker": "diamond"},
-        {"name": "OOD (R5-3)", "file": "Test_dataform_change_air2_R=5-3.xlsx", "group": "OOD", "color": "magenta", "marker": "cross"},
-        {"name": "OOD (R5-4)", "file": "Test_dataform_change_air2_R=5-4.xlsx", "group": "OOD", "color": "purple", "marker": "cross"},
-        {"name": "OOD (R5-5)", "file": "Test_dataform_change_air2_R=5-5.xlsx", "group": "OOD", "color": "yellow", "marker": "cross"},
-        {"name": "OOD (R5-6)", "file": "Test_dataform_change_air2_R=5-6.csv", "group": "OOD", "color": "brown", "marker": "diamond"},
+        {"name": "Train (R5-1)", "file": "Test_dataform_change_air2_R=5-1_converted.csv", "group": "OOD", "color": "red", "marker": "diamond"},
+        {"name": "Train (R5-2)", "file": "Test_dataform_change_air2_R=5-2_converted.csv", "group": "OOD", "color": "orange", "marker": "diamond"},
+        {"name": "Train (R5-6)", "file": "Test_dataform_change_air2_R=5-6_converted.csv", "group": "OOD", "color": "brown", "marker": "diamond"},
+        {"name": "OOD (R5-7)", "file": "Test_dataform_change_air2_R=5-7_converted.csv", "group": "OOD", "color": "purple", "marker": "diamond"},
+        {"name": "OOD (R5-8)", "file": "Test_dataform_change_air2_R=5-8_converted.csv", "group": "OOD", "color": "black", "marker": "diamond"},
+        # OOD Step Datasets (out_of_training_distribution)
+        {"name": "OOD_Step (80_190 air2)", "file": "step_change/out_of_training_distribution/air2_80_t2_190_air2_change_10_converted.csv", "group": "OOD_Step", "color": "darkblue", "marker": "x"},
+        {"name": "OOD_Step (80_190 TR2)", "file": "step_change/out_of_training_distribution/air2_80_t2_190_TR2_change_10_converted.csv", "group": "OOD_Step", "color": "blue", "marker": "x"},
+        {"name": "OOD_Step (100_190 air2)", "file": "step_change/out_of_training_distribution/air2_100_t2_190_air2_change_10_converted.csv", "group": "OOD_Step", "color": "darkred", "marker": "x"},
+        {"name": "OOD_Step (100_190 TR2)", "file": "step_change/out_of_training_distribution/air2_100_t2_190_TR2_change_10_converted.csv", "group": "OOD_Step", "color": "red", "marker": "x"},
+        {"name": "OOD_Step (400_190 air2)", "file": "step_change/out_of_training_distribution/air2_400_t2_190_air2_change_10_converted.csv", "group": "OOD_Step", "color": "darkgreen", "marker": "x"},
+        {"name": "OOD_Step (400_190 TR2)", "file": "step_change/out_of_training_distribution/air2_400_t2_190_TR2_change_10_converted.csv", "group": "OOD_Step", "color": "green", "marker": "x"},
+        {"name": "OOD_Step (500_190 air2)", "file": "step_change/out_of_training_distribution/air2_500_t2_190_air2_change_10_converted.csv", "group": "OOD_Step", "color": "darkorange", "marker": "x"},
+        {"name": "OOD_Step (500_190 TR2)", "file": "step_change/out_of_training_distribution/air2_500_t2_190_TR2_change_10_converted.csv", "group": "OOD_Step", "color": "orange", "marker": "x"},
+        # ID Step Datasets (in_training_distribution)
+        {"name": "ID_Step (180_150 air2)", "file": "step_change/in_training_distribution/air2_180_t2_150_air2_change_10_converted.csv", "group": "ID_Step", "color": "green", "marker": "cross"},
+        {"name": "ID_Step (180_150 TR2)", "file": "step_change/in_training_distribution/air2_180_t2_150_TR2_change_10_converted.csv", "group": "ID_Step", "color": "darkgreen", "marker": "cross"},
+        {"name": "ID_Step (190_155 air2)", "file": "step_change/in_training_distribution/air2_190_t2_155_air2_change_-5_converted.csv", "group": "ID_Step", "color": "magenta", "marker": "cross"},
+        {"name": "ID_Step (190_155 t2)", "file": "step_change/in_training_distribution/air2_190_t2_155_t2_change_-5_converted.csv", "group": "ID_Step", "color": "darkmagenta", "marker": "cross"},
+        {"name": "ID_Step (190_230 air2)", "file": "step_change/in_training_distribution/air2_190_t2_230_air2_change_-5_converted.csv", "group": "ID_Step", "color": "cyan", "marker": "cross"},
+        {"name": "ID_Step (190_230 t2)", "file": "step_change/in_training_distribution/air2_190_t2_230_t2_change_-5_converted.csv", "group": "ID_Step", "color": "darkcyan", "marker": "cross"},
+        {"name": "ID_Step (200_210 air2)", "file": "step_change/in_training_distribution/air2_200_t2_210_air2_change_10_converted.csv", "group": "ID_Step", "color": "purple", "marker": "cross"},
+        {"name": "ID_Step (200_210 TR2)", "file": "step_change/in_training_distribution/air2_200_t2_210_TR2_change_10_converted.csv", "group": "ID_Step", "color": "indigo", "marker": "cross"},
+        {"name": "ID_Step (240_170 air2)", "file": "step_change/in_training_distribution/air2_240_t2_170_air2_change_10_converted.csv", "group": "ID_Step", "color": "orange", "marker": "cross"},
+        {"name": "ID_Step (240_170 TR2)", "file": "step_change/in_training_distribution/air2_240_t2_170_TR2_change_10_converted.csv", "group": "ID_Step", "color": "darkorange", "marker": "cross"},
+        {"name": "ID_Step (270_155 air2)", "file": "step_change/in_training_distribution/air2_270_t2_155_air2_change_-5_converted.csv", "group": "ID_Step", "color": "yellow", "marker": "cross"},
+        {"name": "ID_Step (270_155 t2)", "file": "step_change/in_training_distribution/air2_270_t2_155_t2_change_-5_converted.csv", "group": "ID_Step", "color": "gold", "marker": "cross"},
+        {"name": "ID_Step (270_230 air2)", "file": "step_change/in_training_distribution/air2_270_t2_230_air2_change_-5_converted.csv", "group": "ID_Step", "color": "lime", "marker": "cross"},
+        {"name": "ID_Step (270_230 t2)", "file": "step_change/in_training_distribution/air2_270_t2_230_t2_change_-5_converted.csv", "group": "ID_Step", "color": "greenyellow", "marker": "cross"},
+        {"name": "ID_Step (280_210 air2)", "file": "step_change/in_training_distribution/air2_280_t2_210_air2_change_10_converted.csv", "group": "ID_Step", "color": "pink", "marker": "cross"},
+        {"name": "ID_Step (280_210 TR2)", "file": "step_change/in_training_distribution/air2_280_t2_210_TR2_change_10_converted.csv", "group": "ID_Step", "color": "hotpink", "marker": "cross"},
     ]
     
-    # 2. 變數定義 (切換回 8 變數)
-    variables_num = 8
+    # 2. 變數定義 (切換為 72 變數)
+    variables_num = 72
     try:
         de_mv, y_sv, _, en_mv_and_sv = variable_selection(variables_num)
     except:
-        # Fallback if 8 is not defined or error, use a hardcoded list for analysis
+        # Fallback if 72 is not defined or error, use a hardcoded list for analysis
         en_mv_and_sv = ['acidgas_Fm', 'acidgas_T', 'acidgas_P', 'HEATER1_output_T_PV', 
                         'HEATER2_output_T_PV', 'second_air2', 'B35_H2S', 'B35_SO2']
 
@@ -59,6 +91,17 @@ def analyze_distribution():
             except Exception as e2:
                 print(f"Failed to load {path}: {e2}")
                 continue
+                
+        # Remap columns for plant_simulated_data to match 72 variables config
+        rename_map = {
+            'air_SP': 'air_SP_m3',
+            'air': 'air_m3',
+            'acidgas_Fm': 'acidgas_Fv'
+        }
+        df = df.rename(columns=rename_map)
+        
+        # Remove duplicate columns if any
+        df = df.loc[:, ~df.columns.duplicated()]
         
         # Ensure all columns exist
         missing_cols = [c for c in all_vars if c not in df.columns]
@@ -107,6 +150,8 @@ def analyze_distribution():
         traces = []
         for cfg in file_configs:
             name = cfg['name']
+            if name not in data_store:
+                continue
             df = data_store[name]
             z_data = standardize(df)
             pca_data = pca.transform(z_data)
@@ -120,12 +165,12 @@ def analyze_distribution():
                 x=pca_data[:, 0], y=pca_data[:, 1], z=pca_data[:, 2],
                 mode='markers',
                 name=name,
-                marker=dict(size=3, color=cfg['color'], opacity=0.5, symbol=cfg['marker'])
+                marker=dict(size=3, color=cfg['color'], opacity=0.5, symbol=cfg.get('marker', 'circle'))
             )
             traces.append(trace)
 
         layout = go.Layout(
-            title=f'3D PCA Data Distribution (4 Files Separate)<br>Total Var: {sum(pca.explained_variance_ratio_):.2%}',
+            title=f'3D PCA Data Distribution (All combined)<br>Total Var: {sum(pca.explained_variance_ratio_):.2%}',
             scene=dict(
                 xaxis_title=f'PC1 ({pca.explained_variance_ratio_[0]:.2%})',
                 yaxis_title=f'PC2 ({pca.explained_variance_ratio_[1]:.2%})',
