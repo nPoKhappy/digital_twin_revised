@@ -159,12 +159,12 @@ def apply_zscore(df, mean, std):
     else:
         std_safe = np.where(np.abs(std) < 1e-6, 1.0, std)
     df_z = (df - mean) / std_safe
-    if df_z.isnull().values.any():
-        nan_cols = df_z.columns[df_z.isnull().any()].tolist()
-        print(f"錯誤：標準化後在以下欄位中發現 NaN: {nan_cols}")
-        problem_std_cols = std[std < 1e-9].index.tolist()
-        if problem_std_cols:
-            print(f"原因分析：以下欄位的標準差接近於零，可能導致數值不穩定: {problem_std_cols}")
+    # if df_z.isnull().values.any():
+    #     nan_cols = df_z.columns[df_z.isnull().any()].tolist()
+    #     print(f"錯誤：標準化後在以下欄位中發現 NaN: {nan_cols}")
+    #     problem_std_cols = std[std < 1e-9].index.tolist()
+    #     if problem_std_cols:
+    #         print(f"原因分析：以下欄位的標準差接近於零，可能導致數值不穩定: {problem_std_cols}")
     return df_z
 
 def inverse_zscore(df_scaled, mean, std):
