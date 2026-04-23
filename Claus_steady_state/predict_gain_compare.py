@@ -38,14 +38,16 @@ def ensure_input_columns(df: pd.DataFrame, input_cols: List[str]) -> pd.DataFram
     return df
 
 
-def build_model(cfg: Dict, num_features: int, num_outputs: int, device: str) -> TabularMLP:
+def build_model(cfg, num_features: int, num_outputs: int, device: str, target_mean=None, target_std=None) -> TabularMLP:
     mcfg = cfg['model']
     model = TabularMLP(
         num_features=num_features,
         num_outputs=num_outputs,
         hidden_dims=mcfg.get('hidden_dims', [128, 64]),
         dropout=mcfg.get('dropout', 0.1),
-        activation=mcfg.get('activation', 'relu')
+        activation=mcfg.get('activation', 'relu'),
+        target_mean=target_mean,
+        target_std=target_std
     ).to(device)
     exp = cfg['exp_name']
     ckpt = os.path.join('./saved_models', f'{exp}_tabular_mlp.pth')
@@ -140,8 +142,18 @@ def main():
     # Device
     device = 'cuda' if (torch.cuda.is_available() and cfg['training'].get('device', 'cpu') == 'cuda') else 'cpu'
 
+    target_mean_tensor = torch.tensor(mean_all[trained_target_cols].values, dtype=torch.float32, device=device)
+    target_std_tensor = torch.tensor(std_all[trained_target_cols].values, dtype=torch.float32, device=device)
+
     # Build model with full number of trained targets
-    model = build_model(cfg, num_features=len(input_cols), num_outputs=len(trained_target_cols), device=device)
+    model = build_model(
+        cfg, 
+        num_features=len(input_cols), 
+        num_outputs=len(trained_target_cols), 
+        device=device,
+        target_mean=target_mean_tensor,
+        target_std=target_std_tensor
+    )
 
     # Group by pair and flow
     key_cols = ['target_flow', 'target_air2', 'target_t2']
