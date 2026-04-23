@@ -308,17 +308,23 @@ def plot_combined_h2s_so2(dist_results, y_sv, dist_key, output_dir, exp_name):
                 var_idx = y_sv.index(var)
                 m = result['metrics'][var_idx]
 
-                ax.plot(result['true_values'][:, var_idx], label='True (Aspen)',
+                l1 = ax.plot(result['true_values'][:, var_idx], label='True (Aspen)',
                         color='steelblue', linewidth=1.5)
-                ax.plot(result['predictions'][:, var_idx], label='Predicted',
+                ax_twin = ax.twinx()
+                l2 = ax_twin.plot(result['predictions'][:, var_idx], label='Predicted (Right)',
                         color='tomato', linestyle='--', linewidth=1.5)
 
                 ax.set_title(
                     f'[{cond_str}]\n{var}   R²={m["R2"]:.4f}  RMSE={m["RMSE"]:.4f}  MAE={m["MAE"]:.4f}',
                     fontsize=9)
                 ax.set_xlabel('Time Step')
-                ax.set_ylabel(var)
-                ax.legend(fontsize=8)
+                ax.set_ylabel(f'{var} (True)')
+                ax_twin.set_ylabel(f'{var} (Predicted)', color='tomato')
+                ax_twin.tick_params(axis='y', labelcolor='tomato')
+                
+                lns = l1 + l2
+                labs = [l.get_label() for l in lns]
+                ax.legend(lns, labs, loc='best', fontsize=8)
                 ax.grid(True, alpha=0.3)
 
         part_label = f'Part {fig_idx + 1}/{len(chunks)}'
@@ -484,15 +490,21 @@ def main():
                 ax = axes[idx]
                 var_metrics = result['metrics'][idx]
                 
-                ax.plot(result['true_values'][:, idx], label='True (Aspen)', color='blue', linewidth=1.2)
-                ax.plot(result['predictions'][:, idx], label='Predicted', color='red', 
+                l1 = ax.plot(result['true_values'][:, idx], label='True (Aspen)', color='blue', linewidth=1.2)
+                ax_twin = ax.twinx()
+                l2 = ax_twin.plot(result['predictions'][:, idx], label='Predicted (Right)', color='red', 
                         linestyle='--', linewidth=1.2)
                 
                 title = f'{var}\nR2={var_metrics["R2"]:.4f}, RMSE={var_metrics["RMSE"]:.4f}'
                 ax.set_title(title, fontsize=10)
                 ax.set_xlabel('Time Step')
-                ax.set_ylabel(var)
-                ax.legend(fontsize=8)
+                ax.set_ylabel(f'{var} (True)')
+                ax_twin.set_ylabel(f'{var} (Predicted)', color='red')
+                ax_twin.tick_params(axis='y', labelcolor='red')
+                
+                lns = l1 + l2
+                labs = [l.get_label() for l in lns]
+                ax.legend(lns, labs, loc='best', fontsize=8)
                 ax.grid(True, alpha=0.3)
             
             # 隱藏多餘的子圖
@@ -512,19 +524,25 @@ def main():
                     idx = y_sv.index(var)
                     var_metrics = result['metrics'][idx]
                     
-                    plt.figure(figsize=(14, 5))
-                    plt.plot(result['true_values'][:, idx], label='True (Aspen)', color='blue', linewidth=1.5)
-                    plt.plot(result['predictions'][:, idx], label='Predicted (Model)', color='red', 
+                    fig, ax = plt.subplots(figsize=(14, 5))
+                    l1 = ax.plot(result['true_values'][:, idx], label='True (Aspen)', color='blue', linewidth=1.5)
+                    ax_twin = ax.twinx()
+                    l2 = ax_twin.plot(result['predictions'][:, idx], label='Predicted (Right)', color='red', 
                              linestyle='--', linewidth=1.5)
                     
                     title = f'{csv_file.replace(".csv", "")} - {var}\n'
                     title += f'MAE={var_metrics["MAE"]:.6f}, RMSE={var_metrics["RMSE"]:.6f}, R2={var_metrics["R2"]:.4f}'
-                    plt.title(title, fontsize=11)
-                    plt.xlabel('Time Step (minutes)')
-                    plt.ylabel(var)
-                    plt.legend()
-                    plt.grid(True, alpha=0.3)
-                    plt.tight_layout()
+                    ax.set_title(title, fontsize=11)
+                    ax.set_xlabel('Time Step (minutes)')
+                    ax.set_ylabel(f'{var} (True)')
+                    ax_twin.set_ylabel(f'{var} (Predicted)', color='red')
+                    ax_twin.tick_params(axis='y', labelcolor='red')
+                    
+                    lns = l1 + l2
+                    labs = [l.get_label() for l in lns]
+                    ax.legend(lns, labs, loc='best')
+                    ax.grid(True, alpha=0.3)
+                    fig.tight_layout()
                     plt.savefig(os.path.join(file_output_dir, f'{var}.png'), dpi=150)
                     plt.close()
         
