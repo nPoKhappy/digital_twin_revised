@@ -5,10 +5,21 @@ import os
 
 # 換算係數：kmol/hr -> m³/hr，依據莫耳密度 0.05637 kmol/m³
 # 1 / 0.05637 ≈ 17.740
-FLOW_FACTOR = 1.0 / 0.05637   # ≈ 17.740
+KMOL_TO_M3_FACTOR = 1.0 / 0.05637   # ≈ 17.740
 
-# 要換算的欄位
-COLS_TO_CONVERT = ['acidgas_Fm', 'air']
+# 換算係數：kg/hr -> m³/hr (air_SP 的情況)，依據截圖 mass density 1.58083 kg/m³
+KG_TO_M3_FACTOR = 1.0 / 1.58083     # ≈ 0.63258
+
+# 要換算的欄位 (分為兩類)
+COLS_KMOL_TO_M3 = ['acidgas_Fm', 'air']
+COLS_KG_TO_M3 = ['air_SP']
+
+# 轉換後的變數重新命名對應表
+RENAME_MAP = {
+    'acidgas_Fm': 'acidgas_Fv',
+    'air': 'air_m3',
+    'air_SP': 'air_SP_m3'
+}
 
 # Step change 資料夾
 STEP_CHANGE_DIRS = [
@@ -29,10 +40,31 @@ def convert_files(file_list, label=''):
         try:
             df = pd.read_csv(file_path)
             converted_cols = []
-            for col in COLS_TO_CONVERT:
+            acidgas_fv_exists = 'acidgas_Fv' in df.columns
+            
+            # kmol/hr -> m3/hr
+            for col in COLS_KMOL_TO_M3:
+                if col == 'acidgas_Fm' and acidgas_fv_exists:
+                    continue
                 if col in df.columns:
-                    df[col] = df[col] * FLOW_FACTOR
+                    df[col] = df[col] * KMOL_TO_M3_FACTOR
                     converted_cols.append(col)
+                    
+            # kg/hr -> m3/hr
+            for col in COLS_KG_TO_M3:
+                if col in df.columns:
+                    df[col] = df[col] * KG_TO_M3_FACTOR
+                    converted_cols.append(col)
+
+            # 依據 RENAME_MAP 對轉換後的欄位重新命名
+            renamed_cols = {}
+            for old_col, new_col in RENAME_MAP.items():
+                if old_col == 'acidgas_Fm' and acidgas_fv_exists:
+                    continue
+                if old_col in df.columns:
+                    df.rename(columns={old_col: new_col}, inplace=True)
+                    renamed_cols[old_col] = new_col
+
             if not converted_cols:
                 print(f"  [SKIP] {os.path.basename(file_path)}: 找不到目標欄位")
                 continue
@@ -46,8 +78,10 @@ def convert_files(file_list, label=''):
 
 
 def main():
-    print(f"換算係數: 1 / 0.05637 = {FLOW_FACTOR:.6f}  (kmol/hr -> m³/hr)")
-    print(f"換算欄位: {COLS_TO_CONVERT}")
+    print(f"換算係數 (kmol/hr -> m³/hr): {KMOL_TO_M3_FACTOR:.6f}")
+    print(f"換算欄位 (kmol): {COLS_KMOL_TO_M3}")
+    print(f"換算係數 (kg/hr -> m³/hr): {KG_TO_M3_FACTOR:.6f}")
+    print(f"換算欄位 (kg): {COLS_KG_TO_M3}")
 
     # 1. 訓練資料
     all_train = sorted(glob.glob(TRAIN_DATA_PATTERN))
