@@ -20,18 +20,7 @@ def get_model(config):
     num_de_input = config['data'].get('num_de_input', 2)
     num_output = config['data'].get('num_output', 2)
     
-    if model_name == 'gru_exact':
-        return GRUExact(config)
-    elif model_name == 'gru':
-        return GRUModel(
-            num_en_input=num_en_input,
-            num_de_input=num_de_input,
-            num_output=num_output,
-            embedding_dim=model_params['embedding_dim'],
-            hidden_dim=model_params['hidden_dim'],
-            n_layers=model_params['n_layers']
-        )
-    elif model_name == 'transformer':
+    if model_name == 'transformer':
         return TransformerModel(
             num_en_input=num_en_input,
             num_de_input=num_de_input,
