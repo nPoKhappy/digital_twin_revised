@@ -1,4 +1,4 @@
-# predict.py - Long-term rolling prediction using trained models with sliding window or block replacement strategies (動態數據)
+﻿# predict.py - Long-term rolling prediction using trained models with sliding window or block replacement strategies (????)
 import torch
 import numpy as np
 import pandas as pd
@@ -7,24 +7,48 @@ import yaml
 import argparse
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
-# 確保你的項目結構中有這些模組
+# ????????
 from src import utils as data_utils
 from src.variable_selection import variable_selection
 from src.models import get_model
 from src.utils import calculate_metrics
 
+SPLIT_COLORS = {
+    'train': '#1f77b4',
+    'valid': '#d62728',
+    'test': '#2ca02c',
+    'unknown': '#6b7280',
+}
+
+TRUE_COLOR = "#1f77b4"
+PRED_COLOR = "#d62728"
+HISTORY_COLOR = "#6b7280"
+
+
+def style_prediction_axis(ax, y_ticks=5):
+    ax.set_facecolor("white")
+    ax.grid(False)
+    ax.yaxis.set_major_locator(MaxNLocator(nbins=y_ticks))
+    ax.xaxis.set_major_locator(MaxNLocator(nbins=6))
+    ax.tick_params(axis="both", which="major", direction="out", length=4, width=0.9, colors="#1f2937")
+    for spine in ax.spines.values():
+        spine.set_visible(True)
+        spine.set_color("#1f2937")
+        spine.set_linewidth(1.0)
+
 # ==============================================================================
-# --- 核心預測函數 ---
+# --- ???? ---
 # ==============================================================================
 
 def predict_sliding_window(model, initial_en_input, future_de_inputs, device, num_output_features):
-    """Sliding window 預測策略
+    """Sliding window ?
     
-    每一步：
-    1. 用 encoder 歷史窗口 + 當前 MV 預測下一步的 y_sv
-    2. 將 [MV, y_sv] 合併，加入 encoder 窗口（滑動）
+    ??
+    1. ??encoder  + ?? MV ??? y_sv
+    2. ?[MV, y_sv] ????encoder ???
     """
     model.eval()
     
@@ -33,7 +57,7 @@ def predict_sliding_window(model, initial_en_input, future_de_inputs, device, nu
     current_en_input = initial_en_input.clone().to(device)
     
     with torch.no_grad():
-        for t in tqdm(range(num_pred_steps), desc="[策略: 滑動窗口] 預測中"):
+        for t in tqdm(range(num_pred_steps), desc="[Strategy: sliding window] Predicting"):
             single_step_de_input = future_de_inputs[:, t, :].unsqueeze(1).to(device)
             single_step_prediction = model(current_en_input, single_step_de_input)
             
@@ -46,9 +70,9 @@ def predict_sliding_window(model, initial_en_input, future_de_inputs, device, nu
             
             predictions[:, t, :] = single_step_prediction
 
-            # 滑動窗口：移除最舊的一步，加入新的一步
+            # ??????????
             next_en_input_history = current_en_input[:, 1:, :]
-            # 合併順序：[MV, y_sv] 以匹配 en_mv_and_sv 的順序
+            # ???MV, y_sv] ??en_mv_and_sv ???
             new_step_features = torch.cat([single_step_de_input, single_step_prediction], dim=2)
             current_en_input = torch.cat([next_en_input_history, new_step_features], dim=1)
     
@@ -56,11 +80,11 @@ def predict_sliding_window(model, initial_en_input, future_de_inputs, device, nu
 
 
 def predict_block_replacement(model, initial_en_input, future_de_inputs, device, config):
-    """Block replacement 預測策略
+    """Block replacement ?
     
-    每個窗口：
-    1. 用 encoder 輸入 + 當前窗口 MV 預測整個窗口的 y_sv
-    2. 將 [MV, y_sv] 合併，作為下一個窗口的 encoder 輸入（整塊替換）
+    ????
+    1. ??encoder  + ?? MV ?????? y_sv
+    2. ?[MV, y_sv] ????????? encoder ??
     """
     model.eval()
     
@@ -68,9 +92,9 @@ def predict_block_replacement(model, initial_en_input, future_de_inputs, device,
     num_pred_steps = future_de_inputs.shape[1]
     
     if num_pred_steps % H != 0:
-        print(f"警告: 預測總步數 {num_pred_steps} 不是窗口大小 {H} 的整數倍。")
+        print(f"Warning: prediction length {num_pred_steps} is not divisible by block size {H}.")
         num_pred_steps = (num_pred_steps // H) * H
-        print(f"預測將只進行到 {num_pred_steps} 步 (最後一個完整窗口)。")
+        print(f"Truncating prediction length to {num_pred_steps} steps.")
         future_de_inputs = future_de_inputs[:, :num_pred_steps, :]
 
     num_windows_to_predict = num_pred_steps // H
@@ -78,7 +102,7 @@ def predict_block_replacement(model, initial_en_input, future_de_inputs, device,
     current_en_input = initial_en_input.clone().to(device)
     
     with torch.no_grad():
-        for i in tqdm(range(num_windows_to_predict), desc="[策略: 塊替換] 預測中"):
+        for i in tqdm(range(num_windows_to_predict), desc="[Strategy: block replacement] Predicting"):
             start_idx = i * H
             end_idx = (i + 1) * H
             de_input_block = future_de_inputs[:, start_idx:end_idx, :].to(device)
@@ -86,7 +110,7 @@ def predict_block_replacement(model, initial_en_input, future_de_inputs, device,
             prediction_block = model(current_en_input, de_input_block)
             predictions_all_windows.append(prediction_block)
 
-            # 合併順序：[MV, y_sv] 以匹配 en_mv_and_sv 的順序
+            # ???MV, y_sv] ??en_mv_and_sv ???
             current_en_input = torch.cat([de_input_block, prediction_block], dim=2)
 
     return torch.cat(predictions_all_windows, dim=1)
@@ -182,21 +206,501 @@ def predict_horizon_reinit(model, initial_en_input, future_de_inputs, future_tar
         
     return torch.cat(predictions_all, dim=1)
 
+def split_case_name(test_name):
+    """Return (case_name, split_name) from names like R5-1_train_split."""
+    for suffix, split_name in [
+        ('_train_split', 'train'),
+        ('_valid_split', 'valid'),
+        ('_test_split', 'test'),
+    ]:
+        if test_name.endswith(suffix):
+            return test_name[:-len(suffix)], split_name
+    return test_name, 'unknown'
+
+
+def plot_grouped_horizon_parity(horizon_runs, config, output_root):
+    """Plot all cases together: one parity overview for t+1 and one for t+18."""
+    if not horizon_runs:
+        return
+
+    grouped = {}
+    case_order = []
+    variable_order = []
+    step_order = []
+    for run in horizon_runs:
+        test_name = run['test_name']
+        case_name, split_name = split_case_name(test_name)
+        if case_name not in case_order:
+            case_order.append(case_name)
+        for item in run.get('parity_data', []):
+            key = (case_name, item['step_num'], item['variable'])
+            if item['variable'] not in variable_order:
+                variable_order.append(item['variable'])
+            if item['step_num'] not in step_order:
+                step_order.append(item['step_num'])
+            grouped.setdefault(key, []).append({
+                'split': split_name,
+                'true': item['true'],
+                'pred': item['pred'],
+            })
+
+    if not grouped:
+        return
+
+    out_dir = os.path.join(output_root, config['exp_name'], 'grouped_horizon_parity')
+    os.makedirs(out_dir, exist_ok=True)
+    metric_rows = []
+
+    for step_num in sorted(step_order):
+        n_rows = len(case_order)
+        n_cols = len(variable_order)
+        fig, axes = plt.subplots(
+            n_rows,
+            n_cols,
+            figsize=(7.0 * n_cols, 4.8 * n_rows),
+            squeeze=False,
+        )
+
+        for row_idx, case_name in enumerate(case_order):
+            for col_idx, variable in enumerate(variable_order):
+                ax = axes[row_idx, col_idx]
+                split_items = grouped.get((case_name, step_num, variable), [])
+                all_true = []
+                all_pred = []
+
+                for split_name in ['train', 'valid', 'test', 'unknown']:
+                    items = [x for x in split_items if x['split'] == split_name]
+                    if not items:
+                        continue
+
+                    y_true = np.concatenate([x['true'] for x in items])
+                    y_pred = np.concatenate([x['pred'] for x in items])
+                    mask = np.isfinite(y_true) & np.isfinite(y_pred) & (np.abs(y_pred) < 1e100)
+                    y_true = y_true[mask]
+                    y_pred = y_pred[mask]
+                    if len(y_true) == 0:
+                        continue
+
+                    all_true.append(y_true)
+                    all_pred.append(y_pred)
+                    metrics = calculate_metrics(y_true, y_pred)
+                    metric_rows.append({
+                        'plot_type': 'parity',
+                        'case': case_name,
+                        'horizon': step_num,
+                        'variable': variable,
+                        'split': split_name,
+                        'n_samples': len(y_true),
+                        'MAE': metrics['MAE'],
+                        'RMSE': metrics['RMSE'],
+                        'R2': metrics['R2'],
+                        'MAPE': metrics['MAPE'],
+                    })
+                    ax.scatter(
+                        y_true,
+                        y_pred,
+                        s=14,
+                        alpha=0.62,
+                        color=SPLIT_COLORS.get(split_name, 'tab:gray'),
+                        edgecolors='none',
+                        label=split_name,
+                    )
+
+                if all_true:
+                    y_true_all = np.concatenate(all_true)
+                    y_pred_all = np.concatenate(all_pred)
+                    combined_metrics = calculate_metrics(y_true_all, y_pred_all)
+                    metric_rows.append({
+                        'plot_type': 'parity',
+                        'case': case_name,
+                        'horizon': step_num,
+                        'variable': variable,
+                        'split': 'all',
+                        'n_samples': len(y_true_all),
+                        'MAE': combined_metrics['MAE'],
+                        'RMSE': combined_metrics['RMSE'],
+                        'R2': combined_metrics['R2'],
+                        'MAPE': combined_metrics['MAPE'],
+                    })
+                    min_val = min(y_true_all.min(), y_pred_all.min())
+                    max_val = max(y_true_all.max(), y_pred_all.max())
+                    margin = (max_val - min_val) * 0.05
+                    if margin == 0:
+                        margin = 1.0
+
+                    ax.plot(
+                        [min_val - margin, max_val + margin],
+                        [min_val - margin, max_val + margin],
+                        color='#111827',
+                        linestyle='--',
+                        linewidth=1.2,
+                        label='Ideal',
+                    )
+                    ax.set_xlim(min_val - margin, max_val + margin)
+                    ax.set_ylim(min_val - margin, max_val + margin)
+                    ax.legend(fontsize=7, frameon=True, edgecolor='#1f2937')
+                else:
+                    ax.text(0.5, 0.5, 'No data', transform=ax.transAxes, ha='center', va='center')
+
+                ax.set_xlabel('True Value')
+                ax.set_ylabel('Predicted Value')
+                style_prediction_axis(ax)
+                ax.set_aspect('equal', adjustable='box')
+
+        plt.tight_layout()
+        save_name = f'all_cases_grouped_parity_t{step_num}.png'
+        plt.savefig(os.path.join(out_dir, save_name), dpi=150, bbox_inches='tight')
+        plt.close()
+
+        for case_name in case_order:
+            fig_case, axes_case = plt.subplots(
+                1,
+                n_cols,
+                figsize=(7.0 * n_cols, 4.8),
+                squeeze=False,
+            )
+
+            for col_idx, variable in enumerate(variable_order):
+                ax = axes_case[0, col_idx]
+                split_items = grouped.get((case_name, step_num, variable), [])
+                all_true = []
+                all_pred = []
+
+                for split_name in ['train', 'valid', 'test', 'unknown']:
+                    items = [x for x in split_items if x['split'] == split_name]
+                    if not items:
+                        continue
+
+                    y_true = np.concatenate([x['true'] for x in items])
+                    y_pred = np.concatenate([x['pred'] for x in items])
+                    mask = np.isfinite(y_true) & np.isfinite(y_pred) & (np.abs(y_pred) < 1e100)
+                    y_true = y_true[mask]
+                    y_pred = y_pred[mask]
+                    if len(y_true) == 0:
+                        continue
+
+                    all_true.append(y_true)
+                    all_pred.append(y_pred)
+                    ax.scatter(
+                        y_true,
+                        y_pred,
+                        s=16,
+                        alpha=0.65,
+                        color=SPLIT_COLORS.get(split_name, 'tab:gray'),
+                        edgecolors='none',
+                        label=split_name,
+                    )
+
+                if all_true:
+                    y_true_all = np.concatenate(all_true)
+                    y_pred_all = np.concatenate(all_pred)
+                    min_val = min(y_true_all.min(), y_pred_all.min())
+                    max_val = max(y_true_all.max(), y_pred_all.max())
+                    margin = (max_val - min_val) * 0.05
+                    if margin == 0:
+                        margin = 1.0
+
+                    ax.plot(
+                        [min_val - margin, max_val + margin],
+                        [min_val - margin, max_val + margin],
+                        color='#111827',
+                        linestyle='--',
+                        linewidth=1.2,
+                        label='Ideal',
+                    )
+                    ax.set_xlim(min_val - margin, max_val + margin)
+                    ax.set_ylim(min_val - margin, max_val + margin)
+                    ax.legend(fontsize=8, frameon=True, edgecolor='#1f2937')
+                else:
+                    ax.text(0.5, 0.5, 'No data', transform=ax.transAxes, ha='center', va='center')
+
+                ax.set_xlabel('True Value')
+                ax.set_ylabel('Predicted Value')
+                style_prediction_axis(ax)
+                ax.set_aspect('equal', adjustable='box')
+
+            plt.tight_layout()
+            safe_case_name = case_name.replace(os.sep, '_').replace('/', '_').replace('\\', '_')
+            case_save_name = f'{safe_case_name}_grouped_parity_t{step_num}.png'
+            plt.savefig(os.path.join(out_dir, case_save_name), dpi=150, bbox_inches='tight')
+            plt.close()
+
+    metrics_path = os.path.join(out_dir, 'grouped_parity_metrics.csv')
+    pd.DataFrame(metric_rows).to_csv(metrics_path, index=False)
+    print(f'Grouped t+1/t+18 parity plots saved to {out_dir}')
+    print(f'Grouped parity metrics saved to {metrics_path}')
+
+
+def plot_grouped_time_series(run_results, config, output_root):
+    """Plot all cases together in one rolling time-series overview."""
+    if not run_results:
+        return
+
+    grouped = {}
+    case_order = []
+    variable_order = []
+    for run in run_results:
+        test_name = run['test_name']
+        case_name, split_name = split_case_name(test_name)
+        if case_name not in case_order:
+            case_order.append(case_name)
+        for item in run.get('time_series_data', []):
+            variable = item['variable']
+            if variable not in variable_order:
+                variable_order.append(variable)
+            grouped.setdefault((case_name, variable), []).append({
+                'split': split_name,
+                'true': item['true'],
+                'pred': item['pred'],
+                'r2': item['r2'],
+                'rmse': item['rmse'],
+            })
+
+    if not grouped:
+        return
+
+    out_dir = os.path.join(output_root, config['exp_name'], 'grouped_time_series')
+    os.makedirs(out_dir, exist_ok=True)
+    metric_rows = []
+
+    n_rows = len(case_order) * len(variable_order)
+    n_cols = 1
+    fig, axes = plt.subplots(
+        n_rows,
+        n_cols,
+        figsize=(8.8, 3.2 * n_rows),
+        squeeze=False,
+    )
+
+    for row_idx, case_name in enumerate(case_order):
+        for col_idx, variable in enumerate(variable_order):
+            ax = axes[row_idx * len(variable_order) + col_idx, 0]
+            split_items = grouped.get((case_name, variable), [])
+
+            x_offset = 0
+            split_boundaries = []
+            true_segments = []
+            pred_segments = []
+            for split_name in ['train', 'valid', 'test', 'unknown']:
+                items = [x for x in split_items if x['split'] == split_name]
+                if not items:
+                    continue
+
+                # Normally there is one item per split/case/variable.
+                y_true = np.concatenate([x['true'] for x in items])
+                y_pred = np.concatenate([x['pred'] for x in items])
+                mask = np.isfinite(y_true) & np.isfinite(y_pred) & (np.abs(y_pred) < 1e100)
+                y_true = y_true[mask]
+                y_pred = y_pred[mask]
+                if len(y_true) == 0:
+                    continue
+
+                metrics = calculate_metrics(y_true, y_pred)
+                x = np.arange(x_offset, x_offset + len(y_true))
+                color = SPLIT_COLORS.get(split_name, 'tab:gray')
+                true_segments.append((x, y_true))
+                pred_segments.append((x, y_pred, split_name, color, metrics))
+                metric_rows.append({
+                    'plot_type': 'rolling_time_series',
+                    'case': case_name,
+                    'variable': variable,
+                    'split': split_name,
+                    'n_samples': len(y_true),
+                    'MAE': metrics['MAE'],
+                    'RMSE': metrics['RMSE'],
+                    'R2': metrics['R2'],
+                    'MAPE': metrics['MAPE'],
+                })
+                split_boundaries.append((x_offset, x_offset + len(y_true) - 1, split_name))
+                x_offset += len(y_true)
+
+            if true_segments and pred_segments:
+                y_true_all = np.concatenate([y for _, y in true_segments])
+                y_pred_all = np.concatenate([y for _, y, _, _, _ in pred_segments])
+                combined_metrics = calculate_metrics(y_true_all, y_pred_all)
+                metric_rows.append({
+                    'plot_type': 'rolling_time_series',
+                    'case': case_name,
+                    'variable': variable,
+                    'split': 'all',
+                    'n_samples': len(y_true_all),
+                    'MAE': combined_metrics['MAE'],
+                    'RMSE': combined_metrics['RMSE'],
+                    'R2': combined_metrics['R2'],
+                    'MAPE': combined_metrics['MAPE'],
+                })
+
+            for start, end, split_name in split_boundaries:
+                center = (start + end) / 2
+                color = SPLIT_COLORS.get(split_name, 'tab:gray')
+                ax.axvspan(start - 0.5, end + 0.5, color=color, alpha=0.055, linewidth=0)
+                ax.text(
+                    center,
+                    0.96,
+                    split_name,
+                    transform=ax.get_xaxis_transform(),
+                    ha='center',
+                    va='top',
+                    fontsize=10,
+                    fontweight='bold',
+                    color=color,
+                )
+                if start > 0:
+                    ax.axvline(start - 0.5, color='0.35', linestyle=':', linewidth=1.1, alpha=0.9)
+
+            for x, y_pred, split_name, color, metrics in pred_segments:
+                ax.plot(
+                    x,
+                    y_pred,
+                    color=color,
+                    linewidth=1.25,
+                    linestyle='--',
+                    alpha=0.95,
+                    label=f'{split_name} pred',
+                    zorder=2,
+                )
+
+            for idx, (x, y_true) in enumerate(true_segments):
+                ax.plot(
+                    x,
+                    y_true,
+                    color='black',
+                    linewidth=1.8,
+                    alpha=0.82,
+                    label='true' if idx == 0 else None,
+                    zorder=3,
+                )
+
+            ax.set_xlabel('Rolling sample index')
+            ax.set_ylabel(variable)
+            style_prediction_axis(ax)
+            ax.legend(
+                fontsize=7,
+                ncol=2,
+                loc='lower left',
+                frameon=True,
+            )
+
+    plt.tight_layout()
+    save_name = 'all_cases_grouped_time_series.png'
+    plt.savefig(os.path.join(out_dir, save_name), dpi=150, bbox_inches='tight')
+    plt.close()
+
+    for case_name in case_order:
+        fig_case, axes_case = plt.subplots(
+            len(variable_order),
+            1,
+            figsize=(8.8, 3.2 * len(variable_order)),
+            squeeze=False,
+        )
+
+        for col_idx, variable in enumerate(variable_order):
+            ax = axes_case[col_idx, 0]
+            split_items = grouped.get((case_name, variable), [])
+
+            x_offset = 0
+            split_boundaries = []
+            true_segments = []
+            pred_segments = []
+            for split_name in ['train', 'valid', 'test', 'unknown']:
+                items = [x for x in split_items if x['split'] == split_name]
+                if not items:
+                    continue
+
+                y_true = np.concatenate([x['true'] for x in items])
+                y_pred = np.concatenate([x['pred'] for x in items])
+                mask = np.isfinite(y_true) & np.isfinite(y_pred) & (np.abs(y_pred) < 1e100)
+                y_true = y_true[mask]
+                y_pred = y_pred[mask]
+                if len(y_true) == 0:
+                    continue
+
+                x = np.arange(x_offset, x_offset + len(y_true))
+                color = SPLIT_COLORS.get(split_name, 'tab:gray')
+                true_segments.append((x, y_true))
+                pred_segments.append((x, y_pred, split_name, color))
+                split_boundaries.append((x_offset, x_offset + len(y_true) - 1, split_name))
+                x_offset += len(y_true)
+
+            for start, end, split_name in split_boundaries:
+                center = (start + end) / 2
+                color = SPLIT_COLORS.get(split_name, 'tab:gray')
+                ax.axvspan(start - 0.5, end + 0.5, color=color, alpha=0.055, linewidth=0)
+                ax.text(
+                    center,
+                    0.96,
+                    split_name,
+                    transform=ax.get_xaxis_transform(),
+                    ha='center',
+                    va='top',
+                    fontsize=10,
+                    fontweight='bold',
+                    color=color,
+                )
+                if start > 0:
+                    ax.axvline(start - 0.5, color='0.35', linestyle=':', linewidth=1.1, alpha=0.9)
+
+            for x, y_pred, split_name, color in pred_segments:
+                ax.plot(
+                    x,
+                    y_pred,
+                    color=color,
+                    linewidth=1.35,
+                    linestyle='--',
+                    alpha=0.95,
+                    label=f'{split_name} pred',
+                    zorder=2,
+                )
+
+            for idx, (x, y_true) in enumerate(true_segments):
+                ax.plot(
+                    x,
+                    y_true,
+                    color='black',
+                    linewidth=1.9,
+                    alpha=0.84,
+                    label='true' if idx == 0 else None,
+                    zorder=3,
+                )
+
+            ax.set_xlabel('Rolling sample index')
+            ax.set_ylabel(variable)
+            style_prediction_axis(ax)
+            ax.legend(
+                fontsize=8,
+                ncol=2,
+                loc='lower left',
+                frameon=True,
+                edgecolor='#1f2937',
+            )
+
+        plt.tight_layout()
+        safe_case_name = case_name.replace(os.sep, '_').replace('/', '_').replace('\\', '_')
+        case_save_name = f'{safe_case_name}_grouped_time_series.png'
+        plt.savefig(os.path.join(out_dir, case_save_name), dpi=150, bbox_inches='tight')
+        plt.close()
+
+    metrics_path = os.path.join(out_dir, 'grouped_time_series_metrics.csv')
+    pd.DataFrame(metric_rows).to_csv(metrics_path, index=False)
+    print(f'Grouped rolling time-series plots saved to {out_dir}')
+    print(f'Grouped rolling time-series metrics saved to {metrics_path}')
+
+
 # ==============================================================================
-# --- 主程式 ---
+# --- ??---
 # ==============================================================================
 
 def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and_sv, de_mv, y_sv, W):
-    """執行單一測試集的預測與評估"""
+    """Run prediction and per-split time-series plots for one inference file."""
     test_name = test_cfg.get('name', 'Default_Test')
-    print(f"\n========== 正在測試: {test_name} ==========")
-    print(f"檔案: {test_cfg['filename']}")
+    print(f"\n========== Running inference: {test_name} ==========")
+    print(f"File: {test_cfg['filename']}")
 
-    # --- Step 1: 準備測試數據 ---
+    # --- Step 1: ??? ---
     cfg_data = config['data']
     try:
         df_raw_test = data_utils.load_data(os.path.join(cfg_data['path'], test_cfg['filename']))
-        print("成功載入測試數據（帶 DateTime 索引）")
+        print("Loaded test data with data_utils.load_data.")
     except (KeyError, ValueError, FileNotFoundError) as e:
         # Try finding in parent dir or absolute path
         fpath = test_cfg['filename']
@@ -205,9 +709,9 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
         
         try:
             df_raw_test = pd.read_csv(fpath)
-            print(f"成功使用 pandas 讀取: {fpath}")
+            print(f"Loaded test data with pandas: {fpath}")
         except Exception as e2:
-             print(f"無法讀取檔案: {e2}")
+             print(f"Failed to load test data: {e2}")
              return
 
     # Apply point limit
@@ -237,9 +741,9 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
     df_raw_test.dropna(inplace=True)
 
     # [Step 2: Log Transform] - consistent with training
-    # 注意：必須確保這裡變數名稱對應，目前是 B35_H2S, B35_SO2
+    # ?????? B35_H2S, B35_SO2
     target_cols = ['B35_H2S', 'B35_SO2']
-    # 檢查這些列是否存在
+    # ???????
     valid_log_cols = [c for c in target_cols if c in df_raw_test.columns]
     if valid_log_cols:
         print(f"Applying Log Transform to {valid_log_cols}")
@@ -264,7 +768,7 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
     
     # Needs at least W steps
     if len(df_z_test) <= W:
-        print(f"數據長度 ({len(df_z_test)}) 不足 W ({W})，跳過。")
+        print(f"Data length ({len(df_z_test)}) is not greater than encoder window W ({W}).")
         return
 
     # Initial History (First W steps)
@@ -280,17 +784,17 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
     # Full Encoder Inputs (for Horizon Reinit if needed)
     full_en_inputs = torch.tensor(test_en_input, dtype=torch.float32).unsqueeze(0)
 
-    # --- 執行預測策略 ---
+    # --- ??? ---
     strategy = test_cfg.get('inference_strategy', 'sliding_window')
-    print(f"預測策略: {strategy}")
+    print(f"?: {strategy}")
     
     if strategy == 'sliding_window':
-        # 標準滑動窗口
+        # ??
         predictions_tensor = predict_sliding_window(
             model, initial_en_input, future_de_inputs, device, config['data']['num_output']
         )
     elif strategy == 'block_replacement':
-        # 塊替換
+        # ??
         predictions_tensor = predict_block_replacement(
             model, initial_en_input, future_de_inputs, device, config
         )
@@ -300,10 +804,10 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
             model, initial_en_input, future_de_inputs, None, full_en_inputs, device, config
         )
     else:
-        print(f"未知的策略: {strategy}")
+        print(f"????? {strategy}")
         return
 
-    # --- 處理預測結果 (Tensor -> Numpy) ---
+    # --- ???? (Tensor -> Numpy) ---
     predictions_cov = predictions_tensor.cpu().numpy().squeeze(0)
     
     # Align True Targets
@@ -311,7 +815,7 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
     true_targets_cov = true_targets_np[:pred_len]
     original_index = df_raw_test.index[W : W+pred_len] 
 
-    # --- 計算指標 ---
+    # --- ??? ---
     metrics_results = []
     
     # 1. Reverse Z-Score for Preds and Targets
@@ -340,14 +844,14 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
         y_true = true_df_inv[col].values
         y_pred = pred_df_inv[col].values
         
-        # 使用 np.isfinite 同時過濾 NaN 和 Inf，並過濾極大值防止 Overflow
+        #  np.isfinite ??? NaN ??Inf???Overflow
         # numpy float64 max is ~1.8e308, square is inf. 
         # sklearn MSE might square 1e154 -> overflow. 1e100 is a safe upper bound.
         mask = np.isfinite(y_true) & np.isfinite(y_pred) & (np.abs(y_pred) < 1e100)
         
         ignored_count = len(y_true) - np.sum(mask)
         if ignored_count > 0:
-             print(f"  [警告] 變數 {col}: 過濾了 {ignored_count} 個 NaN/Inf/Extreme 數值。")
+             print(f"  [WARN] {col}: ignored {ignored_count} NaN/Inf/extreme values.")
 
         if np.sum(mask) == 0:
              metrics = {"MAE": 0, "RMSE": 0, "R2": 0, "MAPE": 0}
@@ -360,7 +864,7 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
     metrics_df = pd.DataFrame(metrics_list)
     metrics_path = os.path.join(results_dir, 'evaluation_metrics.csv')
     metrics_df.to_csv(metrics_path, index=False)
-    print(f"指標已保存: {metrics_path}")
+    print(f"???? {metrics_path}")
     print(metrics_df)
     
     # Save Predictions CSV
@@ -371,8 +875,8 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
     predictions_cov = pred_df_inv.values 
     true_targets_cov = true_df_inv.values 
 
-    # 1. 準備歷史數據用於繪圖 (反標準化)
-    # initial_history_np 是 Scaled 的 (W, Enc_Feat)
+    # 1. ????? (???)
+    # initial_history_np ??Scaled ??(W, Enc_Feat)
     df_hist_scaled = pd.DataFrame(initial_history_np, columns=en_mv_and_sv)
     df_hist = data_utils.inverse_zscore(df_hist_scaled, mean_all, std_all) 
     
@@ -381,6 +885,7 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
     
     # [Modified] Only plot targets H2S and SO2
     target_plot_cols = ['B35_H2S', 'B35_SO2']
+    time_series_data = []
     
     for i, name in enumerate(y_sv):
         var_metrics = metrics_results[i]
@@ -389,7 +894,7 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
         if name not in target_plot_cols:
             continue
         
-        # 獲取該變數的歷史數據 (如果存在於 Encoder Input 中)
+        # ??????? (???Encoder Input ?
         if name in df_hist.columns:
             hist_vals = df_hist[name].values
         else:
@@ -397,29 +902,36 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
             
         future_true = true_targets_cov[:, i]
         future_pred = predictions_cov[:, i]
+        time_series_data.append({
+            'variable': name,
+            'true': future_true.copy(),
+            'pred': future_pred.copy(),
+            'r2': var_metrics['R2'],
+            'rmse': var_metrics['RMSE'],
+        })
         
-        # 拼接
+        # ?
         full_true = np.concatenate([hist_vals, future_true])
-        # 對於預測線，歷史部分我們通常畫成真實值 (作為 Context)，或者不畫
-        # 這裡我們畫成一條線：前段是 History(True)，後段是 Pred
-        # 為了區分，我們分兩段畫
+        # ??????????( Context)?????
+        # ?????? History(True)? Pred
+        # ??????????
         
         plt.figure(figsize=(20, 6))
         
         # Plot History
         x_hist = range(len(hist_vals))
-        plt.plot(x_hist, hist_vals, label='History', color='gray', alpha=0.7)
+        plt.plot(x_hist, hist_vals, label='History', color=HISTORY_COLOR, alpha=0.75, linewidth=1.4)
         
         # Plot Future
         x_future = range(len(hist_vals), len(hist_vals) + len(future_true))
-        plt.plot(x_future, future_true, label='True (Future)', color='blue')
-        plt.plot(x_future, future_pred, label='Pred (Future)', color='red', linestyle='--')
+        plt.plot(x_future, future_true, label='True (Future)', color=TRUE_COLOR, linewidth=1.6)
+        plt.plot(x_future, future_pred, label='Pred (Future)', color=PRED_COLOR, linestyle='--', linewidth=1.6)
         
-        # 連接點視覺優化 (讓 History 和 Pred 連起來)
+        # ?????(?History ??Pred ???
         # Connect points for visual continuity
         if len(hist_vals) > 0:
-            plt.plot([x_hist[-1], x_future[0]], [hist_vals[-1], future_pred[0]], color='red', linestyle='--', alpha=0.5)
-            plt.plot([x_hist[-1], x_future[0]], [hist_vals[-1], future_true[0]], color='blue', alpha=0.5)
+            plt.plot([x_hist[-1], x_future[0]], [hist_vals[-1], future_pred[0]], color=PRED_COLOR, linestyle='--', alpha=0.55)
+            plt.plot([x_hist[-1], x_future[0]], [hist_vals[-1], future_true[0]], color=TRUE_COLOR, alpha=0.55)
 
         # Set Y-Axis Limits based on Valid Data (History + True Future)
         # prevents the plot from being unreadable due to massive outlier predictions (e.g. 1e292)
@@ -433,85 +945,45 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
             if y_margin == 0: y_margin = 1.0
             plt.ylim(y_data_min - y_margin, y_data_max + y_margin)
 
-        title = f'{name} ({test_name})\nR2={var_metrics["R2"]:.4f}, MAPE={var_metrics["MAPE"]:.2f}%'
-        plt.title(title)
         plt.legend()
-        plt.grid(True, alpha=0.3)
+        style_prediction_axis(plt.gca())
         plt.savefig(os.path.join(results_dir, f'{name}.png'))
         plt.close()
 
-        # ==========================================
-        # Parity Plot
-        # ==========================================
-        plt.figure(figsize=(6, 6))
-        
-        # Filter finite values for plotting checks
-        mask_plot = np.isfinite(future_true) & np.isfinite(future_pred) 
-        if np.sum(mask_plot) > 0:
-            p_true = future_true[mask_plot]
-            p_pred = future_pred[mask_plot]
-            
-            # Scatter Plot
-            plt.scatter(p_true, p_pred, alpha=0.5, s=10, label='Data', color='blue')
-            
-            # Diagonal line (Reference)
-            # Find min/max across both true and pred to draw a proper diagonal
-            all_vals = np.concatenate([p_true, p_pred])
-            if len(all_vals) > 0:
-                min_val = np.min(all_vals)
-                max_val = np.max(all_vals)
-                margin = (max_val - min_val) * 0.05
-                plt.plot([min_val - margin, max_val + margin], 
-                         [min_val - margin, max_val + margin], 
-                         'r--', label='Perfect Prediction')
-                
-                plt.xlim(min_val - margin, max_val + margin)
-                plt.ylim(min_val - margin, max_val + margin)
-            
-            plt.xlabel('True Values')
-            plt.ylabel('Predicted Values')
-            
-            # Use same metrics in title
-            title_parity = f'Parity Plot: {name}\nR2={var_metrics["R2"]:.4f}, MAPE={var_metrics["MAPE"]:.2f}%'
-            plt.title(title_parity)
-            plt.legend()
-            plt.grid(True, alpha=0.3)
-            plt.axis('equal') # Aspect ratio 1:1 important for parity
-            
-            plt.savefig(os.path.join(results_dir, f'{name}_parity.png'))
-            plt.close()
     
-    print(f"完成測試: {test_name}. 結果存在: {results_dir}")
+    print(f"?: {test_name}. ?: {results_dir}")
 
     # ==========================================
     # Random 5 Case Studies (72-step Horizon) -> Now Horizon Analysis (1-18)
     # ==========================================
-    analyze_horizon_performance(model, df_z_test, config, results_dir, 
+    horizon_result = analyze_horizon_performance(model, df_z_test, config, results_dir, 
                            mean_all, std_all, valid_log_cols,
                            en_mv_and_sv, de_mv, y_sv, W, device)
+    return {
+        'test_name': test_name,
+        'parity_data': horizon_result.get('parity_data', []) if horizon_result else [],
+        'time_series_data': time_series_data,
+    }
 
 def analyze_horizon_performance(model, df_z, config, results_dir, mean_all, std_all, log_cols,
                            en_cols, de_cols, y_cols, W, device):
-    """
-    對 t+1 至 t+18 步進行滾動預測評估 (Rolling Evaluation)。
-    針對每一個時間點生成預測，並統計特定步長 (Horizon) 的預測表現。
-    """
-    print(f"\n[Horizon Analysis] 執行 t+1 至 t+18 步的全面滾動評估...")
+    """Run rolling horizon analysis and keep t+1/t+18 parity data for grouped plots."""
+    print(f"\n[Horizon Analysis] Evaluating t+1 to t+18 rolling predictions...")
     
-    # 1. 準備 DataLoader (Sliding Window)
-    # 我們需要每個時間點的預測，所以使用 Dataset
-    # 預測長度 H 設為 max(prediction_length, 18) 以確保有足夠步數，或者取決於模型訓練設定
-    # 如果模型訓練時 H=12，那只能測到 12。
+    # 1. ? DataLoader (Sliding Window)
+    # ?????????????Dataset
+    # ?? H  max(prediction_length, 18) ???????
+    # ????H=12? 12??
     H_model = config['window']['prediction_length']
     analyze_steps = 18
     
     if H_model < analyze_steps:
-        print(f"  注意: 模型訓練預測長度 ({H_model}) 小於要求的分析長度 ({analyze_steps})。")
-        print(f"  將只分析 t+1 至 t+{H_model}。")
+        print(f"  Warning: model prediction length ({H_model}) is shorter than {analyze_steps}.")
+        print(f"  Analyzing t+1 to t+{H_model} only.")
         analyze_steps = H_model
     
-    # 建立 Dataset
-    # 使用 MultiStepS2SDataset 進行滑動窗口
+    # ? Dataset
+    #  MultiStepS2SDataset ???
     from src.dataset import MultiStepS2SDataset
     
     dataset = MultiStepS2SDataset(
@@ -520,7 +992,7 @@ def analyze_horizon_performance(model, df_z, config, results_dir, mean_all, std_
         W, H_model
     )
     
-    # 避免 OOM，使用適當 Batch Size
+    # ?? OOM???Batch Size
     loader = torch.utils.data.DataLoader(dataset, batch_size=256, shuffle=False, drop_last=False)
     
     all_preds_list = []
@@ -542,8 +1014,8 @@ def analyze_horizon_performance(model, df_z, config, results_dir, mean_all, std_
             
     # Concatenate
     if len(all_preds_list) == 0:
-        print("沒有產生任何預測 (數據過短?)")
-        return
+        print("????? (????)")
+        return {'parity_data': []}
 
     all_preds = np.concatenate(all_preds_list, axis=0)     # (N_samples, H, F_out)
     all_targets = np.concatenate(all_targets_list, axis=0) # (N_samples, H, F_out)
@@ -551,7 +1023,7 @@ def analyze_horizon_performance(model, df_z, config, results_dir, mean_all, std_
     # 2. Inverse Transform Helper
     N, H, F = all_preds.shape
     
-    # 用於 Inverse 的 Helper
+    # ? Inverse ??Helper
     def inverse_full(arr_3d):
         # arr_3d: (N, H, F)
         # Reshape to 2D for inverse
@@ -572,25 +1044,22 @@ def analyze_horizon_performance(model, df_z, config, results_dir, mean_all, std_
              
         return df_inv.values.reshape(N, H, F)
 
-    print("  反標準化中...")
+    print("  ????..")
     all_preds_inv = inverse_full(all_preds)
     all_targets_inv = inverse_full(all_targets)
     
-    # 3. Generating Plots by Horizon
-    analysis_dir = os.path.join(results_dir, 'horizon_analysis_18step')
-    os.makedirs(analysis_dir, exist_ok=True)
-    
+    # 3. Collect metrics and selected horizon parity data.
     target_plot_cols = ['B35_H2S', 'B35_SO2'] # Only analyze these
+    selected_parity_steps = {1, analyze_steps}
+    selected_parity_data = []
     
-    print(f"  正在計算 t+1 ~ t+{analyze_steps} 指標，並生成時序圖與 Parity Plot...")
+    print(f"  Collecting horizon metrics and t+1/t+{analyze_steps} parity data...")
 
     horizon_metrics_rows = []
     
     for t_idx in range(analyze_steps):
         step_num = t_idx + 1
         step_name = f"t+{step_num}"
-        step_dir = os.path.join(analysis_dir, step_name)
-        os.makedirs(step_dir, exist_ok=True)
         
         # Extract data for this step
         # Shape: (N, F)
@@ -605,7 +1074,7 @@ def analyze_horizon_performance(model, df_z, config, results_dir, mean_all, std_
             y_t = targets_t[:, v_idx]
             
             # Filter NaN/Inf
-            # 過濾極端值以避免 Plot 顯示問題
+            # ???? Plot ??
             mask = np.isfinite(y_p) & np.isfinite(y_t) & (np.abs(y_p) < 1e100)
             y_p = y_p[mask]
             y_t = y_t[mask]
@@ -627,72 +1096,47 @@ def analyze_horizon_performance(model, df_z, config, results_dir, mean_all, std_
                 'R2': metric_values['R2'],
                 'MAPE': metric_values['MAPE'],
             })
-            
-            # --- 1. Parity Plot ---
-            plt.figure(figsize=(6, 6))
-            # 降低 alpha 值因為點數可能非常多
-            plt.scatter(y_t, y_p, alpha=0.5, s=10, color='blue') 
-            
-            # Range
-            if len(y_t) > 0:
-                min_val = min(y_t.min(), y_p.min())
-                max_val = max(y_t.max(), y_p.max())
-                margin = (max_val - min_val) * 0.05
-                if margin == 0: margin = 1
-                plt.plot([min_val, max_val], [min_val, max_val], 'r--', label='Ideal')
-            
-            plt.title(f'{var_name} ({step_name}) Parity\nRMSE={rmse:.4f}, R2={r2:.4f}')
-            plt.xlabel('True Value')
-            plt.ylabel('Predicted Value')
-            plt.grid(True, alpha=0.3)
-            plt.axis('equal')
-            plt.savefig(os.path.join(step_dir, f'parity_{var_name}.png'), dpi=100)
-            plt.close()
-            
-            # --- 2. Time Series Plot ---
-            # 畫成 Line Plot，顯示整個測試集的該步預測
-            plt.figure(figsize=(15, 6))
-            plt.plot(y_t, label='True', color='black', linewidth=0.8)
-            plt.plot(y_p, label='Pred', color='red', linewidth=0.8)
-            
-            plt.title(f'{var_name} ({step_name}) Time Series\nRMSE={rmse:.4f}, R2={r2:.4f}')
-            plt.xlabel('Sample Index')
-            plt.ylabel(var_name)
-            plt.legend()
-            plt.grid(True, alpha=0.3)
-            plt.savefig(os.path.join(step_dir, f'timeseries_{var_name}.png'), dpi=100)
-            plt.close()
-            
+
+            if step_num in selected_parity_steps:
+                selected_parity_data.append({
+                    'step_num': step_num,
+                    'step_name': step_name,
+                    'variable': var_name,
+                    'true': y_t.copy(),
+                    'pred': y_p.copy(),
+                })
+
     # Save horizon metrics CSV
     metrics_df = pd.DataFrame(horizon_metrics_rows)
-    metrics_path = os.path.join(analysis_dir, f'horizon_metrics_t1_to_t{analyze_steps}.csv')
+    metrics_path = os.path.join(results_dir, f'horizon_metrics_t1_to_t{analyze_steps}.csv')
     metrics_df.to_csv(metrics_path, index=False)
-    print(f"  已保存逐步指標: {metrics_path}")
-    print(f"Horizon analysis saved to {analysis_dir}")
+    print(f"  ???: {metrics_path}")
+    print(f"Horizon metrics saved to {metrics_path}")
+    return {'parity_data': selected_parity_data}
 
 
 def main(config_path):
-    # --- Step 0: 載入設定 ---
+    # --- Step 0: ? ---
     with open(config_path, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
 
     prefix = config['exp_name']
-    print(f"========== 實驗: {prefix} ==========")
+    print(f"========== ?: {prefix} ==========")
     
-    # --- 全域準備: 載入訓練數據的統計量 ---
-    # 優先嘗試載入訓練時保存的 zscore_mean.csv (Median) 和 zscore_std.csv (IQR)
+    # --- ???: ???? ---
+    # ?????? zscore_mean.csv (Median) ??zscore_std.csv (IQR)
     zscore_mean_path = os.path.join('./results/', prefix, 'zscore_mean.csv')
     zscore_std_path = os.path.join('./results/', prefix, 'zscore_std.csv')
     
     cfg_data = config['data']
     
     if os.path.exists(zscore_mean_path) and os.path.exists(zscore_std_path):
-        print(f"[Init] 載入已保存的統計量: {zscore_mean_path}")
+        print(f"[Init] ????? {zscore_mean_path}")
         # index_col=0 is crucial because saved csv has variable names in first column
         mean_all = pd.read_csv(zscore_mean_path, index_col=0).squeeze()
         std_all = pd.read_csv(zscore_std_path, index_col=0).squeeze()
     else:
-        print("[Init] 警告：未找到保存的統計量，正在從訓練數據重新計算 (確保與訓練流程一致)...")
+        print("[Init] ??????????? (???????...")
         cfg_data = config['data']
         training_file = cfg_data['training_files'][0] if 'training_files' in cfg_data else cfg_data['filename']
         try:
@@ -705,26 +1149,26 @@ def main(config_path):
             
         df_train.dropna(inplace=True)
         
-        # 關鍵：必須先做 Log Transform 再計算 Stats！
+        # ??????Log Transform ???Stats?
         target_cols = ['B35_H2S', 'B35_SO2']
         valid_log_cols = [c for c in target_cols if c in df_train.columns]
         if valid_log_cols:
              print(f"  Doing Log Transform on {valid_log_cols} before stats calc...")
              df_train = data_utils.apply_log_transform(df_train, valid_log_cols)
              
-        # 計算 Robust Stats (Median/IQR)
-        # 注意：雖然變數名叫 mean_all/std_all，但內容其實是 Median/IQR
+        # ? Robust Stats (Median/IQR)
+        # ????????mean_all/std_all?????Median/IQR
         mean_all, std_all = data_utils.calculate_robust_stats(df_train)
-        print("  重新計算完成。")
+        print("  Recalculated robust statistics.")
 
-    # 變數選擇
+    # ??
     de_mv, y_sv, _, en_mv_and_sv = variable_selection(cfg_data['variables_num'])
     
     cfg_win = config['window']
     W = cfg_win['train_window_mins'] // cfg_win['sampling_interval_min']
     
-    # --- 載入模型 ---
-    print(f"\n[Init] 載入模型...")
+    # --- ? ---
+    print(f"\n[Init] Loading model...")
     config['data']['num_en_input'] = len(en_mv_and_sv)
     config['data']['num_de_input'] = len(de_mv)
     config['data']['num_output'] = len(y_sv)
@@ -734,27 +1178,35 @@ def main(config_path):
     model_path = os.path.join('./saved_models/', f'{prefix}.pth')
     
     if not os.path.exists(model_path):
-        print(f"錯誤: 模型檔案不存在: {model_path}")
+        print(f"Error: model file not found: {model_path}")
         return
 
     model.load_state_dict(torch.load(model_path, map_location=device))
     model.to(device)
     
-    # --- 執行多個測試 ---
+    # --- ???---
     test_suites = config['data'].get('inference_files', [])
     
-    # 如果 Yaml 沒定義 inference_files，就用舊的 test_data
+    # ? Yaml ??inference_files????test_data
     if not test_suites:
-        print("未發現 inference_files，使用預設 test_data")
+        print("???inference_files???test_data")
         default_test = config['data']['test_data']
         default_test['name'] = 'Default_Test_Set'
         test_suites = [default_test]
         
+    horizon_runs = []
     for test_cfg in test_suites:
-        run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and_sv, de_mv, y_sv, W)
+        run_result = run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and_sv, de_mv, y_sv, W)
+        if run_result:
+            horizon_runs.append(run_result)
+
+    output_root = config.get('output', {}).get('results_dir', './results')
+    plot_grouped_horizon_parity(horizon_runs, config, output_root)
+    plot_grouped_time_series(horizon_runs, config, output_root)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="執行預測")
+    parser = argparse.ArgumentParser(description="???")
     parser.add_argument('--config', type=str, required=True)
     args = parser.parse_args()
     main(args.config)
+
