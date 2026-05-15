@@ -66,7 +66,7 @@ def step_wise_rolling_training_step(model, batch, criterion, device, loss_fracti
 # ==============================================================================
 # --- 模式二：帶有 AT Loss 的逐步滾動訓練 ---
 # ==============================================================================
-def step_wise_rolling_at_loss_step(model, batch, criterion, device, config):
+def step_wise_rolling_at_loss_step(model, batch, criterion, device, config, return_predictions=False):
     """
     策略：在 PyTorch 中实现与 Keras Three_window_pred 等价的“块替换”滚动训练。
     梯度会在整个块预测链条中反向传播。
@@ -153,6 +153,9 @@ def step_wise_rolling_at_loss_step(model, batch, criterion, device, config):
         l_i = criterion(p_block, t_block)
         total_loss += loss_weights[i] * l_i  
             
+    if return_predictions:
+        return total_loss, all_predictions, all_future_targets
+
     return total_loss
 
 
