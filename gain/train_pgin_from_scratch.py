@@ -2,6 +2,7 @@ import os
 import sys
 import argparse
 import yaml
+import glob
 import torch
 import torch.nn as nn
 torch.backends.cuda.enable_flash_sdp(False)
@@ -15,51 +16,154 @@ import contextlib
 import io
 import matplotlib.pyplot as plt
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from src import utils as data_utils
 from src.variable_selection import variable_selection
 from src.models import get_model
-from src.models.tabular_mlp import TabularMLP
 
-def generate_steady_state_batch(df_raw, batch_size, de_mv, all_cols, W, std_all):
-    idx1 = np.random.choice(len(df_raw) - W - 1, batch_size)
+# =====================================================================
+# 1. Variable name mapping
+#    HYSYS/raw tag names -> Python-friendly column names
+# =====================================================================
+FULL_MAPPING = {
+    'B34.SPo.SPo': 'acidgas_Fm', 'B17.PV.PV': 'air', 'S20.P.P': 'HEATER1_output_P', 'B33.SPo.SPo': 'air2_SP',
+    'B17.SPo.SPo': 'air_SP', 'B35.SPo.SPo': 'COG_SP', 'AIR2.Fv.Fv': 'second_air2', 'S4.Fv.Fv': 'COG',
+    'B18.SPo.SPo': 'burner_input_T_SP', 'B18.PV.PV': 'burner_input_T_PV', 'B19.SPo.SPo': 'burner_output_T_SP',
+    'B19.PV.PV': 'burner_output_T_PV', 'BURNER_PC.SPo.SPo': 'burner_output_P_SP', 'BURNER_PC.PV.PV': 'burner_output_P_PV',
+    'FURANCE_PC.SPo.SPo': 'fur_outputP_SP', 'FURANCE_PC.PV.PV': 'fur_outputP_PV', 'FURANCE.T.0.(0)': 'fur_inputT',
+    'FURANCE.T.1.(1)': 'fur_temp', 'SEP1_PC.SPo.SPo': 'SEP1_P_SP', 'SEP1_PC.PV.PV': 'SEP1_P_PV', 'SEP1.T.T': 'SEP1_T',
+    'SEP2_PC.SPo.SPo': 'SEP2_P_SP', 'SEP2_PC.PV.PV': 'SEP2_P_PV', 'SEP2.T.T': 'SEP2_T', 'SEP3_PC.SPo.SPo': 'SEP3_P_SP',
+    'SEP3_PC.PV.PV': 'SEP3_P_PV', 'SEP3.T.T': 'SEP3_T', 'B21.SPo.SPo': 'HEATER1_output_T_SP',
+    'B21.PV.PV': 'HEATER1_output_T_PV', 'B20.SPo.SPo': 'HEATER2_output_T_SP', 'B20.PV.PV': 'HEATER2_output_T_PV',
+    'CAT1_PC.SPo.SPo': 'cat1_output_P_SP', 'CAT1_PC.PV.PV': 'cat1_output_P_PV', 'CAT2_PC.SPo.SPo': 'cat2_output_P_SP',
+    'CAT2_PC.PV.PV': 'cat2_output_P_PV', 'S12.F.F': 'fur_F', 'S12.P.P': 'fur_inputP', 'S15.T.T': 'fur_outputT',
+    'S16.F.F': 'WHB_F', 'S16.P.P': 'WHB_inputP', 'S16.T.T': 'WHB_inputT', 'S13.T.T': 'WHB_outputT',
+    'S13.P.P': 'WHB_outputP', 'S36.F.F': 'HEATER1_F', 'S36.P.P': 'HEATER1_input_P', 'S36.T.T': 'HEATER1_input_T',
+    'S21.F.F': 'cat1_F', 'S21.P.P': 'cat1_input_P', 'S21.T.T': 'cat1_input_temp', 'S22.T.T': 'cat1_output_temp',
+    'S25.F.F': 'HEATER2_F', 'S25.P.P': 'HEATER2_input_P', 'S25.T.T': 'HEATER2_input_T', 'S27.F.F': 'cat2_F',
+    'S27.P.P': 'cat2_input_P', 'S27.T.T': 'cat2_input_temp', 'S28.T.T': 'cat2_output_temp', 'S14.F.F': 'SEP1_F',
+    'S23.F.F': 'SEP2_F', 'S29.F.F': 'SEP3_F', 'ACIDGAS.T.T': 'acidgas_T', 'ACIDGAS.P.P': 'acidgas_P',
+    'ACIDGAS.Fcn.H2O.("H2O")': 'acidgas_H2O', 'ACIDGAS.Fcn.H2S.("H2S")': 'acidgas_H2S',
+    'ACIDGAS.Fcn.CO2.("CO2")': 'acidgas_CO2', 'S33.Zn.SO2.("SO2")': 'B35_SO2', 'S33.Zn.H2S.("H2S")': 'B35_H2S',
+    'S8.P.P': 'burner_inputP'
+}
+
+class SimpleTabularMLP(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super(SimpleTabularMLP, self).__init__()
+        self.net = nn.Sequential(
+            nn.Linear(input_dim, 64),
+            nn.BatchNorm1d(64),
+            nn.GELU(),
+            nn.Dropout(0.1),
+
+            nn.Linear(64, 32),
+            nn.BatchNorm1d(32),
+            nn.GELU(),
+            nn.Dropout(0.1),
+
+            nn.Linear(32, output_dim)
+        )
+
+    def forward(self, x):
+        return self.net(x)
+
+def load_steady_state_source(path, required_cols, log_target_cols=None):
+    paths = sorted(glob.glob(path))
+    if not paths and os.path.exists(path):
+        paths = [path]
+    if not paths:
+        raise FileNotFoundError(f"Steady-state source file not found: {path}")
+
+    df_list = []
+    total_before_drop = 0
+    for source_path in paths:
+        ext = os.path.splitext(source_path)[1].lower()
+        if ext in [".xlsx", ".xlsm", ".xls"]:
+            df = pd.read_excel(source_path, sheet_name=0, header=2)
+            df = df.iloc[1:].dropna(how='all').copy()
+        elif ext == ".csv":
+            df = pd.read_csv(source_path)
+        else:
+            raise ValueError(f"Unsupported steady-state source file type: {ext}")
+
+        if 'Status' in df.columns:
+            df = df[df['Status'] == 'Run Completed'].copy()
+
+        rename_map = {raw_name: py_name for raw_name, py_name in FULL_MAPPING.items() if raw_name in df.columns}
+        df = df.rename(columns=rename_map)
+        df = df.loc[:, ~df.columns.duplicated()].copy()
+
+        missing_cols = [c for c in required_cols if c not in df.columns]
+        if missing_cols:
+            missing_preview = ', '.join(missing_cols[:20])
+            extra = f" ... (+{len(missing_cols) - 20} more)" if len(missing_cols) > 20 else ""
+            raise ValueError(f"Missing required steady-state columns in {source_path}: {missing_preview}{extra}")
+
+        df = df[required_cols].apply(pd.to_numeric, errors='coerce')
+        total_before_drop += len(df)
+        df_list.append(df)
+
+    df = pd.concat(df_list, ignore_index=True)
+    before_drop = len(df)
+    df = df.dropna().reset_index(drop=True)
+    if len(df) == 0:
+        raise ValueError(f"No usable steady-state rows after numeric conversion/dropna: {path}")
+
+    for col in log_target_cols or []:
+        if col in df.columns:
+            df[col] = np.log(np.clip(df[col], 1e-6, None))
+
+    print(
+        f"[Info] Loaded steady-state sources for SS/Gain loss: {len(paths)} file(s) | "
+        f"{len(df)} usable rows ({total_before_drop - len(df)} dropped)"
+    )
+    for source_path in paths:
+        print(f"  - {source_path}")
+    return df
+
+def generate_steady_state_batch(df_raw, batch_size, de_mv, all_cols, W, std_all, target_mvs=None, repeat_rows_as_history=False):
+    if repeat_rows_as_history:
+        idx1 = np.random.choice(len(df_raw), batch_size)
+    else:
+        idx1 = np.random.choice(len(df_raw) - W - 1, batch_size)
 
     historical_dfs = []
     ss1_rows = []
     
     for i in idx1:
-        hist_w = df_raw.iloc[i : i+W].reset_index(drop=True)
+        if repeat_rows_as_history:
+            ss_row = df_raw.iloc[[i]].reset_index(drop=True)
+            hist_w = pd.concat([ss_row] * W, ignore_index=True)
+        else:
+            hist_w = df_raw.iloc[i : i+W].reset_index(drop=True)
         historical_dfs.append(hist_w)
         ss1_rows.append(hist_w.iloc[-1:])
-        
-    historical_dfs = historical_dfs * 2
-    ss1_p_df = pd.concat(ss1_rows * 2, ignore_index=True)
-    ss2_p_df = ss1_p_df.copy()
 
-    target_mvs = [col for col in ['air2_SP', 'HEATER2_output_T_SP'] if col in de_mv]     
+    ss1_p_df = pd.concat(ss1_rows, ignore_index=True)
+    return historical_dfs, ss1_p_df
 
-    for b in range(batch_size):
-        if target_mvs:
-            var_to_perturb = target_mvs[b % len(target_mvs)]
-        else:
-            var_to_perturb = de_mv[b % len(de_mv)]
-            
-        std_val = std_all[var_to_perturb] if abs(std_all[var_to_perturb]) > 1e-6 else 1.0
-        delta = 0.5 * std_val
-        
-        ss2_p_df.at[b, var_to_perturb] += delta
-        ss2_p_df.at[b + batch_size, var_to_perturb] -= delta
-
-    return historical_dfs, ss1_p_df, ss2_p_df
+def dataframe_to_z_tensor(df, cols, mean, std, device):
+    mean_vals = mean[cols].values
+    std_vals = std[cols].replace(0, 1).values
+    z_values = (df[cols].values - mean_vals) / std_vals
+    return torch.tensor(z_values, dtype=torch.float32, device=device)
 
 def main(config_path: str):
     with open(config_path, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
 
     exp = config['exp_name']
-    pretrained_path = './saved_models/transformer_layerwise_71var_decoder_input_sp.pth'
-    if os.path.exists(pretrained_path):
-        exp = exp + "_Finetuned"
-        print(f"[Info] Found pre-trained weights. Automatically renaming experiment to: {exp}")
+    pretrained_path = config['training'].get(
+        'pretrained_path',
+        './saved_models/transformer_layerwise_71var_decoder_input_sp.pth'
+    )
+    use_pretrained = config['training'].get('use_pretrained', False)
+    finetune_lr = config['training'].get('finetune_learning_rate', 1e-5)
+    if use_pretrained:
+        exp = config['training'].get('finetune_exp_name', exp + "_Finetuned")
+        print(f"[Info] Pre-trained finetuning enabled. Experiment name: {exp}")
 
     device = 'cuda' if torch.cuda.is_available() and config['training']['device'] == 'cuda' else 'cpu'
 
@@ -83,10 +187,25 @@ def main(config_path: str):
     config['data']['num_output'] = len(y_sv)
 
     tab_input_cols = [
-      "acidgas_Fv", "acidgas_T", "acidgas_P", "air2_SP",
-      "HEATER2_output_T_SP", "acidgas_CO2", "acidgas_H2O", "acidgas_H2S"
+        'air2_SP',
+        'HEATER2_output_T_SP',
+        'acidgas_Fm',
+        'acidgas_P',
+        'acidgas_T',
     ]
-    tab_target_cols = ["B35_H2S", "B35_SO2"]
+    full_model_target_cols = [
+        'B35_H2S',
+        'B35_SO2',
+    ]
+    gain_target_qv = config['training'].get('gain_target_qv', ["B35_H2S", "B35_SO2"])
+    gain_target_mv = config['training'].get('gain_target_mv', ['air2_SP', 'HEATER2_output_T_SP'])
+    tab_target_cols = [c for c in gain_target_qv if c in y_sv and c in full_model_target_cols]
+    gain_target_mv = [c for c in gain_target_mv if c in de_mv and c in tab_input_cols]
+    if len(tab_target_cols) == 0:
+        raise ValueError("No valid gain_target_qv columns found in both Transformer outputs and ANN outputs.")
+    if len(gain_target_mv) == 0:
+        raise ValueError("No valid gain_target_mv columns found in both Transformer decoder inputs and ANN inputs.")
+    gain_target_mv_indices = [de_mv.index(c) for c in gain_target_mv]
 
     print("[Info] Loading historical R5-X dataset and calculating Z-score Stats...")
     from src.dataset import MultiStepS2SDataset
@@ -110,6 +229,8 @@ def main(config_path: str):
                 target_cols_log = ['B35_H2S', 'B35_SO2']
                 df_seg = data_utils.apply_log_transform(df_seg, target_cols_log)
                 all_dfs_log.append(df_seg)
+            else:
+                print(f"  [Warning] Training file not found, skipped: {fpath}")
                 
     if len(all_dfs_log) == 0:
         raise ValueError("No training data found to calculate Z-score stats.")
@@ -117,22 +238,33 @@ def main(config_path: str):
     df_all_log = pd.concat(all_dfs_log, ignore_index=True)
     mean_all, std_all = data_utils.calculate_zscore_stats(df_all_log)
     
-    # 建立 PGIN 結果資料夾並儲存 stats
+    # Save the z-score statistics used by this PGIN training run.
     zscore_dir = f'./results/{exp}/'
     os.makedirs(zscore_dir, exist_ok=True)
     mean_all.to_csv(os.path.join(zscore_dir, 'zscore_mean.csv'))
     std_all.to_csv(os.path.join(zscore_dir, 'zscore_std.csv'))
     print(f"  [Save] Z-score stats saved to {zscore_dir}")
 
-    tab_mean_path = './results/Tabular_MLP_Claus_Final/zscore_mean.csv'
-    tab_std_path = './results/Tabular_MLP_Claus_Final/zscore_std.csv'
-    if os.path.exists(tab_mean_path) and os.path.exists(tab_std_path):
-        tab_mean = pd.read_csv(tab_mean_path, index_col=0).squeeze("columns")
-        tab_std = pd.read_csv(tab_std_path, index_col=0).squeeze("columns")
-        for col in tab_input_cols + tab_target_cols:
-            if col not in mean_all.index and col in tab_mean.index:
-                mean_all[col] = tab_mean[col]
-                std_all[col] = tab_std[col]
+    tab_mean_path = './results/Tabular_MLP_New/zscore_mean.csv'
+    tab_std_path = './results/Tabular_MLP_New/zscore_std.csv'
+    if not os.path.exists(tab_mean_path) or not os.path.exists(tab_std_path):
+        raise FileNotFoundError(
+            "Tabular MLP z-score stats are required for ANN steady-state targets: "
+            f"{tab_mean_path}, {tab_std_path}"
+        )
+
+    tab_mean = pd.read_csv(tab_mean_path, index_col=0).squeeze("columns")
+    tab_std = pd.read_csv(tab_std_path, index_col=0).squeeze("columns").replace(0, 1)
+    missing_tab_stats = [c for c in tab_input_cols + full_model_target_cols if c not in tab_mean.index or c not in tab_std.index]
+    if missing_tab_stats:
+        missing_preview = ', '.join(missing_tab_stats[:20])
+        extra = f" ... (+{len(missing_tab_stats) - 20} more)" if len(missing_tab_stats) > 20 else ""
+        raise ValueError(f"Missing Tabular MLP z-score stats for: {missing_preview}{extra}")
+
+    for col in tab_input_cols + full_model_target_cols:
+        if col not in mean_all.index and col in tab_mean.index:
+            mean_all[col] = tab_mean[col]
+            std_all[col] = tab_std[col]
 
     all_dfs_z = []
     for df_log in all_dfs_log:
@@ -172,38 +304,41 @@ def main(config_path: str):
         valid_loader = None
         print('[Warning] No Validation data available!')
 
-    print('[Info] Preparing data for Physics-Informed Perturbation...')
-    df_raw = df_all_log.copy()
-    if 'air_acidgas_ratio' not in df_raw.columns and 'air2_SP' in df_raw.columns and 'acidgas_Fv' in df_raw.columns:
-        df_raw['air_acidgas_ratio'] = df_raw['air2_SP'] / df_raw['acidgas_Fv']
-
-    cols_to_check = [c for c in list(set(all_dynamic_cols + tab_input_cols + tab_target_cols)) if c in df_raw.columns]
-    df_raw = df_raw.dropna(subset=cols_to_check)
-
+    print('[Info] Preparing LHS steady-state data for SS/Gain losses...')
     keep_cols = []
     for c in all_dynamic_cols + tab_input_cols:
         if c not in keep_cols:
             keep_cols.append(c)
-    df_raw = df_raw[keep_cols]
 
-    print("[Info] Initializing Transformer Model (with optional Pre-trained check)...")
+    steady_state_source_path = config['training'].get(
+        'steady_state_source_path',
+        './data/Claus_steady_state/lhs_generated_dynamic_ss_data*.xlsx'
+    )
+    df_raw = load_steady_state_source(
+        steady_state_source_path,
+        keep_cols,
+        log_target_cols=['B35_H2S', 'B35_SO2']
+    )
+
+    print("[Info] Initializing Transformer Model...")
     dynamic_model = get_model(config).to(device)
-    pretrained_path = './saved_models/transformer_layerwise_71var_decoder_input_sp.pth'
-    if os.path.exists(pretrained_path):
-        print(f"  [Info] Found pre-trained MSE weights: {pretrained_path}")
+    if use_pretrained:
+        if not os.path.exists(pretrained_path):
+            raise FileNotFoundError(f"Configured pretrained_path does not exist: {pretrained_path}")
+        print(f"  [Info] Loading pre-trained MSE weights: {pretrained_path}")
         print(f"  [Info] Loading weights for Finetuning...")
         dynamic_model.load_state_dict(torch.load(pretrained_path, map_location=device))
     else:
-        print("  [Info] No pre-trained weights found. Training entirely from scratch.")
+        print("  [Info] Pre-trained loading disabled. Training entirely from scratch.")
     dynamic_model.train() 
 
     print("[Info] Loading Pre-trained TabularMLP Model...")
-    target_mean_tensor = torch.tensor(mean_all[tab_target_cols].values, dtype=torch.float32, device=device)
-    target_std_tensor = torch.tensor(std_all[tab_target_cols].values, dtype=torch.float32, device=device)
-    mlp_model = TabularMLP(num_features=len(tab_input_cols), num_outputs=len(tab_target_cols),
-                           hidden_dims=[256, 128, 64], dropout=0.05, activation='gelu',
-                           target_mean=target_mean_tensor, target_std=target_std_tensor)
-    mlp_path = f'./saved_models/Tabular_MLP_Claus_Final_tabular_mlp.pth'
+    tab_target_mean_tensor = torch.tensor(tab_mean[full_model_target_cols].values, dtype=torch.float32, device=device)
+    tab_target_std_tensor = torch.tensor(tab_std[full_model_target_cols].values, dtype=torch.float32, device=device)
+    dynamic_full_target_mean_tensor = torch.tensor(mean_all[full_model_target_cols].values, dtype=torch.float32, device=device)
+    dynamic_full_target_std_tensor = torch.tensor(std_all[full_model_target_cols].values, dtype=torch.float32, device=device)
+    mlp_model = SimpleTabularMLP(input_dim=len(tab_input_cols), output_dim=len(full_model_target_cols))
+    mlp_path = f'./saved_models/Tabular_MLP_5in_2out_QV.pth'
     if not os.path.exists(mlp_path):
         mlp_path = f'./saved_models/{exp}_tabular_mlp.pth'
     mlp_model.load_state_dict(torch.load(mlp_path, map_location=device))
@@ -214,16 +349,19 @@ def main(config_path: str):
     epochs = config['training'].get('epochs', 20)
     steps_per_epoch = min(config['training'].get('steps_per_epoch', 50), len(train_loader))
     base_lr = config['training'].get('learning_rate', 1e-4)
-    # If using pretrained model, scale down LR to prevent destroying MSE state
-    if os.path.exists('./saved_models/transformer_layerwise_71var_decoder_input_sp.pth'):
-        base_lr = 1e-5
-        print(f"  [Info] Auto-scaled Learning Rate for Fine-tuning: {base_lr}")
+    if use_pretrained:
+        base_lr = finetune_lr
+        print(f"  [Info] Using fine-tuning Learning Rate: {base_lr}")
 
     optimizer = optim.Adam(dynamic_model.parameters(), lr=base_lr)
     
     W = int(config['window']['train_window_mins'] / config['window']['sampling_interval_min'])
-    H_ss = 100 
-    warmup_steps = 100 
+    H_ss = H_out
+    detach_closed_loop_history = config['training'].get('detach_closed_loop_history', True)
+    ss_debug_plot = config['training'].get('ss_debug_plot', False)
+    ss_debug_top_k = config['training'].get('ss_debug_top_k', 8)
+    pgin_runtime_plot = config['training'].get('pgin_runtime_plot', True)
+    print(f"  [Info] Detach closed-loop history: {detach_closed_loop_history}")
 
     best_loss = float('inf')
     early_stop_patience = config['training'].get('patience', 10)
@@ -233,11 +371,59 @@ def main(config_path: str):
     y_std_tensor = torch.tensor(std_all[y_sv].values, dtype=torch.float32, device=device)
     y_std_safe = torch.where(torch.abs(y_std_tensor) < 1e-6, torch.ones_like(y_std_tensor), y_std_tensor)
 
-    target_std_safe = torch.where(torch.abs(target_std_tensor) < 1e-6, torch.ones_like(target_std_tensor), target_std_tensor)
+    tab_target_std_safe = torch.where(torch.abs(tab_target_std_tensor) < 1e-6, torch.ones_like(tab_target_std_tensor), tab_target_std_tensor)
+    dynamic_full_target_std_safe = torch.where(
+        torch.abs(dynamic_full_target_std_tensor) < 1e-6,
+        torch.ones_like(dynamic_full_target_std_tensor),
+        dynamic_full_target_std_tensor
+    )
+    ss_target_cols_cfg = config['training'].get('ss_target_cols')
+    if ss_target_cols_cfg:
+        ss_target_cols = [c for c in ss_target_cols_cfg if c in full_model_target_cols and c in y_sv]
+        missing_ss_targets = [c for c in ss_target_cols_cfg if c not in ss_target_cols]
+        if missing_ss_targets:
+            raise ValueError(f"Invalid ss_target_cols entries: {missing_ss_targets}")
+    else:
+        ss_target_cols = [c for c in full_model_target_cols if c in y_sv]
+    if len(ss_target_cols) == 0:
+        raise ValueError("No valid steady-state target columns configured.")
+    ss_dyn_target_idx = [y_sv.index(c) for c in ss_target_cols]
+    ss_ann_target_idx = [full_model_target_cols.index(c) for c in ss_target_cols]
+    ss_log_target_idx = [i for i, c in enumerate(ss_target_cols) if c in ['B35_H2S', 'B35_SO2']]
+    ann_monitor_idx = [full_model_target_cols.index(c) for c in tab_target_cols]
+
+    ss_loss_weight = config['training'].get('ss_loss_weight', 0.1)
+    gain_loss_weight = config['training'].get('gain_loss_weight', config['training'].get('pgin_loss_weight', 0.3))
+    smooth_loss_weight = config['training'].get('smooth_loss_weight', 0.0)
+    enable_gain_loss = config['training'].get('enable_gain_loss', True)
+    monitor_gain_kci = config['training'].get('monitor_gain_kci', True)
+    effective_gain_loss_weight = gain_loss_weight if enable_gain_loss else 0.0
+    compute_gain_metrics = enable_gain_loss or monitor_gain_kci or config['training'].get('pgin_runtime_plot', True)
+    gain_valid_delta_threshold = config['training'].get('gain_valid_delta_threshold', 1e-5)
+    dynamic_gain_method = config['training'].get('dynamic_gain_method', 'autograd').lower()
+    dynamic_gain_tail_start_step = config['training'].get('dynamic_gain_tail_start_step', 10)
+    finite_diff_delta_std = config['training'].get('finite_diff_delta_std', 0.5)
+    if dynamic_gain_method not in ['autograd', 'finite_difference']:
+        raise ValueError("dynamic_gain_method must be either 'autograd' or 'finite_difference'.")
+    if dynamic_gain_tail_start_step < 1:
+        raise ValueError("dynamic_gain_tail_start_step must be 1-based and >= 1.")
+    dynamic_gain_tail_start_idx = min(dynamic_gain_tail_start_step - 1, H_ss - 1)
+    print(
+        f"  [Info] Loss weights | MSE: 1.0, Smooth: {smooth_loss_weight}, SS: {ss_loss_weight}, "
+        f"Gain: {effective_gain_loss_weight}; "
+        f"SS targets: {len(ss_target_cols)} vars; Gain loss enabled: {enable_gain_loss}; "
+        f"KCI monitor: {compute_gain_metrics}; "
+        f"Gain targets: {tab_target_cols} x {gain_target_mv}; "
+        f"Gain valid delta threshold: {gain_valid_delta_threshold}; "
+        f"Dynamic gain method: {dynamic_gain_method}; "
+        f"Dynamic gain output: tail mean steps {dynamic_gain_tail_start_idx + 1}-{H_ss}; "
+        f"FD delta std: {finite_diff_delta_std}"
+    )
 
     history_losses = []
     history_val_losses = []
     history_kci = [] 
+    history_gain_pair_rows = []
 
     from src.engine import step_wise_rolling_at_loss_step
     criterion = nn.MSELoss()
@@ -248,6 +434,17 @@ def main(config_path: str):
         epoch_correct_dir = 0
         epoch_total_eval = 0
         epoch_mse_loss = 0.0
+        epoch_smooth_loss = 0.0
+        epoch_ss_loss = 0.0
+        epoch_total_loss = 0.0
+        pair_correct = torch.zeros(len(tab_target_cols), len(gain_target_mv), device=device)
+        pair_total = torch.zeros(len(tab_target_cols), len(gain_target_mv), device=device)
+        pair_ann_sign_sum = torch.zeros(len(tab_target_cols), len(gain_target_mv), device=device)
+        pair_dyn_pos_sum = torch.zeros(len(tab_target_cols), len(gain_target_mv), device=device)
+        ann_monitor_min = torch.full((len(tab_target_cols),), float('inf'), device=device)
+        ann_monitor_max = torch.full((len(tab_target_cols),), float('-inf'), device=device)
+        ann_monitor_clamped = 0
+        ann_monitor_count = 0
         
         step_limit = min(steps_per_epoch, len(train_loader))
         pbar = tqdm(enumerate(train_loader), total=step_limit, desc=f"Epoch {epoch+1}/{epochs}")
@@ -258,10 +455,25 @@ def main(config_path: str):
                 
             optimizer.zero_grad()
 
-            mse_loss_val = step_wise_rolling_at_loss_step(dynamic_model, mse_batch, criterion, device, config)
+            if smooth_loss_weight != 0:
+                mse_loss_val, pred_rollout_z, target_rollout_z = step_wise_rolling_at_loss_step(
+                    dynamic_model, mse_batch, criterion, device, config, return_predictions=True
+                )
+                if pred_rollout_z.shape[1] > 1:
+                    pred_diff_z = pred_rollout_z[:, 1:, :] - pred_rollout_z[:, :-1, :]
+                    target_diff_z = target_rollout_z[:, 1:, :] - target_rollout_z[:, :-1, :]
+                    smooth_loss_val = criterion(pred_diff_z, target_diff_z)
+                else:
+                    smooth_loss_val = torch.tensor(0.0, device=device)
+            else:
+                mse_loss_val = step_wise_rolling_at_loss_step(dynamic_model, mse_batch, criterion, device, config)
+                smooth_loss_val = torch.tensor(0.0, device=device)
 
             ss_batch_size = 4
-            historical_dfs, ss1_df, ss2_df = generate_steady_state_batch(df_raw, ss_batch_size, de_mv, keep_cols, W, std_all)
+            historical_dfs, ss1_df = generate_steady_state_batch(
+                df_raw, ss_batch_size, de_mv, keep_cols, W, std_all, gain_target_mv,
+                repeat_rows_as_history=True
+            )
             B_actual = len(historical_dfs)
 
             with contextlib.redirect_stdout(io.StringIO()):
@@ -272,180 +484,398 @@ def main(config_path: str):
                 x_en_z_history = torch.stack(x_en_z_list) 
                 
                 ss1_z_df = data_utils.apply_zscore(ss1_df, mean_all, std_all).fillna(0.0)
-                ss2_z_df = data_utils.apply_zscore(ss2_df, mean_all, std_all).fillna(0.0)
 
             ss1_de_p = torch.tensor(ss1_df[de_mv].values, dtype=torch.float32, device=device)
-            ss2_de_p = torch.tensor(ss2_df[de_mv].values, dtype=torch.float32, device=device)
-
-            delta_mv = ss2_de_p - ss1_de_p
-            is_perturbed = torch.abs(delta_mv) > 1e-5
-            delta_mv_safe = torch.where(is_perturbed, delta_mv, torch.sign(delta_mv) * 1e-6 + 1e-6)
-
-            mlp_x_z_ss1 = torch.tensor(ss1_z_df[tab_input_cols].values, dtype=torch.float32, device=device)
-            mlp_x_z_ss2 = mlp_x_z_ss1.clone()
-            
-            for col in de_mv:
-                if col in tab_input_cols:
-                    col_idx_in_tab = tab_input_cols.index(col)
-                    col_idx_in_de = de_mv.index(col)
-                    m = mean_all.get(col, 0.0)
-                    s_val = std_all.get(col, 1.0)
-                    s = s_val if abs(s_val) > 1e-6 else 1.0
-                    mlp_x_z_ss2[:, col_idx_in_tab] = (ss2_de_p[:, col_idx_in_de] - m) / s
-
-            with torch.no_grad():
-                y_mlp_z_ss1 = mlp_model(mlp_x_z_ss1)
-                y_mlp_p_ss1 = y_mlp_z_ss1 * target_std_safe + target_mean_tensor
-                y_mlp_z_ss2 = mlp_model(mlp_x_z_ss2)
-                y_mlp_p_ss2 = y_mlp_z_ss2 * target_std_safe + target_mean_tensor
-
-            delta_y_mlp = y_mlp_p_ss2 - y_mlp_p_ss1 
-            K_ss_matrix = delta_y_mlp.unsqueeze(2) / delta_mv_safe.unsqueeze(1)
-            K_ss_direction = torch.sign(K_ss_matrix)
-
             ss1_en_z = torch.tensor(ss1_z_df[en_mv_and_sv].values, dtype=torch.float32, device=device)
             ss1_de_z = torch.tensor(ss1_z_df[de_mv].values, dtype=torch.float32, device=device)
 
-            current_en_history = x_en_z_history.clone()
-            steady_state_preds_ss1 = []
-            all_preds_ss1_plot = []
+            mlp_x_z_ss1 = dataframe_to_z_tensor(ss1_df, tab_input_cols, tab_mean, tab_std, device)
+            mlp_x_z_ss1.requires_grad_(True)
+            
+            y_mlp_z_ss1 = mlp_model(mlp_x_z_ss1)
+            y_mlp_p_ss1 = y_mlp_z_ss1 * tab_target_std_safe + tab_target_mean_tensor
+            ann_monitor_vals = y_mlp_p_ss1.detach()[:, ann_monitor_idx]
+            ann_monitor_min = torch.minimum(ann_monitor_min, ann_monitor_vals.min(dim=0).values)
+            ann_monitor_max = torch.maximum(ann_monitor_max, ann_monitor_vals.max(dim=0).values)
+            ann_monitor_clamped += (ann_monitor_vals <= 1e-6).sum().item()
+            ann_monitor_count += ann_monitor_vals.numel()
 
-            with torch.no_grad():
-                for t in range(warmup_steps):
-                    step_de_input = ss1_de_z.unsqueeze(1)
-                    pred_z = dynamic_model(current_en_history, step_de_input)
-                    pred_p_warmup = pred_z.squeeze(1) * y_std_safe + y_mean_tensor
-
-                    log_cols_inv = [c for c in ['B35_H2S', 'B35_SO2'] if c in y_sv]
-                    log_target_idx = [y_sv.index(c) for c in log_cols_inv]
-                    if len(log_target_idx) > 0:
-                        pred_p_warmup[:, log_target_idx] = torch.exp(pred_p_warmup[:, log_target_idx])
-
-                    tab_target_idx = [y_sv.index(c) for c in tab_target_cols]
-                    pred_p_warmup[:, tab_target_idx] = torch.clamp(pred_p_warmup[:, tab_target_idx], min=1e-6)
-
-                    pred_p_targets = pred_p_warmup[:, tab_target_idx]
-                    if step == 0:
-                        all_preds_ss1_plot.append(pred_p_targets)
-
-                    if t >= warmup_steps - 40:
-                        steady_state_preds_ss1.append(pred_p_targets)
+            ss_target_z = torch.tensor(ss1_z_df[ss_target_cols].values, dtype=torch.float32, device=device)
+            ss_loss_val = torch.tensor(0.0, device=device)
+            compute_ss_loss = ss_loss_weight != 0 or ss_debug_plot
+            if compute_ss_loss:
+                ss_rollout_history = x_en_z_history.clone()
+                ss_pred_z_steps = []
+                for t in range(H_ss):
+                    pred_z_ss = dynamic_model(ss_rollout_history, ss1_de_z.unsqueeze(1))
+                    ss_pred_z_steps.append(pred_z_ss[:, 0, ss_dyn_target_idx])
 
                     new_step_features = torch.zeros(B_actual, 1, len(en_mv_and_sv), device=device)
                     for c_idx, c_name in enumerate(en_mv_and_sv):
                         if c_name in de_mv:
                             new_step_features[:, 0, c_idx] = ss1_de_z[:, de_mv.index(c_name)]
                         elif c_name in y_sv:
-                            new_step_features[:, 0, c_idx] = pred_z[:, 0, y_sv.index(c_name)].detach()
+                            pred_history = pred_z_ss[:, 0, y_sv.index(c_name)]
+                            if detach_closed_loop_history:
+                                pred_history = pred_history.detach()
+                            new_step_features[:, 0, c_idx] = pred_history
                         else:
                             new_step_features[:, 0, c_idx] = ss1_en_z[:, c_idx]
 
-                    current_en_history = torch.cat([current_en_history[:, 1:, :], new_step_features], dim=1)
+                    ss_rollout_history = torch.cat([ss_rollout_history[:, 1:, :], new_step_features], dim=1)
 
-            y_dyn_ss1 = torch.stack(steady_state_preds_ss1).mean(dim=0)
-            current_en_history = current_en_history.detach() 
+                ss_pred_z_stack = torch.stack(ss_pred_z_steps, dim=1)
+                ss_target_z_stack = ss_target_z.unsqueeze(1).expand_as(ss_pred_z_stack)
+                ss_loss_val = criterion(ss_pred_z_stack, ss_target_z_stack)
 
-            ss2_de_z_graph = torch.zeros(B_actual, len(de_mv), device=device)
-            for col_idx_in_de, col in enumerate(de_mv):
-                m = mean_all.get(col, 0.0)
-                s_val = std_all.get(col, 1.0)
-                s = s_val if abs(s_val) > 1e-6 else 1.0
-                ss2_de_z_graph[:, col_idx_in_de] = (ss2_de_p[:, col_idx_in_de] - m) / s
+                if ss_debug_plot and step == 0:
+                    ss_err_by_var = torch.mean((ss_pred_z_stack.detach() - ss_target_z_stack.detach()) ** 2, dim=(0, 1))
+                    top_k = min(ss_debug_top_k, len(ss_target_cols))
+                    top_vals, top_indices = torch.topk(ss_err_by_var, k=top_k)
+                    selected_indices = []
+                    for col in tab_target_cols:
+                        if col in ss_target_cols:
+                            selected_indices.append(ss_target_cols.index(col))
+                    for idx in top_indices.detach().cpu().tolist():
+                        if idx not in selected_indices:
+                            selected_indices.append(idx)
 
-            ss2_en_z_const = torch.tensor(ss2_z_df[en_mv_and_sv].values, dtype=torch.float32, device=device)
-            steady_state_preds = []
-            all_preds_ss2_plot = []
+                    ss_debug_dir = './results/PGIN_Visualizations'
+                    os.makedirs(ss_debug_dir, exist_ok=True)
 
-            for t in range(H_ss):
-                step_de_input = ss2_de_z_graph.unsqueeze(1)
-                pred_z = dynamic_model(current_en_history, step_de_input)
-                pred_p = pred_z.squeeze(1) * y_std_safe + y_mean_tensor
+                    per_var_df = pd.DataFrame({
+                        'variable': ss_target_cols,
+                        'ss_mse_z': ss_err_by_var.detach().cpu().numpy()
+                    }).sort_values('ss_mse_z', ascending=False)
+                    per_var_df.to_csv(
+                        os.path.join(ss_debug_dir, f'ss_loss_per_var_ep{epoch}_step{step}.csv'),
+                        index=False
+                    )
 
-                if len(log_target_idx) > 0:
-                    pred_p[:, log_target_idx] = torch.exp(pred_p[:, log_target_idx])
+                    selected_count = len(selected_indices)
+                    fig_height = max(8, 2.2 * selected_count)
+                    fig, axes = plt.subplots(selected_count + 1, 1, figsize=(12, fig_height))
 
+                    sorted_plot_df = per_var_df.head(max(12, top_k))
+                    axes[0].barh(sorted_plot_df['variable'][::-1], sorted_plot_df['ss_mse_z'][::-1], color='steelblue')
+                    axes[0].set_title(f"Top Steady-State Loss Contributors Ep{epoch} Step{step} (z-space MSE)")
+                    axes[0].set_xlabel("MSE")
+                    axes[0].grid(True, axis='x', linestyle='--', alpha=0.5)
+
+                    ss_pred_np = ss_pred_z_stack[0].detach().cpu().numpy()
+                    ss_target_np = ss_target_z[0].detach().cpu().numpy()
+                    time_axis = np.arange(H_ss)
+                    for ax_idx, var_idx in enumerate(selected_indices, start=1):
+                        var_name = ss_target_cols[var_idx]
+                        ax = axes[ax_idx]
+                        ax.plot(time_axis, ss_pred_np[:, var_idx], color='purple', linewidth=2, label='Transformer rollout z')
+                        ax.axhline(ss_target_np[var_idx], color='black', linestyle='--', linewidth=1.5, label='Excel steady-state target z')
+                        ax.set_title(f"{var_name} | SS MSE={ss_err_by_var[var_idx].item():.4f}")
+                        ax.set_xlabel("Rollout step")
+                        ax.set_ylabel("z-score")
+                        ax.grid(True, linestyle='--', alpha=0.5)
+                        ax.legend(loc='best')
+
+                    plt.tight_layout()
+                    debug_plot_path = os.path.join(ss_debug_dir, f'ss_loss_debug_ep{epoch}_step{step}.png')
+                    plt.savefig(debug_plot_path, dpi=200)
+                    plt.close()
+                    print(f"\n  [Plot] Saved steady-state loss debug plot: {debug_plot_path}")
+                    print(f"  [Save] Saved steady-state per-variable MSE CSV in {ss_debug_dir}")
+            
+            loss_gain = torch.tensor(0.0, device=device)
+            if compute_gain_metrics:
+                K_ss_matrix = torch.zeros(B_actual, len(tab_target_cols), len(gain_target_mv), device=device)
+                for t_idx, tgt_col in enumerate(tab_target_cols):
+                    if tgt_col in full_model_target_cols:
+                        full_out_idx = full_model_target_cols.index(tgt_col)
+                        grad_outputs = torch.zeros_like(y_mlp_p_ss1)
+                        grad_outputs[:, full_out_idx] = 1.0
+                        
+                        grads_x, = torch.autograd.grad(
+                            outputs=y_mlp_p_ss1, 
+                            inputs=mlp_x_z_ss1, 
+                            grad_outputs=grad_outputs,
+                            create_graph=False,
+                            retain_graph=True
+                        )
+                        
+                        for col_idx_in_gain, col in enumerate(gain_target_mv):
+                            col_idx_in_tab = tab_input_cols.index(col)
+                            s_val = tab_std.get(col, 1.0)
+                            s = s_val if abs(s_val) > 1e-6 else 1.0
+                            K_ss_matrix[:, t_idx, col_idx_in_gain] = grads_x[:, col_idx_in_tab] / s
+    
+                K_ss_direction = torch.sign(K_ss_matrix)
+                
+                current_en_history = x_en_z_history.clone()
+                all_preds_ss1_plot = []
                 tab_target_idx = [y_sv.index(c) for c in tab_target_cols]
-                pred_p[:, tab_target_idx] = torch.clamp(pred_p[:, tab_target_idx], min=1e-6)
+                log_cols_inv = [c for c in ['B35_H2S', 'B35_SO2'] if c in y_sv]
+                log_target_idx = [y_sv.index(c) for c in log_cols_inv]
+                gain_start_history = current_en_history.clone()
 
-                pred_p_targets = pred_p[:, tab_target_idx]
-                if step == 0:
-                    all_preds_ss2_plot.append(pred_p_targets)
+                def rollout_gain_stack(de_p_tensor, collect_debug=False):
+                    de_z_cols = []
+                    for col_idx_in_de, col in enumerate(de_mv):
+                        m = mean_all.get(col, 0.0)
+                        s_val = std_all.get(col, 1.0)
+                        s = s_val if abs(s_val) > 1e-6 else 1.0
+                        de_z_cols.append((de_p_tensor[:, col_idx_in_de] - m) / s)
+                    de_z_graph = torch.stack(de_z_cols, dim=1)
 
-                if t >= 60:
-                    steady_state_preds.append(pred_p_targets)
+                    gain_history = gain_start_history.clone()
+                    gain_log_steps_local = []
+                    debug_steps_local = []
+                    for _ in range(H_ss):
+                        pred_z_gain = dynamic_model(gain_history, de_z_graph.unsqueeze(1))
+                        pred_log_or_p_gain = pred_z_gain.squeeze(1) * y_std_safe + y_mean_tensor
+                        gain_log_steps_local.append(pred_log_or_p_gain[:, tab_target_idx])
 
-                new_step_features = torch.zeros(B_actual, 1, len(en_mv_and_sv), device=device)
-                for c_idx, c_name in enumerate(en_mv_and_sv):
-                    if c_name in de_mv:
-                        new_step_features[:, 0, c_idx] = ss2_de_z_graph[:, de_mv.index(c_name)]
-                    elif c_name in y_sv:
-                        new_step_features[:, 0, c_idx] = pred_z[:, 0, y_sv.index(c_name)].detach()
-                    else:
-                        new_step_features[:, 0, c_idx] = ss2_en_z_const[:, c_idx]
+                        if collect_debug:
+                            pred_p_gain = pred_log_or_p_gain.clone()
+                            if len(log_target_idx) > 0:
+                                pred_p_gain[:, log_target_idx] = torch.exp(pred_p_gain[:, log_target_idx])
+                            pred_p_gain[:, tab_target_idx] = torch.clamp(pred_p_gain[:, tab_target_idx], min=1e-6)
+                            debug_steps_local.append(pred_p_gain[:, tab_target_idx].detach())
 
-                current_en_history = torch.cat([current_en_history[:, 1:, :], new_step_features], dim=1)
+                        new_step_features = torch.zeros(B_actual, 1, len(en_mv_and_sv), device=device)
+                        for c_idx, c_name in enumerate(en_mv_and_sv):
+                            if c_name in de_mv:
+                                new_step_features[:, 0, c_idx] = de_z_graph[:, de_mv.index(c_name)]
+                            elif c_name in y_sv:
+                                pred_history = pred_z_gain[:, 0, y_sv.index(c_name)]
+                                if detach_closed_loop_history:
+                                    pred_history = pred_history.detach()
+                                new_step_features[:, 0, c_idx] = pred_history
+                            else:
+                                new_step_features[:, 0, c_idx] = ss1_en_z[:, c_idx]
 
-            if step == 0:
-                t_ss1_full = torch.stack(all_preds_ss1_plot, dim=1).detach().cpu().numpy() # shape (B, T1, num_targets)
-                t_ss2_full = torch.stack(all_preds_ss2_plot, dim=1).detach().cpu().numpy() # shape (B, T2, num_targets)
+                        gain_history = torch.cat([gain_history[:, 1:, :], new_step_features], dim=1)
+
+                    return torch.stack(gain_log_steps_local), de_z_graph, debug_steps_local
+
+                ss_gain_de_p = ss1_de_p.detach().clone()
+                if dynamic_gain_method == 'autograd':
+                    ss_gain_de_p.requires_grad_(True)
+
+                gain_log_stack, _, all_preds_ss1_plot = rollout_gain_stack(
+                    ss_gain_de_p,
+                    collect_debug=ss_debug_plot and step == 0
+                )
+
+                baseline_target_steps = gain_log_stack[dynamic_gain_tail_start_idx:, :, :].mean(dim=0)
+
+                if dynamic_gain_method == 'autograd':
+                    K_dyn_by_target = []
+                    for target_idx in range(len(tab_target_cols)):
+                        target_steps = baseline_target_steps[:, target_idx]
+                        grads_de_p, = torch.autograd.grad(
+                            outputs=target_steps.sum(),
+                            inputs=ss_gain_de_p,
+                            create_graph=True,
+                            retain_graph=True
+                        )
+                        K_dyn_by_target.append(grads_de_p[:, gain_target_mv_indices])
+                    K_dyn_matrix = torch.stack(K_dyn_by_target, dim=1)
+                    K_dyn_matrix_stack = K_dyn_matrix.unsqueeze(0)
+                else:
+                    K_dyn_plus_by_mv = []
+                    K_dyn_minus_by_mv = []
+                    for mv_name in gain_target_mv:
+                        mv_de_idx = de_mv.index(mv_name)
+                        std_val = std_all[mv_name] if abs(std_all[mv_name]) > 1e-6 else 1.0
+                        delta = finite_diff_delta_std * std_val
+
+                        plus_de_p = ss1_de_p.detach().clone()
+                        minus_de_p = ss1_de_p.detach().clone()
+                        plus_de_p[:, mv_de_idx] += delta
+                        minus_de_p[:, mv_de_idx] -= delta
+
+                        plus_log_stack, _, _ = rollout_gain_stack(plus_de_p, collect_debug=False)
+                        minus_log_stack, _, _ = rollout_gain_stack(minus_de_p, collect_debug=False)
+                        plus_target_steps = plus_log_stack[dynamic_gain_tail_start_idx:, :, :].mean(dim=0)
+                        minus_target_steps = minus_log_stack[dynamic_gain_tail_start_idx:, :, :].mean(dim=0)
+
+                        K_dyn_plus_by_mv.append((plus_target_steps - baseline_target_steps) / delta)
+                        K_dyn_minus_by_mv.append((baseline_target_steps - minus_target_steps) / delta)
+
+                    K_dyn_plus_matrix = torch.stack(K_dyn_plus_by_mv, dim=2)
+                    K_dyn_minus_matrix = torch.stack(K_dyn_minus_by_mv, dim=2)
+                    K_dyn_matrix_stack = torch.stack([K_dyn_plus_matrix, K_dyn_minus_matrix], dim=0)
+
+                if pgin_runtime_plot and step == 0:
+                    runtime_dir = './results/PGIN_Visualizations'
+                    os.makedirs(runtime_dir, exist_ok=True)
+
+                    ss_target_sample = ss_target_z[0].detach().cpu().numpy()
+                    ss_target_mean_np = mean_all[ss_target_cols].values
+                    ss_target_std_np = std_all[ss_target_cols].replace(0, 1).values
+                    ss_pred_phys = gain_log_stack[:, 0, :].detach().cpu().numpy()
+                    ss_target_phys = ss_target_sample * ss_target_std_np + ss_target_mean_np
+                    for log_idx, col_name in enumerate(tab_target_cols):
+                        if col_name in ['B35_H2S', 'B35_SO2']:
+                            ss_pred_phys[:, log_idx] = np.exp(ss_pred_phys[:, log_idx])
+                    for log_idx, col_name in enumerate(ss_target_cols):
+                        if col_name in ['B35_H2S', 'B35_SO2']:
+                            ss_target_phys[log_idx] = np.exp(ss_target_phys[log_idx])
+
+                    time_axis = np.arange(1, H_ss + 1)
+
+                    response_curves = {}
+                    response_ann_targets = {}
+                    with torch.no_grad():
+                        for mv_name in gain_target_mv:
+                            mv_de_idx = de_mv.index(mv_name)
+                            mv_tab_idx = tab_input_cols.index(mv_name)
+                            delta = 0.5 * (std_all[mv_name] if abs(std_all[mv_name]) > 1e-6 else 1.0)
+                            response_curves[mv_name] = {}
+                            response_ann_targets[mv_name] = {}
+
+                            for direction, signed_delta in [("plus", delta), ("minus", -delta)]:
+                                response_de_p = ss1_de_p.detach().clone()
+                                response_de_p[:, mv_de_idx] += signed_delta
+                                response_de_z_cols = []
+                                for col_idx_in_de, col in enumerate(de_mv):
+                                    m = mean_all.get(col, 0.0)
+                                    s_val = std_all.get(col, 1.0)
+                                    s = s_val if abs(s_val) > 1e-6 else 1.0
+                                    response_de_z_cols.append((response_de_p[:, col_idx_in_de] - m) / s)
+                                response_de_z = torch.stack(response_de_z_cols, dim=1)
+
+                                response_history = x_en_z_history.clone()
+                                response_steps = []
+                                for _ in range(H_ss):
+                                    pred_z_response = dynamic_model(response_history, response_de_z.unsqueeze(1))
+                                    pred_log_or_p_response = pred_z_response.squeeze(1) * y_std_safe + y_mean_tensor
+                                    pred_p_response = pred_log_or_p_response.clone()
+                                    if len(log_target_idx) > 0:
+                                        pred_p_response[:, log_target_idx] = torch.exp(pred_p_response[:, log_target_idx])
+                                    pred_p_response[:, tab_target_idx] = torch.clamp(pred_p_response[:, tab_target_idx], min=1e-6)
+                                    response_steps.append(pred_p_response[:, tab_target_idx])
+
+                                    new_step_features = torch.zeros(B_actual, 1, len(en_mv_and_sv), device=device)
+                                    for c_idx, c_name in enumerate(en_mv_and_sv):
+                                        if c_name in de_mv:
+                                            new_step_features[:, 0, c_idx] = response_de_z[:, de_mv.index(c_name)]
+                                        elif c_name in y_sv:
+                                            pred_history = pred_z_response[:, 0, y_sv.index(c_name)]
+                                            if detach_closed_loop_history:
+                                                pred_history = pred_history.detach()
+                                            new_step_features[:, 0, c_idx] = pred_history
+                                        else:
+                                            new_step_features[:, 0, c_idx] = ss1_en_z[:, c_idx]
+                                    response_history = torch.cat([response_history[:, 1:, :], new_step_features], dim=1)
+
+                                response_curves[mv_name][direction] = torch.stack(response_steps, dim=1)[0].detach().cpu().numpy()
+
+                                response_mlp_x_z = mlp_x_z_ss1.detach().clone()
+                                tab_s_val = tab_std.get(mv_name, 1.0)
+                                tab_s = tab_s_val if abs(tab_s_val) > 1e-6 else 1.0
+                                response_mlp_x_z[:, mv_tab_idx] += signed_delta / tab_s
+                                response_mlp_p = mlp_model(response_mlp_x_z) * tab_target_std_safe + tab_target_mean_tensor
+                                response_ann_targets[mv_name][direction] = (
+                                    response_mlp_p[0, ann_monitor_idx].detach().cpu().numpy()
+                                )
+
+                    fig, axes = plt.subplots(
+                        1 + len(gain_target_mv),
+                        len(tab_target_cols),
+                        figsize=(6 * len(tab_target_cols), 4 * (1 + len(gain_target_mv)))
+                    )
+                    if len(tab_target_cols) == 1:
+                        axes = axes.reshape(1 + len(gain_target_mv), 1)
+
+                    for tgt_idx, tgt_name in enumerate(tab_target_cols):
+                        ss_target_col_idx = ss_target_cols.index(tgt_name)
+                        axes[0, tgt_idx].plot(time_axis, ss_pred_phys[:, tgt_idx], color='purple', linewidth=2, label='Transformer rollout')
+                        axes[0, tgt_idx].axhline(ss_target_phys[ss_target_col_idx], color='black', linestyle='--', linewidth=1.5, label='Excel S.S. target')
+                        axes[0, tgt_idx].set_title(f'{tgt_name} rollout | epoch {epoch + 1}, step {step}')
+                        axes[0, tgt_idx].set_xlabel('Decoder step')
+                        axes[0, tgt_idx].set_ylabel('Physical value')
+                        axes[0, tgt_idx].grid(True, linestyle='--', alpha=0.5)
+                        axes[0, tgt_idx].legend(loc='best')
+
+                        for mv_plot_idx, mv_name in enumerate(gain_target_mv, start=1):
+                            ax = axes[mv_plot_idx, tgt_idx]
+                            ax.plot(time_axis, ss_pred_phys[:, tgt_idx], color='black', linewidth=1.8, label='baseline')
+                            ax.plot(time_axis, response_curves[mv_name]["plus"][:, tgt_idx], color='crimson', linewidth=2, label=f'{mv_name} +0.5 std')
+                            ax.plot(time_axis, response_curves[mv_name]["minus"][:, tgt_idx], color='steelblue', linewidth=2, label=f'{mv_name} -0.5 std')
+                            ax.axhline(ss_target_phys[ss_target_col_idx], color='black', linestyle='--', linewidth=1, alpha=0.8, label='Excel baseline')
+                            ax.axhline(response_ann_targets[mv_name]["plus"][tgt_idx], color='crimson', linestyle='--', linewidth=1, alpha=0.8, label='ANN +step')
+                            ax.axhline(response_ann_targets[mv_name]["minus"][tgt_idx], color='steelblue', linestyle='--', linewidth=1, alpha=0.8, label='ANN -step')
+                            ax.set_title(f'{tgt_name} response to {mv_name}')
+                            ax.set_xlabel('Decoder step')
+                            ax.set_ylabel('Physical value')
+                            ax.grid(True, linestyle='--', alpha=0.5)
+                            ax.legend(loc='best', fontsize=8)
+
+                    plt.tight_layout()
+                    latest_runtime_path = os.path.join(runtime_dir, 'pgin_runtime_latest.png')
+                    plt.savefig(latest_runtime_path, dpi=180)
+                    plt.close()
+                    print(f"\n  [Plot] Updated PGIN runtime rollout/gain plot: {latest_runtime_path}")
+
+                if ss_debug_plot and step == 0:
+                    t_ss1_full = torch.stack(all_preds_ss1_plot, dim=1).detach().cpu().numpy()
+                    timeline_full = t_ss1_full
+                    total_steps = timeline_full.shape[1]
+    
+                    fig, axes = plt.subplots(len(tab_target_cols), 1, figsize=(10, 4*len(tab_target_cols)))
+                    if len(tab_target_cols) == 1: axes = [axes]
+                    
+                    for tgt_idx, tgt_name in enumerate(tab_target_cols):
+                        axes[tgt_idx].plot(range(total_steps), timeline_full[0, :, tgt_idx], label='Model prediction trajectory', color='purple', linewidth=2)
+    
+                        axes[tgt_idx].set_title(f"Direct H-step Rollout Ep{epoch}_Step{step} - {tgt_name}")
+                        axes[tgt_idx].set_xlabel("Future Time Steps")
+                        axes[tgt_idx].legend()
+                        axes[tgt_idx].grid(True)
+                    
+                    os.makedirs('./results/PGIN_Visualizations', exist_ok=True)
+                    plt.tight_layout()
+                    plt.savefig(f'./results/PGIN_Visualizations/train_rollout_ep{epoch}_step{step}.png')
+                    plt.close()
+                    print(f"\n  [Plot] Saved direct H-step rollout visualization at Ep{epoch} Step{step}!")
+                K_ss_direction_exp = K_ss_direction.unsqueeze(0) 
                 
-                timeline_full = np.concatenate([t_ss1_full, t_ss2_full], axis=1) # shape (B, T1+T2, num_targets)
-                total_steps = timeline_full.shape[1]
-                t_change_idx = t_ss1_full.shape[1]
-
-                fig, axes = plt.subplots(len(tab_target_cols), 1, figsize=(10, 4*len(tab_target_cols)))
-                if len(tab_target_cols) == 1: axes = [axes]
+                loss_matrix_stack = torch.nn.functional.relu(-K_dyn_matrix_stack * K_ss_direction_exp)
+    
+                valid_mlp_mask = torch.abs(K_ss_matrix) >= gain_valid_delta_threshold
+                valid_mlp_mask_expanded = valid_mlp_mask.unsqueeze(0).expand_as(loss_matrix_stack)
+    
+                final_mask = valid_mlp_mask_expanded
+                correct_mask = (K_dyn_matrix_stack * K_ss_direction_exp > 0) & final_mask
                 
-                for tgt_idx, tgt_name in enumerate(tab_target_cols):
-                    axes[tgt_idx].plot(range(total_steps), timeline_full[0, :, tgt_idx], label=f'Model Prediction trajectory', color='purple', linewidth=2)
-                    axes[tgt_idx].axvline(x=t_change_idx, color='red', linestyle='--', linewidth=1.5, label='Perturb MV (+0.5σ)')
-                    axes[tgt_idx].text(t_change_idx + 1, timeline_full[0, :, tgt_idx].min(), "Step Change!", color='red', verticalalignment='bottom')
+                valid_items = final_mask.sum().item()
+                epoch_correct_dir += correct_mask.sum().item()
+                epoch_total_eval += valid_items
 
-                    axes[tgt_idx].set_title(f"Continuous Step-Change Rollout Ep{epoch}_Step{step} - {tgt_name}")
-                    axes[tgt_idx].set_xlabel("Future Time Steps")
-                    axes[tgt_idx].legend()
-                    axes[tgt_idx].grid(True)
-                
-                os.makedirs('./results/PGIN_Visualizations', exist_ok=True)
-                plt.tight_layout()
-                plt.savefig(f'./results/PGIN_Visualizations/train_rollout_ep{epoch}_step{step}.png')
-                plt.close()
-                print(f"\n  [Plot] Saved continuous step-change visualization at Ep{epoch} Step{step}!")
+                pair_correct += correct_mask.sum(dim=(0, 1))
+                pair_total += final_mask.sum(dim=(0, 1))
+                pair_ann_sign_sum += (K_ss_direction_exp.expand_as(final_mask).float() * final_mask.float()).sum(dim=(0, 1))
+                pair_dyn_pos_sum += ((K_dyn_matrix_stack > 0).float() * final_mask.float()).sum(dim=(0, 1))
+    
+                if valid_items > 0:
+                    loss_gain = torch.mean(loss_matrix_stack[final_mask])
+                else:
+                    loss_gain = torch.tensor(0.0, device=device, requires_grad=True)
 
-            steady_state_stack = torch.stack(steady_state_preds) 
-            delta_y_dyn_stack = steady_state_stack - y_dyn_ss1.unsqueeze(0) 
-
-            K_dyn_matrix_stack = delta_y_dyn_stack.unsqueeze(3) / delta_mv_safe.unsqueeze(0).unsqueeze(2)
-            K_ss_direction_exp = K_ss_direction.unsqueeze(0) 
-            
-            loss_matrix_stack = torch.nn.functional.relu(-K_dyn_matrix_stack * K_ss_direction_exp)
-
-            is_perturbed_mask = is_perturbed.unsqueeze(1).expand(-1, loss_matrix_stack.size(2), -1) 
-            is_perturbed_mask_stack = is_perturbed_mask.unsqueeze(0).expand(loss_matrix_stack.size(0), -1, -1, -1) 
-            
-            valid_mlp_mask = (torch.abs(delta_y_mlp) >= 1e-5)
-            valid_mlp_mask_expanded = valid_mlp_mask.unsqueeze(0).unsqueeze(3).expand(loss_matrix_stack.size(0), -1, -1, loss_matrix_stack.size(3))
-
-            final_mask = is_perturbed_mask_stack & valid_mlp_mask_expanded
-            correct_mask = (K_dyn_matrix_stack * K_ss_direction_exp > 0) & final_mask
-            
-            valid_items = final_mask.sum().item()
-            epoch_correct_dir += correct_mask.sum().item()
-            epoch_total_eval += valid_items
-
-            if valid_items > 0:
-                gain_loss_weight = config['training'].get('pgin_loss_weight', 0.3)
-                loss_gain = torch.mean(loss_matrix_stack[final_mask]) * gain_loss_weight
-            else:
-                loss_gain = torch.tensor(0.0, device=device, requires_grad=True)
-
-            total_loss = mse_loss_val + loss_gain
+            total_loss = (
+                mse_loss_val
+                + smooth_loss_weight * smooth_loss_val
+                + ss_loss_weight * ss_loss_val
+                + effective_gain_loss_weight * loss_gain
+            )
             epoch_mse_loss += mse_loss_val.item()
+            epoch_smooth_loss += smooth_loss_val.item()
+            epoch_ss_loss += ss_loss_val.item()
+            epoch_total_loss += total_loss.item()
 
             total_norm_val = 0.0
             if total_loss.item() > 0:
                 total_loss.backward()
-                # clip_grad_norm_ 會回傳被截斷之前的原始總梯度大小 (unclipped grad norm)
+                # clip_grad_norm_ returns the gradient norm before clipping.
                 total_norm = torch.nn.utils.clip_grad_norm_(dynamic_model.parameters(), 1.0)
                 total_norm_val = total_norm.item()
                 optimizer.step()
@@ -453,13 +883,76 @@ def main(config_path: str):
             epoch_gain_loss += loss_gain.item()
             pbar.set_postfix({
                 'MSE': f"{mse_loss_val.item():.4f}", 
-                'Gain': f"{loss_gain.item():.8f}",
-                'GradNorm(Pre-Clip)': f"{total_norm_val:.2f}"
+                'D1_w': f"{(smooth_loss_weight * smooth_loss_val).item():.5f}",
+                'SS_w': f"{(ss_loss_weight * ss_loss_val).item():.4f}",
+                'Gain_w': f"{(effective_gain_loss_weight * loss_gain).item():.5f}",
+                'KCI_n': f"{epoch_correct_dir}/{epoch_total_eval}"
             })
 
-        avg_loss = (epoch_gain_loss + epoch_mse_loss) / step_limit
+        avg_loss = epoch_total_loss / step_limit
+        avg_mse_loss = epoch_mse_loss / step_limit
+        avg_smooth_loss = epoch_smooth_loss / step_limit
+        avg_ss_loss = epoch_ss_loss / step_limit
+        avg_gain_loss = epoch_gain_loss / step_limit
         epoch_kci = epoch_correct_dir / epoch_total_eval if epoch_total_eval > 0 else 1.0
-        print(f"Epoch [{epoch+1}/{epochs}] | Train Total L: {avg_loss:.6f} | KCI: {epoch_kci*100:.2f}%")
+        print(
+            f"Epoch [{epoch+1}/{epochs}] | Train Total L: {avg_loss:.6f} | "
+            f"MSE: {avg_mse_loss:.6f} | D1: {avg_smooth_loss:.6f} | SS: {avg_ss_loss:.6f} | "
+            f"Gain: {avg_gain_loss:.8f} | KCI: {epoch_correct_dir}/{epoch_total_eval} = {epoch_kci*100:.2f}%"
+        )
+        if compute_gain_metrics:
+            pair_correct_cpu = pair_correct.detach().cpu()
+            pair_total_cpu = pair_total.detach().cpu()
+            pair_ann_sign_cpu = pair_ann_sign_sum.detach().cpu()
+            pair_dyn_pos_cpu = pair_dyn_pos_sum.detach().cpu()
+            print("  [Gain Pair KCI]")
+            for q_idx, q_name in enumerate(tab_target_cols):
+                parts = []
+                for mv_idx, mv_name in enumerate(gain_target_mv):
+                    total_pair = pair_total_cpu[q_idx, mv_idx].item()
+                    correct_pair = pair_correct_cpu[q_idx, mv_idx].item()
+                    if total_pair > 0:
+                        kci_pair = 100.0 * correct_pair / total_pair
+                        ann_sign_avg = pair_ann_sign_cpu[q_idx, mv_idx].item() / total_pair
+                        dyn_pos_pct = 100.0 * pair_dyn_pos_cpu[q_idx, mv_idx].item() / total_pair
+                        history_gain_pair_rows.append({
+                            'epoch': epoch + 1,
+                            'target': q_name,
+                            'mv': mv_name,
+                            'correct': correct_pair,
+                            'total': total_pair,
+                            'kci_percent': kci_pair,
+                            'ann_sign_avg': ann_sign_avg,
+                            'dynamic_positive_percent': dyn_pos_pct,
+                        })
+                        parts.append(
+                            f"{mv_name}: {correct_pair:.0f}/{total_pair:.0f}={kci_pair:.1f}% "
+                            f"ann_sign_avg={ann_sign_avg:.2f} dyn_pos={dyn_pos_pct:.1f}%"
+                        )
+                    else:
+                        history_gain_pair_rows.append({
+                            'epoch': epoch + 1,
+                            'target': q_name,
+                            'mv': mv_name,
+                            'correct': 0.0,
+                            'total': 0.0,
+                            'kci_percent': np.nan,
+                            'ann_sign_avg': np.nan,
+                            'dynamic_positive_percent': np.nan,
+                        })
+                        parts.append(f"{mv_name}: no valid")
+                print(f"    {q_name} | " + " ; ".join(parts))
+        ann_clamp_pct = 100.0 * ann_monitor_clamped / ann_monitor_count if ann_monitor_count > 0 else 0.0
+        ann_min_str = ', '.join(
+            f"{name}={value:.6g}" for name, value in zip(tab_target_cols, ann_monitor_min.detach().cpu().tolist())
+        )
+        ann_max_str = ', '.join(
+            f"{name}={value:.6g}" for name, value in zip(tab_target_cols, ann_monitor_max.detach().cpu().tolist())
+        )
+        print(
+            f"  [ANN Gain Teacher] target min: {ann_min_str} | max: {ann_max_str} | "
+            f"<=1e-6: {ann_clamp_pct:.2f}%"
+        )
         history_losses.append(avg_loss)
         history_kci.append(epoch_kci)
 
@@ -496,24 +989,16 @@ def main(config_path: str):
     os.makedirs(out_dir, exist_ok=True)
 
     actual_epochs = len(history_losses)
-    plt.figure(figsize=(14, 6))
-    plt.subplot(1, 2, 1)
-    plt.plot(range(1, actual_epochs + 1), history_losses, marker='o', color='purple', label='Train Total', linewidth=2)
+    epochs_axis = list(range(1, actual_epochs + 1))
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(epochs_axis, history_losses, marker='o', color='blue', label='Train Total', linewidth=2)
     if len(history_val_losses) > 0 and valid_loader is not None:
-        plt.plot(range(1, actual_epochs + 1), history_val_losses, marker='x', color='blue', label='Valid MSE', linewidth=2)
+        plt.plot(epochs_axis, history_val_losses, marker='o', color='red', label='Valid MSE', linewidth=2)
     plt.title(f'Training & Validation Loss - {exp}')
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.legend()
-    plt.grid(True, linestyle='--', alpha=0.7)
-
-    plt.subplot(1, 2, 2)
-    kci_percentages = [kci * 100 for kci in history_kci]
-    plt.plot(range(1, actual_epochs + 1), kci_percentages, marker='s', color='orange', linewidth=2)
-    plt.title(f'PGIN KCI Consistency - {exp}')
-    plt.xlabel('Epoch')
-    plt.ylabel('Consistent Steps (%)')
-    plt.ylim(0, 105)
     plt.grid(True, linestyle='--', alpha=0.7)
 
     plt.tight_layout()
@@ -521,8 +1006,67 @@ def main(config_path: str):
     plt.savefig(plot_path, dpi=300)
     plt.close()
 
+    kci_percentages = [kci * 100 for kci in history_kci]
+    kci_df = pd.DataFrame({
+        'epoch': epochs_axis,
+        'kci_percent': kci_percentages,
+    })
+    kci_csv_path = os.path.join(out_dir, 'kci_history.csv')
+    kci_df.to_csv(kci_csv_path, index=False)
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(epochs_axis, kci_percentages, marker='s', color='orange', linewidth=2)
+    plt.title(f'PGIN KCI Consistency - {exp}')
+    plt.xlabel('Epoch')
+    plt.ylabel('Consistent Steps (%)')
+    plt.ylim(0, 105)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    kci_plot_path = os.path.join(out_dir, 'kci_consistency_curve.png')
+    plt.savefig(kci_plot_path, dpi=300)
+    plt.close()
+
+    if history_gain_pair_rows:
+        gain_pair_df = pd.DataFrame(history_gain_pair_rows)
+        gain_pair_csv_path = os.path.join(out_dir, 'gain_pair_kci_history.csv')
+        gain_pair_df.to_csv(gain_pair_csv_path, index=False)
+
+        last_epoch = int(gain_pair_df['epoch'].max())
+        last_pair_df = gain_pair_df[gain_pair_df['epoch'] == last_epoch].copy()
+        last_pair_df['pair'] = last_pair_df['target'] + '\n' + last_pair_df['mv']
+
+        plt.figure(figsize=(11, 5))
+        colors = ['seagreen' if v >= 95 else 'goldenrod' if v >= 80 else 'crimson'
+                  for v in last_pair_df['kci_percent'].fillna(0)]
+        bars = plt.bar(last_pair_df['pair'], last_pair_df['kci_percent'].fillna(0), color=colors)
+        plt.axhline(95, color='black', linestyle='--', linewidth=1, alpha=0.7, label='95% reference')
+        plt.ylim(0, 105)
+        plt.ylabel('KCI (%)')
+        plt.title(f'Final Gain Direction Consistency - Epoch {last_epoch}')
+        plt.grid(True, axis='y', linestyle='--', alpha=0.5)
+        plt.legend(loc='lower right')
+        for bar, total in zip(bars, last_pair_df['total']):
+            height = bar.get_height()
+            plt.text(
+                bar.get_x() + bar.get_width() / 2,
+                min(height + 2, 103),
+                f'{height:.1f}%\nn={int(total)}',
+                ha='center',
+                va='bottom',
+                fontsize=9
+            )
+        plt.tight_layout()
+        gain_pair_plot_path = os.path.join(out_dir, 'final_gain_pair_kci_bar.png')
+        plt.savefig(gain_pair_plot_path, dpi=300)
+        plt.close()
+
     print(f"\n[Done] Model training complete. Weights securely saved to {out_model_path}")
     print(f"[Info] Training metrics exported to {plot_path}")
+    print(f"[Info] KCI curve exported to {kci_plot_path}")
+    print(f"[Info] KCI CSV exported to {kci_csv_path}")
+    if history_gain_pair_rows:
+        print(f"[Info] Gain pair KCI bar chart exported to {gain_pair_plot_path}")
+        print(f"[Info] Gain pair KCI history exported to {gain_pair_csv_path}")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
