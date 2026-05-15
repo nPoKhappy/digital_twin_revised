@@ -1,5 +1,3 @@
-from .gru_model import Seq2Seq as GRUModel
-from .gru_s2s import GRUSeq2Seq as GRUExact
 from .transformer_model import Seq2Seq as TransformerModel
 
 
