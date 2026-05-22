@@ -332,7 +332,52 @@ def variable_selection(total_variables):
         ]
         con_tag = y_sv
         en_mv_and_sv = de_mv + y_sv  # 20 + 51 = 71 個變量，使用與 71-var 相同的資料檔
+    elif total_variables == 63:
+        # ======================================================================
+        # 配置 63: Claus 過程 (63 變量資料，SP 作為 Decoder 輸入，PV 作為預測目標)
+        # 邏輯：SP = 未來已知 → de_mv；PV / 流量響應 = 預測目標 → y_sv
+        # air, second_air2, COG 為響應量，移至 y_sv
+        # de_mv: 4 (acidgas + air2_SP) + 11 SP = 15 vars
+        # y_sv : 45 (原 PV) + 3 (air/second_air2/COG) = 48 vars
+        # en_mv_and_sv: 15 + 48 = 63 vars (同 63-var 資料檔)
+        # 使用方式：YAML 設定 variables_num: 63
+        # 刪減掉 HEATER2_output_P 因為他跟 HEATER1_output_P 使用一樣的節點資料 -2
+        # 接著我把 cat1_deltaP cat2_deltaP 移除掉 因為我已經給進料跟出料的壓力 -1
+        # ======================================================================
 
+        # Decoder 輸入：acidgas MV + SP 設定值 (純未來可知量，不含流量響應)
+        de_mv = [
+            # ── acidgas 操作條件 + future-known air2 SP (4 vars) ────────────────────────────
+            'acidgas_Fm',
+            'acidgas_T', 'acidgas_P',
+            'air2_SP',
+            # ── 從 y_sv 移來的 11 個 SP ──────────────────────────────
+            'burner_input_T_SP', 'burner_output_T_SP', 'burner_output_P_SP',
+            'fur_outputP_SP', 'SEP1_P_SP',
+            'HEATER1_output_T_SP', 'cat1_output_P_SP',
+            'SEP2_P_SP', 'HEATER2_output_T_SP', 'cat2_output_P_SP', 'SEP3_P_SP',
+        ]
+
+        # 預測目標：PV + 空氣/COG 實際流量響應 (51 vars)
+        y_sv = [
+            # ── 移入的流量響應 (3 vars) ──────────────────────────────
+            'air', 'second_air2', 'COG',
+            # ── 原有 PV 及狀態變量 (48 vars) ─────────────────────────
+            'burner_input_T_PV', 'burner_inputP',
+            'burner_output_T_PV', 'burner_output_P_PV',
+            'fur_F', 'fur_inputT', 'fur_inputP', 'fur_temp', 'fur_outputT', 'fur_outputP_PV',
+            'WHB_F', 'WHB_inputT', 'WHB_inputP', 'WHB_outputT', 'WHB_outputP',
+            'SEP1_F', 'SEP1_P_PV', 'SEP1_T',
+            'HEATER1_F', 'HEATER1_input_T', 'HEATER1_input_P', 'HEATER1_output_T_PV', 'HEATER1_output_P',
+            'cat1_F', 'cat1_input_temp', 'cat1_output_temp', 'cat1_input_P', 'cat1_output_P_PV',
+            'SEP2_F', 'SEP2_P_PV', 'SEP2_T',
+            'HEATER2_F', 'HEATER2_input_T', 'HEATER2_input_P', 'HEATER2_output_T_PV',
+            'cat2_F', 'cat2_input_temp', 'cat2_output_temp', 'cat2_input_P', 'cat2_output_P_PV',
+            'SEP3_F', 'SEP3_P_PV', 'SEP3_T',
+            'B35_H2S', 'B35_SO2',
+        ]
+        con_tag = y_sv
+        en_mv_and_sv = de_mv + y_sv  # 15 + 48 = 63 個變量，使用與 63-var 相同的資料檔
     elif total_variables == 54:
         # ======================================================================
         # 配置 54: Claus 過程 (57 變量基礎上移除酸氣組成變量)
@@ -368,7 +413,7 @@ def variable_selection(total_variables):
         # 錯誤處理：不支持的變量數量
         # ======================================================================
         print(f'錯誤：不支持的變量總數 {total_variables}')
-        print('支持的配置: 8, 9, 10, 17, 27, 28, 30, 33, 35, 54, 57, 58, 71')
+        print('支持的配置: 8, 9, 10, 17, 27, 28, 30, 33, 35, 54, 57, 58, 63, 68, 71')
         raise ValueError(f'不支持的變量總數: {total_variables}')
         
     return de_mv, y_sv, con_tag, en_mv_and_sv

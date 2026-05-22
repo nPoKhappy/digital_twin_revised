@@ -42,7 +42,8 @@ def get_model(config):
             num_heads=model_params.get('num_heads', 8), # Default to 8 if not in config
             num_layers=model_params['n_layers'],
             activation_func=model_params.get('activation', 'tanh'),
-            dropout=model_params.get('dropout', 0.1)
+            dropout=model_params.get('dropout', 0.1),
+            decoder_attention_type=model_params.get('decoder_attention_type', 'pytorch')
         )
     elif model_name == 'transformer_memory_connect':
         return TransformerThreeLayersMemoryConnect(

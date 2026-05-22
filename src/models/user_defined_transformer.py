@@ -61,13 +61,37 @@ class FusedCrossAttention(nn.Module):
         
         return self.norm(decoder_input + attn_out)
 
-class DecoderBlock(nn.Module):
-    def __init__(self, d_model, num_heads, intermediate_dim, dropout=0.0):
+class StandardCrossAttention(nn.Module):
+    def __init__(self, d_model, num_heads, dropout=0.0):
         super().__init__()
+        self.attn = nn.MultiheadAttention(embed_dim=d_model, num_heads=num_heads, dropout=dropout, batch_first=True)
+        self.dropout = nn.Dropout(dropout)
+        self.norm = nn.LayerNorm(d_model, eps=1e-6)
+
+    def forward(self, decoder_input, encoder_input, attn_mask=None, key_padding_mask=None):
+        attn_out, _ = self.attn(
+            query=decoder_input,
+            key=encoder_input,
+            value=encoder_input,
+            attn_mask=attn_mask,
+            key_padding_mask=key_padding_mask
+        )
+        attn_out = self.dropout(attn_out)
+        return self.norm(decoder_input + attn_out)
+
+class DecoderBlock(nn.Module):
+    def __init__(self, d_model, num_heads, intermediate_dim, dropout=0.0, cross_attention_type='fused', use_causal_mask=True):
+        super().__init__()
+        self.use_causal_mask = use_causal_mask
         self.self_attn = nn.MultiheadAttention(d_model, num_heads, dropout=dropout, batch_first=True)
         self.self_norm = nn.LayerNorm(d_model, eps=1e-6)
         
-        self.cross_attn = FusedCrossAttention(d_model, num_heads, dropout)
+        if cross_attention_type == 'fused':
+            self.cross_attn = FusedCrossAttention(d_model, num_heads, dropout)
+        elif cross_attention_type == 'standard':
+            self.cross_attn = StandardCrossAttention(d_model, num_heads, dropout)
+        else:
+            raise ValueError(f"Unsupported cross_attention_type: {cross_attention_type}")
         
         self.ffn = nn.Sequential(
             nn.Linear(d_model, intermediate_dim),
@@ -77,7 +101,7 @@ class DecoderBlock(nn.Module):
         self.ffn_norm = nn.LayerNorm(d_model, eps=1e-6)
 
     def forward(self, decoder_input, encoder_input, tgt_mask=None):
-        if tgt_mask is None:
+        if self.use_causal_mask and tgt_mask is None:
             seq_len = decoder_input.size(1)
             tgt_mask = torch.triu(torch.ones(seq_len, seq_len) * float('-inf'), diagonal=1).to(decoder_input.device)
             
@@ -128,9 +152,10 @@ def get_activation(activation_func):
         return nn.Identity()
 
 class TransformerModel(nn.Module):
-    def __init__(self, num_input, num_output, num_embs, intermediate_dim, num_heads, num_layers=1, activation_func='tanh', dropout=0.1):
+    def __init__(self, num_input, num_output, num_embs, intermediate_dim, num_heads, num_layers=1, activation_func='tanh', dropout=0.1, decoder_attention_type='pytorch'):
         super().__init__()
         self.num_layers = num_layers
+        self.decoder_attention_type = decoder_attention_type
         self.activation = get_activation(activation_func)
         
         self.enc_dense = nn.Linear(num_input, num_embs)
@@ -142,10 +167,25 @@ class TransformerModel(nn.Module):
             for _ in range(num_layers)
         ])
         
-        self.dec_layers = nn.ModuleList([
-            nn.TransformerDecoderLayer(d_model=num_embs, nhead=num_heads, dim_feedforward=intermediate_dim, dropout=dropout, batch_first=True)
-            for _ in range(num_layers)
-        ])
+        if decoder_attention_type == 'pytorch':
+            self.dec_layers = nn.ModuleList([
+                nn.TransformerDecoderLayer(d_model=num_embs, nhead=num_heads, dim_feedforward=intermediate_dim, dropout=dropout, batch_first=True)
+                for _ in range(num_layers)
+            ])
+        elif decoder_attention_type in ('standard', 'fused'):
+            self.dec_layers = nn.ModuleList([
+                DecoderBlock(
+                    num_embs,
+                    num_heads,
+                    intermediate_dim,
+                    dropout=dropout,
+                    cross_attention_type=decoder_attention_type,
+                    use_causal_mask=False
+                )
+                for _ in range(num_layers)
+            ])
+        else:
+            raise ValueError(f"Unsupported decoder_attention_type: {decoder_attention_type}")
         
         self.layer_norm = nn.LayerNorm(num_embs)
         self.output_dense = nn.Linear(num_embs, num_output)
@@ -165,7 +205,7 @@ class TransformerModel(nn.Module):
         d = self.pos_enc(d)
         curr_d = d
         for i, layer in enumerate(self.dec_layers):
-            # [MODIFIED] No Causal Mask. Model can see all future MVs.
+            # No causal mask here because decoder_input contains known future MVs.
             curr_d = layer(curr_d, memory[i], tgt_mask=None)
         output = self.layer_norm(curr_d)
         output = self.output_dense(output)
