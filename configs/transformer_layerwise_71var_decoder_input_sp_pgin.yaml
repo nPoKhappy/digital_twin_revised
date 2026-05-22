@@ -16,40 +16,40 @@ data:
   inference_files: 
     - name: "R5_train_split"
       filename: "Test_dataform_change_air2_R=5_train_split.csv"
-      inference_strategy: 'sliding_window'
+      inference_strategy: 'receding_block_replacement'
     - name: "R5-1_train_split"
       filename: "Test_dataform_change_air2_R=5-1_train_split.csv"
-      inference_strategy: 'sliding_window'
+      inference_strategy: 'receding_block_replacement'
     - name: "R5-2_train_split"
       filename: "Test_dataform_change_air2_R=5-2_train_split.csv"
-      inference_strategy: 'sliding_window'
+      inference_strategy: 'receding_block_replacement'
     - name: "R5-6_train_split"
       filename: "Test_dataform_change_air2_R=5-6_train_split.csv"
-      inference_strategy: 'sliding_window'
+      inference_strategy: 'receding_block_replacement'
     - name: "R5_test_split"
       filename: "Test_dataform_change_air2_R=5_test_split.csv"
-      inference_strategy: 'sliding_window'
+      inference_strategy: 'receding_block_replacement'
     - name: "R5-1_test_split"
       filename: "Test_dataform_change_air2_R=5-1_test_split.csv"
-      inference_strategy: 'sliding_window'
+      inference_strategy: 'receding_block_replacement'
     - name: "R5-2_test_split"
       filename: "Test_dataform_change_air2_R=5-2_test_split.csv"
-      inference_strategy: 'sliding_window'
+      inference_strategy: 'receding_block_replacement'
     - name: "R5-6_test_split"
       filename: "Test_dataform_change_air2_R=5-6_test_split.csv"
-      inference_strategy: 'sliding_window'
+      inference_strategy: 'receding_block_replacement'
     - name: "R5_valid_split"
       filename: "Test_dataform_change_air2_R=5_valid_split.csv"
-      inference_strategy: 'sliding_window'
+      inference_strategy: 'receding_block_replacement'
     - name: "R5-1_valid_split"
       filename: "Test_dataform_change_air2_R=5-1_valid_split.csv"
-      inference_strategy: 'sliding_window'
+      inference_strategy: 'receding_block_replacement'
     - name: "R5-2_valid_split"
       filename: "Test_dataform_change_air2_R=5-2_valid_split.csv"
-      inference_strategy: 'sliding_window'
+      inference_strategy: 'receding_block_replacement'
     - name: "R5-6_valid_split"
       filename: "Test_dataform_change_air2_R=5-6_valid_split.csv"
-      inference_strategy: 'sliding_window'
+      inference_strategy: 'receding_block_replacement'
 
 
 window:
@@ -81,6 +81,8 @@ training:
   dynamic_gain_method: "finite_difference"
   dynamic_gain_tail_start_step: 10
   finite_diff_delta_std: 0.5
+  inference_strategy: "receding_block_replacement"
+  block_commit_steps: 1
   patience: 10
   loss_function: 'mse'
   loss_weighting:

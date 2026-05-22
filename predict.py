@@ -115,6 +115,45 @@ def predict_block_replacement(model, initial_en_input, future_de_inputs, device,
 
     return torch.cat(predictions_all_windows, dim=1)
 
+def predict_receding_block_replacement(model, initial_en_input, future_de_inputs, device, config):
+    """Predict H steps ahead, commit only the first few steps, then re-plan."""
+    model.eval()
+
+    H = config['window']['prediction_length']
+    commit_steps = config['training'].get('block_commit_steps', 3)
+    commit_steps = max(1, min(commit_steps, H))
+    num_pred_steps = future_de_inputs.shape[1]
+
+    predictions_committed = []
+    current_en_input = initial_en_input.clone().to(device)
+
+    with torch.no_grad():
+        for start_idx in tqdm(
+            range(0, num_pred_steps, commit_steps),
+            desc=f"[Strategy: receding block | commit={commit_steps}] Predicting"
+        ):
+            end_idx = min(start_idx + H, num_pred_steps)
+            de_input_block = future_de_inputs[:, start_idx:end_idx, :].to(device)
+
+            if de_input_block.size(1) < H:
+                pad_len = H - de_input_block.size(1)
+                pad_block = de_input_block[:, -1:, :].expand(-1, pad_len, -1)
+                de_input_for_model = torch.cat([de_input_block, pad_block], dim=1)
+            else:
+                de_input_for_model = de_input_block
+
+            prediction_block = model(current_en_input, de_input_for_model)
+            keep_len = min(commit_steps, num_pred_steps - start_idx)
+            committed_pred = prediction_block[:, :keep_len, :]
+            committed_de = future_de_inputs[:, start_idx:start_idx + keep_len, :].to(device)
+
+            predictions_committed.append(committed_pred)
+
+            new_block = torch.cat([committed_de, committed_pred], dim=2)
+            current_en_input = torch.cat([current_en_input[:, new_block.size(1):, :], new_block], dim=1)
+
+    return torch.cat(predictions_committed, dim=1)
+
 def predict_horizon_reinit(model, initial_en_input, future_de_inputs, future_targets, full_en_inputs, device, config):
     """
     Horizon Re-initialization Strategy:
@@ -553,7 +592,7 @@ def plot_grouped_time_series(run_results, config, output_root):
                     x,
                     y_pred,
                     color=color,
-                    linewidth=1.25,
+                    linewidth=0.8,
                     linestyle='--',
                     alpha=0.95,
                     label=f'{split_name} pred',
@@ -565,7 +604,7 @@ def plot_grouped_time_series(run_results, config, output_root):
                     x,
                     y_true,
                     color='black',
-                    linewidth=1.8,
+                    linewidth=1.05,
                     alpha=0.82,
                     label='true' if idx == 0 else None,
                     zorder=3,
@@ -645,7 +684,7 @@ def plot_grouped_time_series(run_results, config, output_root):
                     x,
                     y_pred,
                     color=color,
-                    linewidth=1.35,
+                    linewidth=0.85,
                     linestyle='--',
                     alpha=0.95,
                     label=f'{split_name} pred',
@@ -657,7 +696,7 @@ def plot_grouped_time_series(run_results, config, output_root):
                     x,
                     y_true,
                     color='black',
-                    linewidth=1.9,
+                    linewidth=1.1,
                     alpha=0.84,
                     label='true' if idx == 0 else None,
                     zorder=3,
@@ -798,6 +837,10 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
         predictions_tensor = predict_block_replacement(
             model, initial_en_input, future_de_inputs, device, config
         )
+    elif strategy == 'receding_block_replacement':
+        predictions_tensor = predict_receding_block_replacement(
+            model, initial_en_input, future_de_inputs, device, config
+        )
     elif strategy == 'horizon_reinit':
         # Horizon Re-initialization
         predictions_tensor = predict_horizon_reinit(
@@ -920,18 +963,18 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
         
         # Plot History
         x_hist = range(len(hist_vals))
-        plt.plot(x_hist, hist_vals, label='History', color=HISTORY_COLOR, alpha=0.75, linewidth=1.4)
+        plt.plot(x_hist, hist_vals, label='History', color=HISTORY_COLOR, alpha=0.75, linewidth=0.9)
         
         # Plot Future
         x_future = range(len(hist_vals), len(hist_vals) + len(future_true))
-        plt.plot(x_future, future_true, label='True (Future)', color=TRUE_COLOR, linewidth=1.6)
-        plt.plot(x_future, future_pred, label='Pred (Future)', color=PRED_COLOR, linestyle='--', linewidth=1.6)
+        plt.plot(x_future, future_true, label='True (Future)', color=TRUE_COLOR, linewidth=1.0)
+        plt.plot(x_future, future_pred, label='Pred (Future)', color=PRED_COLOR, linestyle='--', linewidth=1.0)
         
         # ?????(?History ??Pred ???
         # Connect points for visual continuity
         if len(hist_vals) > 0:
-            plt.plot([x_hist[-1], x_future[0]], [hist_vals[-1], future_pred[0]], color=PRED_COLOR, linestyle='--', alpha=0.55)
-            plt.plot([x_hist[-1], x_future[0]], [hist_vals[-1], future_true[0]], color=TRUE_COLOR, alpha=0.55)
+            plt.plot([x_hist[-1], x_future[0]], [hist_vals[-1], future_pred[0]], color=PRED_COLOR, linestyle='--', alpha=0.55, linewidth=0.8)
+            plt.plot([x_hist[-1], x_future[0]], [hist_vals[-1], future_true[0]], color=TRUE_COLOR, alpha=0.55, linewidth=0.8)
 
         # Set Y-Axis Limits based on Valid Data (History + True Future)
         # prevents the plot from being unreadable due to massive outlier predictions (e.g. 1e292)

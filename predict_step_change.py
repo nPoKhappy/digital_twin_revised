@@ -47,31 +47,84 @@ def style_prediction_axis(ax, y_ticks=5):
         spine.set_linewidth(1.0)
 
 
-def predict_block_replacement(model, initial_en_input, future_de_inputs, device, H):
-    """Predict in blocks of length H, then replace the encoder window by the predicted block."""
+def smooth_prediction_block(prediction_block, previous_output=None, alpha=0.25):
+    """Low-pass filter a prediction block along time."""
+    smoothed_steps = []
+    last_output = previous_output
+    for t in range(prediction_block.size(1)):
+        current_output = prediction_block[:, t:t + 1, :]
+        if last_output is None:
+            smoothed_output = current_output
+        else:
+            smoothed_output = alpha * current_output + (1.0 - alpha) * last_output
+        smoothed_steps.append(smoothed_output)
+        last_output = smoothed_output
+    return torch.cat(smoothed_steps, dim=1), last_output
+
+
+def predict_block_replacement(model, initial_en_input, future_de_inputs, device, H, smooth_alpha=None):
+    """Predict in blocks of length H, then append the predicted block to the encoder window."""
     model.eval()
 
     num_pred_steps = future_de_inputs.shape[1]
-    if num_pred_steps % H != 0:
-        num_pred_steps = (num_pred_steps // H) * H
-        future_de_inputs = future_de_inputs[:, :num_pred_steps, :]
-
-    num_windows_to_predict = num_pred_steps // H
     predictions_all_windows = []
     current_en_input = initial_en_input.clone().to(device)
+    previous_output = None
 
     with torch.no_grad():
-        for i in range(num_windows_to_predict):
-            start_idx = i * H
-            end_idx = (i + 1) * H
+        for start_idx in range(0, num_pred_steps, H):
+            end_idx = min(start_idx + H, num_pred_steps)
             de_input_block = future_de_inputs[:, start_idx:end_idx, :].to(device)
             prediction_block = model(current_en_input, de_input_block)
+
+            if smooth_alpha is not None:
+                prediction_block, previous_output = smooth_prediction_block(
+                    prediction_block,
+                    previous_output=previous_output,
+                    alpha=smooth_alpha
+                )
+
             predictions_all_windows.append(prediction_block)
 
             # Encoder order is [MV, y_sv].
-            current_en_input = torch.cat([de_input_block, prediction_block], dim=2)
+            new_block = torch.cat([de_input_block, prediction_block], dim=2)
+            current_en_input = torch.cat([current_en_input[:, new_block.size(1):, :], new_block], dim=1)
 
     return torch.cat(predictions_all_windows, dim=1)
+
+
+def predict_receding_block_replacement(model, initial_en_input, future_de_inputs, device, H, commit_steps):
+    """Predict H steps ahead, commit only the first few steps, then re-plan."""
+    model.eval()
+
+    num_pred_steps = future_de_inputs.shape[1]
+    predictions_committed = []
+    current_en_input = initial_en_input.clone().to(device)
+    commit_steps = max(1, min(commit_steps, H))
+
+    with torch.no_grad():
+        for start_idx in range(0, num_pred_steps, commit_steps):
+            end_idx = min(start_idx + H, num_pred_steps)
+            de_input_block = future_de_inputs[:, start_idx:end_idx, :].to(device)
+
+            if de_input_block.size(1) < H:
+                pad_len = H - de_input_block.size(1)
+                pad_block = de_input_block[:, -1:, :].expand(-1, pad_len, -1)
+                de_input_for_model = torch.cat([de_input_block, pad_block], dim=1)
+            else:
+                de_input_for_model = de_input_block
+
+            prediction_block = model(current_en_input, de_input_for_model)
+            keep_len = min(commit_steps, num_pred_steps - start_idx)
+            committed_pred = prediction_block[:, :keep_len, :]
+            committed_de = future_de_inputs[:, start_idx:start_idx + keep_len, :].to(device)
+
+            predictions_committed.append(committed_pred)
+
+            new_block = torch.cat([committed_de, committed_pred], dim=2)
+            current_en_input = torch.cat([current_en_input[:, new_block.size(1):, :], new_block], dim=1)
+
+    return torch.cat(predictions_committed, dim=1)
 
 
 def predict_sliding_window(model, initial_en_input, future_de_inputs, device, num_output_features):
@@ -168,8 +221,28 @@ def process_single_file(
             f"running {warmup_steps} SS1 decoder steps before prediction."
         )
 
-    if inference_strategy == "block_replacement":
-        all_preds_z = predict_block_replacement(model, initial_en_input, full_de_inputs, device, H)
+    if inference_strategy in ["block_replacement", "block_replacement_smooth"]:
+        smooth_alpha = None
+        if inference_strategy == "block_replacement_smooth":
+            smooth_alpha = config["training"].get("block_smooth_alpha", 0.25)
+        all_preds_z = predict_block_replacement(
+            model,
+            initial_en_input,
+            full_de_inputs,
+            device,
+            H,
+            smooth_alpha=smooth_alpha
+        )
+    elif inference_strategy == "receding_block_replacement":
+        commit_steps = config["training"].get("block_commit_steps", 3)
+        all_preds_z = predict_receding_block_replacement(
+            model,
+            initial_en_input,
+            full_de_inputs,
+            device,
+            H,
+            commit_steps=commit_steps
+        )
     else:
         all_preds_z = predict_sliding_window(model, initial_en_input, full_de_inputs, device, len(y_sv))
 
