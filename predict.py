@@ -1046,11 +1046,23 @@ def analyze_horizon_performance(model, df_z, config, results_dir, mean_all, std_
         for curr_en, curr_de, curr_target in tqdm(loader, desc="Rolling Prediction"):
             curr_en = curr_en.to(device)
             curr_de = curr_de.to(device)
-            
-            # Predict
-            # output: [Batch, H, F_out]
-            out = model(curr_en, curr_de)
-            
+
+            current_en_input = curr_en.clone()
+            step_predictions = []
+            for t in range(curr_de.shape[1]):
+                single_step_de_input = curr_de[:, t, :].unsqueeze(1)
+                single_step_prediction = model(current_en_input, single_step_de_input)
+
+                if single_step_prediction.shape[1] > 1:
+                    single_step_prediction = single_step_prediction[:, 0, :].unsqueeze(1)
+
+                step_predictions.append(single_step_prediction)
+                if t < curr_de.shape[1] - 1:
+                    new_step_features = torch.cat([single_step_de_input, single_step_prediction], dim=2)
+                    current_en_input = torch.cat([current_en_input[:, 1:, :], new_step_features], dim=1)
+
+            out = torch.cat(step_predictions, dim=1)
+
             all_preds_list.append(out.cpu().numpy())
             # target is [Batch, H, F_out] (Dataset returns slice)
             all_targets_list.append(curr_target.numpy())
