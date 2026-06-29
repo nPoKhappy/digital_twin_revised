@@ -11,14 +11,15 @@ from scipy.stats import qmc
 
 
 SOURCE_CSV = "data/Claus_dynamic/step_change/in_training_distribution/air2_190_t2_155_t2_change_-5.csv"
-OUTPUT_PERTURB_FILENAME = "LHS_air2_190_t2_155_air2_t2_only_perturbation.csv"
+OUTPUT_PERTURB_FILENAME = "LHS/LHS_air2_190_t2_155_air2_t2_only_perturbation.csv"
 
 
 def main():
     today_str = date.today().strftime("%Y%m%d")
     base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    n_base = 1000
+    n_base = 480
+    target_rows = 5000
     
 
     # Local region around the selected step-change condition.
@@ -26,10 +27,10 @@ def main():
     # air2_190_t2_155_t2_change_-5.csv covers T2 155 -> 150.
     variable_ranges = {
         "B33.SPo.SPo": (140.0, 300.0),  # air2_SP
-        "B20.SPo.SPo": (190.0, 240.0),  # HEATER2_output_T_SP
-        "B34.SPo.SPo": (130.5, 150.5),  # acidgas_Fm, small local change around 140.5 kmol/hr
-        "ACIDGAS.T.T": (82.6, 84.6),  # acidgas_T, small local change around 83.6 C
-        "ACIDGAS.P.P": (1.6, 1.7),  # acidgas_P, small local change around 1.6722 bar
+        "B20.SPo.SPo": (140.0, 240.0),  # HEATER2_output_T_SP
+        "B34.SPo.SPo": (120.5, 160.5),  # acidgas_Fm, small local change around 140.5 kmol/hr
+        "ACIDGAS.T.T": (82.5, 84.5),  # acidgas_T, small local change around 83.6 C
+        "ACIDGAS.P.P": (1.65, 1.7),  # acidgas_P, small local change around 1.6722 bar
     }
 
     # Perturbation size for local gain cases. Keep this small enough to stay local,
@@ -51,8 +52,8 @@ def main():
         'ACIDGAS.Fcn.CO2.("CO2")': "acidgas_CO2",
         'ACIDGAS.Fcn.H2O.("H2O")': "acidgas_H2O",
         'ACIDGAS.Fcn.H2S.("H2S")': "acidgas_H2S",
-        "B17.SPo.SPo": "air_SP",
-        "B35.SPo.SPo": "COG_SP",
+        # "B17.SPo.SPo": "air_SP",
+        # "B35.SPo.SPo": "COG_SP",
         "B18.SPo.SPo": "burner_input_T_SP",
         "B19.SPo.SPo": "burner_output_T_SP",
         "BURNER_PC.SPo.SPo": "burner_output_P_SP",
@@ -140,6 +141,27 @@ def main():
     df_perturb = pd.DataFrame(perturb_rows)
     metadata_cols = ["case_id", "base_id", "case_type", "perturbed_mv", "direction", "delta"]
     df_perturb = df_perturb[final_tags + metadata_cols]
+    generated_rows = len(df_perturb)
+    if target_rows is not None and generated_rows != target_rows:
+        base_mask = df_perturb["case_type"] == "base"
+        df_base_cases = df_perturb[base_mask]
+        df_perturb_cases = df_perturb[~base_mask]
+        needed_perturb_rows = target_rows - len(df_base_cases)
+        if needed_perturb_rows < 0:
+            raise ValueError(
+                f"target_rows={target_rows} is smaller than base rows={len(df_base_cases)}"
+            )
+        if needed_perturb_rows > len(df_perturb_cases):
+            raise ValueError(
+                f"Only generated {generated_rows} rows, fewer than target_rows={target_rows}. "
+                "Increase n_base or widen the variable ranges."
+            )
+        df_perturb_cases = df_perturb_cases.sample(n=needed_perturb_rows).sort_index()
+        df_perturb = (
+            pd.concat([df_base_cases, df_perturb_cases])
+            .sort_index()
+            .reset_index(drop=True)
+        )
     df_perturb.to_csv(OUTPUT_PERTURB_FILENAME, index=False)
 
     plot_dir = os.path.join(base_dir, f"LHS_Air2_T2_Local_Check_Plots_{today_str}")
@@ -158,6 +180,8 @@ def main():
         plt.close()
 
     print("Done.")
+    if generated_rows != len(df_perturb):
+        print(f"Generated rows before target trim: {generated_rows}")
     print(f"Perturbation rows: {len(df_perturb)} -> {OUTPUT_PERTURB_FILENAME}")
     print(f"Varied tags: {', '.join(lhs_tags)}")
     print(f"Check plots: {plot_dir}")
