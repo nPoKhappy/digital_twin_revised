@@ -82,26 +82,47 @@ def add_surface_subplot(fig, subplot_id, df, z_col, label, grid_size):
         grid_x,
         grid_y,
         grid_z,
-        cmap="viridis",
+        cmap="RdYlGn_r",
         linewidth=0,
         antialiased=True,
         alpha=0.88,
     )
-    ax.scatter(x, y, z, c="black", s=8, alpha=0.23, depthshade=False)
-
-    ax.set_title(label)
     ax.set_xlabel("air2_SP / B33.SPo.SPo", labelpad=10)
     ax.set_ylabel("tr2 = HEATER2_output_T_SP / B20.SPo.SPo", labelpad=10)
     ax.set_zlabel(f"{label} / {z_col}", labelpad=10)
-    ax.view_init(elev=26, azim=55)
+    # Place the low-air2, low-tr2 corner at the lower-left front of the view.
+    ax.view_init(elev=26, azim=-135)
     ax.grid(True, alpha=0.45)
     fig.colorbar(surface, ax=ax, shrink=0.62, pad=0.10, label=label)
     return ax
 
 
+def add_contour_subplot(fig, subplot_id, df, z_col, label, grid_size):
+    x, y, _, grid_x, grid_y, grid_z = make_surface(df, z_col, grid_size)
+
+    ax = fig.add_subplot(subplot_id)
+    contour = ax.contourf(grid_x, grid_y, grid_z, levels=24, cmap="RdYlGn_r")
+    ax.contour(
+        grid_x,
+        grid_y,
+        grid_z,
+        levels=12,
+        colors="black",
+        linewidths=0.45,
+        alpha=0.48,
+    )
+    ax.set_xlabel("air2_SP / B33.SPo.SPo")
+    ax.set_ylabel("tr2 = HEATER2_output_T_SP / B20.SPo.SPo")
+    ax.set_xlim(x.min(), x.max())
+    ax.set_ylim(y.min(), y.max())
+    ax.grid(False)
+    fig.colorbar(contour, ax=ax, pad=0.02, label=label)
+    return ax
+
+
 def main():
     parser = argparse.ArgumentParser(
-        description="Show interactive 3D surfaces for Run Completed LHS data."
+        description="Show interactive 3D surfaces and 2D contours for Run Completed LHS data."
     )
     parser.add_argument(
         "--excel",
@@ -117,19 +138,24 @@ def main():
     parser.add_argument(
         "--include-file5",
         action="store_true",
-        help="Load lhs_generated_dynamic_ss_data.xlsx and lhs_generated_dynamic_ss_data_5.xlsx only.",
+        help="Load lhs_generated_dynamic_ss_data.xlsx and lhs_generated_dynamic_ss_data_5.xlsx only. This is the default when no source option is given.",
     )
     parser.add_argument(
         "--target",
-        choices=["sum", "h2s", "so2", "both"],
-        default="sum",
-        help="Which surface to show. Default is tail-gas total sulfur as H2S + SO2.",
+        choices=["all", "sum", "h2s", "so2"],
+        default="all",
+        help="Which target to show. Default creates separate H2S, SO2, and H2S + SO2 figures.",
     )
     parser.add_argument(
         "--grid-size",
         type=int,
         default=120,
         help="Interpolation grid size. Larger is smoother but slower.",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default="results/steady_state_surface_contour_plot",
+        help="Directory used to save generated figures.",
     )
     args = parser.parse_args()
 
@@ -138,35 +164,38 @@ def main():
     elif args.file_index:
         excel_patterns = [lhs_excel_name(args.file_index)]
     else:
-        excel_patterns = args.excel or [DEFAULT_EXCEL]
+        excel_patterns = args.excel or [lhs_excel_name(1), lhs_excel_name(5)]
 
     df = load_completed_points(excel_patterns)
     if df.empty:
         raise ValueError("No Run Completed rows found with valid air2/tr2/H2S/SO2 values.")
 
-    if args.target == "both":
-        fig = plt.figure(figsize=(15, 7))
-        add_surface_subplot(fig, 121, df, H2S_COL, "H2S", args.grid_size)
-        add_surface_subplot(fig, 122, df, SO2_COL, "SO2", args.grid_size)
-        fig.suptitle(
-            f"Run Completed Surfaces, n={len(df)}. Drag with mouse to rotate.",
-            fontsize=14,
-        )
-    else:
-        target_map = {
-            "h2s": (H2S_COL, "H2S"),
-            "so2": (SO2_COL, "SO2"),
-            "sum": (SUM_COL, "Tail gas total sulfur = H2S + SO2"),
-        }
-        z_col, label = target_map[args.target]
+    target_map = {
+        "h2s": (H2S_COL, "H2S"),
+        "so2": (SO2_COL, "SO2"),
+        "sum": (SUM_COL, "Tail gas total sulfur = H2S + SO2"),
+    }
+    target_keys = ["h2s", "so2", "sum"] if args.target == "all" else [args.target]
+
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    figures = []
+    for target_key in target_keys:
+        z_col, label = target_map[target_key]
         fig = plt.figure(figsize=(9.5, 7.2))
         add_surface_subplot(fig, 111, df, z_col, label, args.grid_size)
-        fig.suptitle(
-            f"Run Completed Surface: air2 vs tr2 vs {label}, n={len(df)}",
-            fontsize=14,
-        )
+        contour_fig = plt.figure(figsize=(9.5, 7.2))
+        add_contour_subplot(contour_fig, 111, df, z_col, label, args.grid_size)
+        figures.extend([
+            (fig, output_dir / f"{target_key}_surface_3d.png"),
+            (contour_fig, output_dir / f"{target_key}_contour_2d.png"),
+        ])
 
-    plt.tight_layout()
+    for fig, output_path in figures:
+        fig.tight_layout()
+        fig.savefig(output_path, dpi=300, bbox_inches="tight")
+        print(f"Saved: {output_path}")
     plt.show()
 
 
