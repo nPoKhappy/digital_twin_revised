@@ -1,3 +1,9 @@
+"""Step-wise PGIN training for the dynamic Transformer model.
+
+This script trains the dynamic regression model with step-wise AR rollout and
+adds a directional gain loss from a frozen tabular ANN steady-state teacher.
+"""
+
 import os
 import sys
 import argparse
@@ -5,6 +11,8 @@ import yaml
 import glob
 import torch
 import torch.nn as nn
+
+# Force the math attention path for reproducible Transformer behavior on CUDA.
 torch.backends.cuda.enable_flash_sdp(False)
 torch.backends.cuda.enable_mem_efficient_sdp(False)
 torch.backends.cuda.enable_math_sdp(True)
@@ -50,6 +58,8 @@ FULL_MAPPING = {
 }
 
 class SimpleTabularMLP(nn.Module):
+    """Small ANN used as the frozen steady-state gain teacher."""
+
     def __init__(self, input_dim, output_dim):
         super(SimpleTabularMLP, self).__init__()
         self.net = nn.Sequential(
@@ -70,6 +80,8 @@ class SimpleTabularMLP(nn.Module):
         return self.net(x)
 
 def load_steady_state_source(path, required_cols, log_target_cols=None):
+    """Load LHS steady-state rows and align raw Aspen dynamics names to model columns."""
+
     paths = sorted(glob.glob(path))
     if not paths and os.path.exists(path):
         paths = [path]
@@ -102,6 +114,9 @@ def load_steady_state_source(path, required_cols, log_target_cols=None):
             raise ValueError(f"Missing required steady-state columns in {source_path}: {missing_preview}{extra}")
 
         df = df[required_cols].apply(pd.to_numeric, errors='coerce')
+        # Aspen exports B17.PV.PV as kg/hr; dynamics CSVs store `air` in kmol/hr.
+        if 'air' in df.columns:
+            df['air'] = df['air'] / 28.0408
         total_before_drop += len(df)
         df_list.append(df)
 
@@ -124,6 +139,8 @@ def load_steady_state_source(path, required_cols, log_target_cols=None):
     return df
 
 def generate_steady_state_batch(df_raw, batch_size, de_mv, all_cols, W, std_all, target_mvs=None, repeat_rows_as_history=False, indices=None):
+    """Sample steady-state rows and build encoder histories for gain probing."""
+
     if indices is not None:
         idx1 = np.asarray(indices)
     elif repeat_rows_as_history:
@@ -147,6 +164,8 @@ def generate_steady_state_batch(df_raw, batch_size, de_mv, all_cols, W, std_all,
     return historical_dfs, ss1_p_df
 
 def dataframe_to_z_tensor(df, cols, mean, std, device):
+    """Convert selected physical/log columns to the z-space used by the model."""
+
     mean_vals = mean[cols].values
     std_vals = std[cols].replace(0, 1).values
     z_values = (df[cols].values - mean_vals) / std_vals
@@ -164,6 +183,7 @@ def step_wise_rolling_loss_and_predictions(model, batch, criterion, device):
     predictions = []
 
     for t in range(n_steps):
+        # Regression loss is computed one AR step at a time.
         _, context = model.encoder(current_en_input)
         single_step_de_input = all_future_mvs[:, t, :].unsqueeze(1)
         single_step_prediction = model.decoder(single_step_de_input, context)
@@ -174,6 +194,8 @@ def step_wise_rolling_loss_and_predictions(model, batch, criterion, device):
 
         if t < n_steps - 1:
             next_en_input_history = current_en_input[:, 1:, :]
+            # Feed the prediction back numerically, but stop later-step loss
+            # from backpropagating through this previous prediction.
             new_step_features = torch.cat(
                 [single_step_de_input, single_step_prediction.detach()],
                 dim=2
@@ -183,6 +205,7 @@ def step_wise_rolling_loss_and_predictions(model, batch, criterion, device):
     return total_loss / n_steps, torch.cat(predictions, dim=1), all_future_targets
 
 def main(config_path: str):
+    # Load the experiment config first; every tensor shape below is derived from it.
     with open(config_path, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
 
@@ -204,8 +227,10 @@ def main(config_path: str):
     print("=" * 70)
 
     cfg_data = config['data']
+    # variable_selection defines the shared contract among encoder, decoder, and targets.
     de_mv, y_sv, non_used, en_mv_and_sv = variable_selection(cfg_data['variables_num'])
 
+    # Keep all columns that may be needed when constructing synthetic gain histories.
     all_dynamic_cols = []
     for col in en_mv_and_sv:
         if col not in all_dynamic_cols:
@@ -218,6 +243,7 @@ def main(config_path: str):
     config['data']['num_de_input'] = len(de_mv)
     config['data']['num_output'] = len(y_sv)
 
+    # Tabular ANN has a fixed 5-input/2-output steady-state interface.
     tab_input_cols = [
         'air2_SP',
         'HEATER2_output_T_SP',
@@ -239,6 +265,7 @@ def main(config_path: str):
         raise ValueError("No valid gain_target_mv columns found in both Transformer decoder inputs and ANN inputs.")
     gain_target_mv_indices = [de_mv.index(c) for c in gain_target_mv]
 
+    # Dynamic CSVs provide supervised regression data and the z-score reference.
     print("[Info] Loading historical R5-X dataset and calculating Z-score Stats...")
     from src.dataset import MultiStepS2SDataset
     from torch.utils.data import DataLoader, ConcatDataset
@@ -303,6 +330,7 @@ def main(config_path: str):
         df_z = data_utils.apply_zscore(df_log, mean_all, std_all)
         all_dfs_z.append(df_z)
 
+    # Regression horizon is intentionally independent from the gain rollout horizon.
     train_datasets = []
     valid_datasets = []
     W = int(config['window']['train_window_mins'] / config['window']['sampling_interval_min'])
@@ -340,6 +368,7 @@ def main(config_path: str):
         valid_loader = None
         print('[Warning] No Validation data available!')
 
+    # Steady-state rows are only used to probe ANN/dynamic gain direction.
     print('[Info] Preparing LHS steady-state data for Gain loss...')
     keep_cols = []
     for c in all_dynamic_cols + tab_input_cols:
@@ -368,6 +397,7 @@ def main(config_path: str):
         print("  [Info] Pre-trained loading disabled. Training entirely from scratch.")
     dynamic_model.train()
 
+    # The ANN teacher is frozen; gradients through its inputs give the target gain signs.
     print("[Info] Loading Pre-trained TabularMLP Model...")
     tab_target_mean_tensor = torch.tensor(tab_mean[full_model_target_cols].values, dtype=torch.float32, device=device)
     tab_target_std_tensor = torch.tensor(tab_std[full_model_target_cols].values, dtype=torch.float32, device=device)
@@ -391,6 +421,7 @@ def main(config_path: str):
 
     optimizer = optim.Adam(dynamic_model.parameters(), lr=base_lr)
 
+    # Gain rollout: warm up on baseline MV, then apply the step change.
     W = int(config['window']['train_window_mins'] / config['window']['sampling_interval_min'])
     gain_warmup_steps = int(config['training'].get('stepwise_gain_warmup_steps', 60))
     H_gain = int(config['training'].get('stepwise_gain_steps', gain_warmup_steps + H_out))
@@ -414,6 +445,7 @@ def main(config_path: str):
     y_std_tensor = torch.tensor(std_all[y_sv].values, dtype=torch.float32, device=device)
     y_std_safe = torch.where(torch.abs(y_std_tensor) < 1e-6, torch.ones_like(y_std_tensor), y_std_tensor)
 
+    # Safe std tensors avoid divide-by-zero when converting ANN/dynamic outputs.
     tab_target_std_safe = torch.where(torch.abs(tab_target_std_tensor) < 1e-6, torch.ones_like(tab_target_std_tensor), tab_target_std_tensor)
     dynamic_full_target_std_safe = torch.where(
         torch.abs(dynamic_full_target_std_tensor) < 1e-6,
@@ -432,6 +464,7 @@ def main(config_path: str):
         raise ValueError("No valid steady-state target columns configured.")
     ann_monitor_idx = [full_model_target_cols.index(c) for c in tab_target_cols]
 
+    # Gain loss compares direction only; small ANN gradients are masked out later.
     gain_loss_weight = config['training'].get('gain_loss_weight', config['training'].get('pgin_loss_weight', 0.3))
     smooth_loss_weight = config['training'].get('smooth_loss_weight', 0.0)
     enable_gain_loss = config['training'].get('enable_gain_loss', True)
@@ -439,22 +472,14 @@ def main(config_path: str):
     effective_gain_loss_weight = gain_loss_weight if enable_gain_loss else 0.0
     compute_gain_metrics = enable_gain_loss or monitor_gain_kci or config['training'].get('pgin_runtime_plot', True)
     gain_valid_delta_threshold = config['training'].get('gain_valid_delta_threshold', 1e-5)
-    dynamic_gain_method = config['training'].get('dynamic_gain_method', 'autograd').lower()
     dynamic_gain_tail_start_step = config['training'].get(
         'stepwise_gain_tail_start_step',
         max(config['training'].get('dynamic_gain_tail_start_step', dynamic_gain_step_change_step), dynamic_gain_step_change_step)
     )
     finite_diff_delta_std = config['training'].get('finite_diff_delta_std', 0.5)
     ss_batch_size = config['training'].get('ss_batch_size', 4)
-    ss_coverage_mode = config['training'].get('ss_coverage_mode', 'random_with_replacement').lower()
-    if dynamic_gain_method not in ['autograd', 'finite_difference']:
-        raise ValueError("dynamic_gain_method must be either 'autograd' or 'finite_difference'.")
-    if ss_coverage_mode not in ['random_with_replacement', 'shuffle_without_replacement']:
-        raise ValueError("ss_coverage_mode must be either 'random_with_replacement' or 'shuffle_without_replacement'.")
     if ss_batch_size < 1:
         raise ValueError("ss_batch_size must be >= 1.")
-    if ss_coverage_mode == 'shuffle_without_replacement' and ss_batch_size > len(df_raw):
-        raise ValueError("ss_batch_size cannot exceed steady-state row count when using shuffle_without_replacement.")
     if dynamic_gain_tail_start_step < 1:
         raise ValueError("dynamic_gain_tail_start_step must be 1-based and >= 1.")
     dynamic_gain_tail_start_idx = min(max(dynamic_gain_tail_start_step, dynamic_gain_step_change_step) - 1, H_gain - 1)
@@ -463,14 +488,16 @@ def main(config_path: str):
     ss_cursor = 0
 
     def next_steady_state_indices(batch_size):
+        """Return non-repeating steady-state indices until every row is covered."""
+
         nonlocal ss_perm, ss_cursor
-        if ss_coverage_mode != 'shuffle_without_replacement':
-            return None
-        if ss_cursor + batch_size > len(ss_perm):
+        if ss_cursor >= len(ss_perm):
             ss_perm = np.random.permutation(len(df_raw))
             ss_cursor = 0
-        batch_indices = ss_perm[ss_cursor:ss_cursor + batch_size]
-        ss_cursor += batch_size
+
+        end_cursor = min(ss_cursor + batch_size, len(ss_perm))
+        batch_indices = ss_perm[ss_cursor:end_cursor]
+        ss_cursor = end_cursor
         return batch_indices
 
     print(
@@ -480,12 +507,12 @@ def main(config_path: str):
         f"KCI monitor: {compute_gain_metrics}; "
         f"Gain targets: {tab_target_cols} x {gain_target_mv}; "
         f"Gain valid delta threshold: {gain_valid_delta_threshold}; "
-        f"Dynamic gain method: {dynamic_gain_method}; "
+        f"Dynamic gain method: finite_difference; "
         f"Dynamic gain rollout: {H_gain} step-wise steps; "
         f"Step change starts at step {dynamic_gain_step_change_step}; "
         f"Dynamic gain output: steps {dynamic_gain_tail_start_idx + 1}-{dynamic_gain_tail_end_idx}; "
         f"FD delta std: {finite_diff_delta_std}; "
-        f"SS batch: {ss_batch_size}; SS coverage: {ss_coverage_mode}"
+        f"SS batch: {ss_batch_size}; SS coverage: full permutation without replacement"
     )
 
     history_losses = []
@@ -494,8 +521,10 @@ def main(config_path: str):
     history_gain_pair_rows = []
 
     from src.engine import step_wise_rolling_training_step
+    # Regression criterion: average MSE over the step-wise rolling horizon.
     criterion = nn.MSELoss()
 
+    # Main optimization loop mixes supervised regression, optional D1 loss, and gain loss.
     for epoch in range(epochs):
         dynamic_model.train()
         epoch_gain_loss = 0.0
@@ -522,11 +551,13 @@ def main(config_path: str):
 
             optimizer.zero_grad()
 
+            # Supervised dynamic regression loss over the configured rolling horizon.
             if smooth_loss_weight != 0:
                 mse_loss_val, pred_rollout_z, target_rollout_z = step_wise_rolling_loss_and_predictions(
                     dynamic_model, mse_batch, criterion, device
                 )
                 if pred_rollout_z.shape[1] > 1:
+                    # D1 loss aligns first differences so the rollout slope follows data.
                     pred_diff_z = pred_rollout_z[:, 1:, :] - pred_rollout_z[:, :-1, :]
                     target_diff_z = target_rollout_z[:, 1:, :] - target_rollout_z[:, :-1, :]
                     smooth_loss_val = criterion(pred_diff_z, target_diff_z)
@@ -536,6 +567,7 @@ def main(config_path: str):
                 mse_loss_val = step_wise_rolling_training_step(dynamic_model, mse_batch, criterion, device)
                 smooth_loss_val = torch.tensor(0.0, device=device)
 
+            # Draw steady-state rows for ANN teacher gradients and dynamic gain probes.
             ss_indices = next_steady_state_indices(ss_batch_size)
             historical_dfs, ss1_df = generate_steady_state_batch(
                 df_raw, ss_batch_size, de_mv, keep_cols, W, std_all, gain_target_mv,
@@ -557,6 +589,7 @@ def main(config_path: str):
             mlp_x_z_ss1 = dataframe_to_z_tensor(ss1_df, tab_input_cols, tab_mean, tab_std, device)
             mlp_x_z_ss1.requires_grad_(True)
 
+            # Physical ANN outputs are used both for monitoring and gain-direction gradients.
             y_mlp_z_ss1 = mlp_model(mlp_x_z_ss1)
             y_mlp_p_ss1 = y_mlp_z_ss1 * tab_target_std_safe + tab_target_mean_tensor
             ann_monitor_vals = y_mlp_p_ss1.detach()[:, ann_monitor_idx]
@@ -571,6 +604,7 @@ def main(config_path: str):
             gain_prev_training_mode = dynamic_model.training
             if compute_gain_metrics:
                 dynamic_model.eval()
+                # K_ss_matrix is ANN d(target) / d(MV physical), used only for sign.
                 K_ss_matrix = torch.zeros(B_actual, len(tab_target_cols), len(gain_target_mv), device=device)
                 for t_idx, tgt_col in enumerate(tab_target_cols):
                     if tgt_col in full_model_target_cols:
@@ -600,6 +634,8 @@ def main(config_path: str):
                 gain_start_history = x_en_z_history.clone()
 
                 def de_physical_to_z(de_p_tensor):
+                    """Map decoder MV values from physical units to model z-space."""
+
                     de_z_cols = []
                     for col_idx_in_de, col in enumerate(de_mv):
                         m = mean_all.get(col, 0.0)
@@ -609,6 +645,8 @@ def main(config_path: str):
                     return torch.stack(de_z_cols, dim=1)
 
                 def rollout_gain_stack(base_de_p_tensor, step_de_p_tensor=None, collect_debug=False):
+                    """Run a full step-wise AR gain rollout and collect target traces."""
+
                     base_de_z_graph = de_physical_to_z(base_de_p_tensor)
                     step_de_z_graph = (
                         base_de_z_graph if step_de_p_tensor is None else de_physical_to_z(step_de_p_tensor)
@@ -617,6 +655,7 @@ def main(config_path: str):
                     gain_log_steps_local = []
                     debug_steps_local = []
                     for step_idx in range(H_gain):
+                        # The configured step change starts after the baseline warmup window.
                         current_de_z = (
                             step_de_z_graph
                             if step_idx >= dynamic_gain_step_change_idx
@@ -636,6 +675,7 @@ def main(config_path: str):
                             debug_steps_local.append(pred_p_gain[:, tab_target_idx].detach())
 
                         if step_idx < H_gain - 1:
+                            # Same truncated-AR update as regression training.
                             new_step_features = torch.cat(
                                 [single_step_de_input, single_step_prediction.detach()],
                                 dim=2
@@ -646,13 +686,9 @@ def main(config_path: str):
                     return gain_log_stack_local, base_de_z_graph, debug_steps_local
 
                 baseline_de_p = ss1_de_p.detach().clone()
-                ss_gain_de_p = baseline_de_p.clone()
-                if dynamic_gain_method == 'autograd':
-                    ss_gain_de_p.requires_grad_(True)
-
                 gain_log_stack, _, _ = rollout_gain_stack(
                     baseline_de_p,
-                    step_de_p_tensor=ss_gain_de_p if dynamic_gain_method == 'autograd' else None,
+                    step_de_p_tensor=None,
                     collect_debug=False
                 )
 
@@ -660,53 +696,41 @@ def main(config_path: str):
                     dynamic_gain_tail_start_idx:dynamic_gain_tail_end_idx, :, :
                 ].mean(dim=0)
 
-                if dynamic_gain_method == 'autograd':
-                    K_dyn_by_target = []
-                    for target_idx in range(len(tab_target_cols)):
-                        target_steps = baseline_target_steps[:, target_idx]
-                        grads_de_p, = torch.autograd.grad(
-                            outputs=target_steps.sum(),
-                            inputs=ss_gain_de_p,
-                            create_graph=True,
-                            retain_graph=True
-                        )
-                        K_dyn_by_target.append(grads_de_p[:, gain_target_mv_indices])
-                    K_dyn_matrix = torch.stack(K_dyn_by_target, dim=1)
-                    K_dyn_matrix_stack = K_dyn_matrix.unsqueeze(0)
-                else:
-                    K_dyn_plus_by_mv = []
-                    K_dyn_minus_by_mv = []
-                    for mv_name in gain_target_mv:
-                        mv_de_idx = de_mv.index(mv_name)
-                        std_val = std_all[mv_name] if abs(std_all[mv_name]) > 1e-6 else 1.0
-                        delta = finite_diff_delta_std * std_val
+                # Finite-difference gain: plus-baseline and baseline-minus tail means.
+                K_dyn_plus_by_mv = []
+                K_dyn_minus_by_mv = []
+                for mv_name in gain_target_mv:
+                    mv_de_idx = de_mv.index(mv_name)
+                    std_val = std_all[mv_name] if abs(std_all[mv_name]) > 1e-6 else 1.0
+                    delta = finite_diff_delta_std * std_val
 
-                        plus_de_p = baseline_de_p.clone()
-                        minus_de_p = baseline_de_p.clone()
-                        plus_de_p[:, mv_de_idx] += delta
-                        minus_de_p[:, mv_de_idx] -= delta
+                    plus_de_p = baseline_de_p.clone()
+                    minus_de_p = baseline_de_p.clone()
+                    plus_de_p[:, mv_de_idx] += delta
+                    minus_de_p[:, mv_de_idx] -= delta
 
-                        plus_log_stack, _, _ = rollout_gain_stack(
-                            baseline_de_p, step_de_p_tensor=plus_de_p, collect_debug=False
-                        )
-                        minus_log_stack, _, _ = rollout_gain_stack(
-                            baseline_de_p, step_de_p_tensor=minus_de_p, collect_debug=False
-                        )
-                        plus_target_steps = plus_log_stack[
-                            dynamic_gain_tail_start_idx:dynamic_gain_tail_end_idx, :, :
-                        ].mean(dim=0)
-                        minus_target_steps = minus_log_stack[
-                            dynamic_gain_tail_start_idx:dynamic_gain_tail_end_idx, :, :
-                        ].mean(dim=0)
+                    plus_log_stack, _, _ = rollout_gain_stack(
+                        baseline_de_p, step_de_p_tensor=plus_de_p, collect_debug=False
+                    )
+                    minus_log_stack, _, _ = rollout_gain_stack(
+                        baseline_de_p, step_de_p_tensor=minus_de_p, collect_debug=False
+                    )
+                    plus_target_steps = plus_log_stack[
+                        dynamic_gain_tail_start_idx:dynamic_gain_tail_end_idx, :, :
+                    ].mean(dim=0)
+                    minus_target_steps = minus_log_stack[
+                        dynamic_gain_tail_start_idx:dynamic_gain_tail_end_idx, :, :
+                    ].mean(dim=0)
 
-                        K_dyn_plus_by_mv.append((plus_target_steps - baseline_target_steps) / delta)
-                        K_dyn_minus_by_mv.append((baseline_target_steps - minus_target_steps) / delta)
+                    K_dyn_plus_by_mv.append((plus_target_steps - baseline_target_steps) / delta)
+                    K_dyn_minus_by_mv.append((baseline_target_steps - minus_target_steps) / delta)
 
-                    K_dyn_plus_matrix = torch.stack(K_dyn_plus_by_mv, dim=2)
-                    K_dyn_minus_matrix = torch.stack(K_dyn_minus_by_mv, dim=2)
-                    K_dyn_matrix_stack = torch.stack([K_dyn_plus_matrix, K_dyn_minus_matrix], dim=0)
+                K_dyn_plus_matrix = torch.stack(K_dyn_plus_by_mv, dim=2)
+                K_dyn_minus_matrix = torch.stack(K_dyn_minus_by_mv, dim=2)
+                K_dyn_matrix_stack = torch.stack([K_dyn_plus_matrix, K_dyn_minus_matrix], dim=0)
 
                 if pgin_runtime_plot and step == 0:
+                    # Runtime plot exposes baseline/plus/minus dynamic traces against ANN targets.
                     runtime_dir = './results/PGIN_Visualizations'
                     os.makedirs(runtime_dir, exist_ok=True)
 
@@ -797,8 +821,10 @@ def main(config_path: str):
 
                 K_ss_direction_exp = K_ss_direction.unsqueeze(0)
 
+                # Penalize only sign disagreement between dynamic gain and ANN teacher gain.
                 loss_matrix_stack = torch.nn.functional.relu(-K_dyn_matrix_stack * K_ss_direction_exp)
 
+                # Ignore weak ANN teacher gradients because their sign is not reliable.
                 valid_mlp_mask = torch.abs(K_ss_matrix) >= gain_valid_delta_threshold
                 valid_mlp_mask_expanded = valid_mlp_mask.unsqueeze(0).expand_as(loss_matrix_stack)
 
@@ -821,8 +847,11 @@ def main(config_path: str):
                 dynamic_model.train(gain_prev_training_mode)
 
             total_loss = (
+                # Main supervised regression term.
                 mse_loss_val
+                # Optional first-difference matching term.
                 + smooth_loss_weight * smooth_loss_val
+                # Directional dynamic-gain consistency term.
                 + effective_gain_loss_weight * loss_gain
             )
             epoch_mse_loss += mse_loss_val.item()
@@ -943,6 +972,7 @@ def main(config_path: str):
     out_dir = f'./results/{exp}'
     os.makedirs(out_dir, exist_ok=True)
 
+    # Export compact training diagnostics for loss, KCI, and final pair-level gain signs.
     actual_epochs = len(history_losses)
     epochs_axis = list(range(1, actual_epochs + 1))
 
