@@ -4,10 +4,10 @@ exp_name: "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch"
 data:
   path: "./data/Claus_dynamic/"
   training_files:
-    - "Test_dataform_change_air2_R=5.csv"
-    - "Test_dataform_change_air2_R=5-1.csv"
-    - "Test_dataform_change_air2_R=5-2.csv"
-    - "Test_dataform_change_air2_R=5-6.csv"
+    - "Test_dataform_change_air2_R=5_train_split.csv"
+    - "Test_dataform_change_air2_R=5-1_train_split.csv"
+    - "Test_dataform_change_air2_R=5-2_train_split.csv"
+    - "Test_dataform_change_air2_R=5-6_train_split.csv"
 
   variables_num: 63
 
@@ -39,6 +39,7 @@ data:
     - name: "R5-6_test_split"
       filename: "Test_dataform_change_air2_R=5-6_test_split.csv"
       inference_strategy: 'sliding_window'
+    
     - name: "R5_valid_split"
       filename: "Test_dataform_change_air2_R=5_valid_split.csv"
       inference_strategy: 'sliding_window'
@@ -52,7 +53,12 @@ data:
       filename: "Test_dataform_change_air2_R=5-6_valid_split.csv"
       inference_strategy: 'sliding_window'
 
-
+    - name: "R5-11"
+      filename: "Test_dataform_change_air2_R=5-11.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-12"
+      filename: "Test_dataform_change_air2_R=5-12.csv"
+      inference_strategy: 'sliding_window'
 window:
   train_window_mins: 180    # 18 steps * 10 min
   sampling_interval_min: 10
@@ -77,15 +83,12 @@ training:
   learning_rate: 0.0005
   ss_loss_weight: 0
   smooth_loss_weight: 0.1
-  gain_loss_weight: 2
+  gain_loss_weight: 0.5
   monitor_gain_kci: true
   stepwise_gain_warmup_steps: 35
-  
-  dynamic_gain_method: "finite_difference"
   dynamic_gain_tail_start_step: 10
   finite_diff_delta_std: 0.5
   ss_batch_size: 64
-  ss_coverage_mode: "shuffle_without_replacement"
   inference_strategy: "sliding_window"
   block_commit_steps: 1
   patience: 10
