@@ -18,7 +18,7 @@ def main():
     today_str = date.today().strftime("%Y%m%d")
     base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    n_base = 480
+    n_base = 1000
     target_rows = 5000
     
 
@@ -28,9 +28,9 @@ def main():
     variable_ranges = {
         "B33.SPo.SPo": (140.0, 300.0),  # air2_SP
         "B20.SPo.SPo": (140.0, 240.0),  # HEATER2_output_T_SP
-        "B34.SPo.SPo": (120.5, 160.5),  # acidgas_Fm, small local change around 140.5 kmol/hr
-        "ACIDGAS.T.T": (82.5, 84.5),  # acidgas_T, small local change around 83.6 C
-        "ACIDGAS.P.P": (1.65, 1.7),  # acidgas_P, small local change around 1.6722 bar
+        "B34.SPo.SPo": (140.5, 140.5),  # acidgas_Fm, small local change around 140.5 kmol/hr
+        "ACIDGAS.T.T": (83.6, 83.6),  # acidgas_T, small local change around 83.6 C
+        "ACIDGAS.P.P": (1.6722, 1.6722),  # acidgas_P, small local change around 1.6722 bar
     }
 
     # Perturbation size for local gain cases. Keep this small enough to stay local,
@@ -61,7 +61,7 @@ def main():
         "CAT1_PC.SPo.SPo": "cat1_output_P_SP",
         "CAT2_PC.SPo.SPo": "cat2_output_P_SP",
         "SEP2_PC.SPo.SPo": "SEP2_P_SP",
-        "B21.SPo.SPo": "HEATER1_output_T_SP",
+        # "B21.SPo.SPo": "HEATER1_output_T_SP",
         "SEP1_PC.SPo.SPo": "SEP1_P_SP",
         "SEP3_PC.SPo.SPo": "SEP3_P_SP",
     }
