@@ -28,8 +28,6 @@ STEP_CHANGE_BASE_DIR = "data/Claus_dynamic/step_change"
 
 DISTRIBUTION_DIRS = {
     "in_training": "in_training_distribution",
-    "out_of_training": "out_of_training_distribution",
-    "acidgas_fm_170": "acidgas_fm=170",
 }
 
 TRUE_COLOR = "#1f77b4"
