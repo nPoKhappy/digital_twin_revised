@@ -7,6 +7,7 @@ adds a directional gain loss from a frozen tabular ANN steady-state teacher.
 import os
 import sys
 import argparse
+import random
 import yaml
 import glob
 import torch
@@ -209,6 +210,15 @@ def main(config_path: str):
     with open(config_path, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
 
+    seed = int(config['training'].get('seed', 42))
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
     exp = config['exp_name']
     pretrained_path = config['training'].get(
         'pretrained_path',
@@ -224,6 +234,7 @@ def main(config_path: str):
 
     print("=" * 70)
     print(f"Physics-Informed Gain Training (From Scratch) - Session: {exp}")
+    print(f"[Info] Random seed: {seed}")
     print("=" * 70)
 
     cfg_data = config['data']
