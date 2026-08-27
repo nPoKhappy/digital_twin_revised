@@ -1,0 +1,101 @@
+exp_name: "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss001_seed42"
+
+
+data:
+  path: "./data/Claus_dynamic/"
+  training_files:
+    - "Test_dataform_change_air2_R=5_train_split.csv"
+    - "Test_dataform_change_air2_R=5-1_train_split.csv"
+    - "Test_dataform_change_air2_R=5-2_train_split.csv"
+    - "Test_dataform_change_air2_R=5-6_train_split.csv"
+
+  variables_num: 63
+
+  test_data_split: 0.1
+  valid_data_split: 0.1
+
+  inference_files:
+    - name: "R5_train_split"
+      filename: "Test_dataform_change_air2_R=5_train_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-1_train_split"
+      filename: "Test_dataform_change_air2_R=5-1_train_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-2_train_split"
+      filename: "Test_dataform_change_air2_R=5-2_train_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-6_train_split"
+      filename: "Test_dataform_change_air2_R=5-6_train_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5_test_split"
+      filename: "Test_dataform_change_air2_R=5_test_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-1_test_split"
+      filename: "Test_dataform_change_air2_R=5-1_test_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-2_test_split"
+      filename: "Test_dataform_change_air2_R=5-2_test_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-6_test_split"
+      filename: "Test_dataform_change_air2_R=5-6_test_split.csv"
+      inference_strategy: 'sliding_window'
+
+    - name: "R5_valid_split"
+      filename: "Test_dataform_change_air2_R=5_valid_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-1_valid_split"
+      filename: "Test_dataform_change_air2_R=5-1_valid_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-2_valid_split"
+      filename: "Test_dataform_change_air2_R=5-2_valid_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-6_valid_split"
+      filename: "Test_dataform_change_air2_R=5-6_valid_split.csv"
+      inference_strategy: 'sliding_window'
+
+    - name: "R5-11"
+      filename: "Test_dataform_change_air2_R=5-11.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-12"
+      filename: "Test_dataform_change_air2_R=5-12.csv"
+      inference_strategy: 'sliding_window'
+
+window:
+  train_window_mins: 180
+  sampling_interval_min: 10
+  use_median_downsampling: true
+  prediction_length: 18
+
+model:
+  name: "transformer_layerwise"
+  embedding_dim: 64
+  hidden_dim: 64
+  n_layers: 2
+  num_heads: 1
+  activation: 'gelu'
+  dropout: 0.1
+  ffn_expansion: 4
+
+training:
+  device: "cuda"
+  seed: 42
+  batch_size: 64
+  epochs: 1000
+  steps_per_epoch: 10
+  learning_rate: 0.0005
+  ss_loss_weight: 0.01
+  ss_target_scope: "all_48_outputs"
+  smooth_loss_weight: 0
+  gain_loss_weight: 0.05
+  monitor_gain_kci: true
+  stepwise_gain_warmup_steps: 35
+  dynamic_gain_tail_start_step: 10
+  finite_diff_delta_std: 0.5
+  ss_batch_size: 64
+  inference_strategy: "sliding_window"
+  block_commit_steps: 1
+  patience: 10
+  loss_function: 'mse'
+  loss_weighting:
+    weights: [1.0, 1.0, 1.0, 1.0]
+
