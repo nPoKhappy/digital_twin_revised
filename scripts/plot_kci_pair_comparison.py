@@ -12,16 +12,27 @@ import pandas as pd
 import seaborn as sns
 
 
-RESULT_DIRS = {
-    "Gain-only": "gain_in_hard_distribution_evaluation_seed42",
-    "Gain+SS=0.001": "gain_in_hard_distribution_evaluation_seed42_ss0001",
-    "Gain+SS=0.01": "gain_in_hard_distribution_evaluation_seed42_ss001",
-    "Gain+SS=0.05": "gain_in_hard_distribution_evaluation_seed42_ss005",
+RESULT_FILES = {
+    "No-Gain": (
+        "gain_in_soft_ood_distribution_evaluation/gain_evaluation_detail.csv",
+        "no_gain",
+    ),
+    "Gain": (
+        "gain_in_soft_ood_distribution_evaluation/gain_evaluation_detail.csv",
+        "gain",
+    ),
+    "Gain + SS=0.01": (
+        "gain_in_soft_ood_ss_weight_evaluation/ss001/gain_evaluation_detail.csv",
+        "gain",
+    ),
+    "Difficult-GradNorm": (
+        "gain_in_soft_ood_difficult_group_gradnorm_no_ss_evaluation/gain_evaluation_detail.csv",
+        "gain",
+    ),
 }
-GAIN_SS_MODELS = ["No-Gain", "Gain+SS=0.001", "Gain+SS=0.01", "Gain+SS=0.05"]
-GAIN_MODELS = ["No-Gain", "Gain-only"]
-DISTRIBUTIONS = ["in_range", "out_range"]
-DISTRIBUTION_LABELS = {"in_range": "In-range", "out_range": "Hard-OOD"}
+MODELS = list(RESULT_FILES)
+DISTRIBUTIONS = ["in_range", "soft_ood"]
+DISTRIBUTION_LABELS = {"in_range": "In-range", "soft_ood": "Soft-OOD"}
 PAIR_KEYS = [
     ("B35_H2S", "air2_SP"),
     ("B35_H2S", "HEATER2_output_T_SP"),
@@ -29,17 +40,16 @@ PAIR_KEYS = [
     ("B35_SO2", "HEATER2_output_T_SP"),
 ]
 PAIR_LABELS = [
-    r"H$_2$S × air2",
-    r"H$_2$S × T2",
-    r"SO$_2$ × air2",
-    r"SO$_2$ × T2",
+    r"air2 $\rightarrow$ H$_2$S",
+    r"T2 $\rightarrow$ H$_2$S",
+    r"air2 $\rightarrow$ SO$_2$",
+    r"T2 $\rightarrow$ SO$_2$",
 ]
 MODEL_STYLES = {
-    "No-Gain": {"color": "#0072B2", "marker": "s", "linestyle": "--"},
-    "Gain-only": {"color": "#E69F00", "marker": "o", "linestyle": "-"},
-    "Gain+SS=0.001": {"color": "#D55E00", "marker": "o", "linestyle": "-"},
-    "Gain+SS=0.01": {"color": "#009E73", "marker": "^", "linestyle": "-"},
-    "Gain+SS=0.05": {"color": "#CC79A7", "marker": "D", "linestyle": "-"},
+    "No-Gain": {"color": "#333333", "marker": "s", "linestyle": "--"},
+    "Gain": {"color": "#0072B2", "marker": "o", "linestyle": "-"},
+    "Gain + SS=0.01": {"color": "#E69F00", "marker": "^", "linestyle": "-."},
+    "Difficult-GradNorm": {"color": "#D81B60", "marker": "D", "linestyle": ":"},
 }
 
 
@@ -60,17 +70,14 @@ def configure_style() -> None:
     )
 
 
-def load_comparison(repo_root: Path, model: str) -> pd.DataFrame:
-    path = (
-        repo_root
-        / "results"
-        / RESULT_DIRS[model]
-        / "gain_vs_no_gain_comparison.csv"
-    )
+def load_model_kci(repo_root: Path, model: str) -> pd.DataFrame:
+    relative_path, training_type = RESULT_FILES[model]
+    path = repo_root / "results" / relative_path
     data = pd.read_csv(path)
     expected = len(DISTRIBUTIONS) * len(PAIR_KEYS)
     data = data[
         data["distribution"].isin(DISTRIBUTIONS)
+        & (data["training_type"] == training_type)
         & data[["target", "mv"]].apply(tuple, axis=1).isin(PAIR_KEYS)
     ].copy()
     if len(data) != expected:
@@ -82,7 +89,6 @@ def kci_value(
     data: pd.DataFrame,
     distribution: str,
     pair: tuple[str, str],
-    column: str,
 ) -> float:
     rows = data[
         (data["distribution"] == distribution)
@@ -93,7 +99,7 @@ def kci_value(
         raise ValueError(
             f"Expected one KCI row for {distribution}, {pair}; found {len(rows)}."
         )
-    return float(rows.iloc[0][column])
+    return float(rows.iloc[0]["kci_percent"])
 
 
 def plot_kci_panels(
@@ -177,86 +183,43 @@ def plot_kci_panels(
     records.to_csv(output_dir / f"{filename}.csv", index=False)
 
 
-def build_records(comparisons: dict[str, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
-    gain_ss_records = []
-    gain_records = []
-    baseline = comparisons["Gain-only"]
+def build_records(comparisons: dict[str, pd.DataFrame]) -> pd.DataFrame:
+    records = []
 
     for distribution in DISTRIBUTIONS:
         for pair, pair_label in zip(PAIR_KEYS, PAIR_LABELS):
-            no_gain = kci_value(
-                baseline, distribution, pair, "kci_percent_no_gain"
-            )
-            gain_only = kci_value(
-                baseline, distribution, pair, "kci_percent_gain"
-            )
-            gain_records.extend(
-                [
-                    {
-                        "Distribution": distribution,
-                        "Gain pair": pair_label,
-                        "Model": "No-Gain",
-                        "Raw KCI (%)": no_gain,
-                    },
-                    {
-                        "Distribution": distribution,
-                        "Gain pair": pair_label,
-                        "Model": "Gain-only",
-                        "Raw KCI (%)": gain_only,
-                    },
-                ]
-            )
-            gain_ss_records.append(
-                {
-                    "Distribution": distribution,
-                    "Gain pair": pair_label,
-                    "Model": "No-Gain",
-                    "Raw KCI (%)": no_gain,
-                }
-            )
-            for model in GAIN_SS_MODELS[1:]:
-                gain_ss_records.append(
+            for model in MODELS:
+                records.append(
                     {
                         "Distribution": distribution,
                         "Gain pair": pair_label,
                         "Model": model,
                         "Raw KCI (%)": kci_value(
-                            comparisons[model],
-                            distribution,
-                            pair,
-                            "kci_percent_gain",
+                            comparisons[model], distribution, pair
                         ),
                     }
                 )
 
-    return (
-        pd.DataFrame.from_records(gain_ss_records),
-        pd.DataFrame.from_records(gain_records),
-    )
+    return pd.DataFrame.from_records(records)
 
 
 def main() -> None:
     repo_root = Path(__file__).resolve().parents[1]
-    output_dir = repo_root / "results" / "kci_pair_visualization_seed42"
+    output_dir = (
+        repo_root / "results" / "kci_pair_visualization_seed42_in_soft_ood"
+    )
     output_dir.mkdir(parents=True, exist_ok=True)
     configure_style()
 
     comparisons = {
-        model: load_comparison(repo_root, model) for model in RESULT_DIRS
+        model: load_model_kci(repo_root, model) for model in RESULT_FILES
     }
-    gain_ss_records, gain_records = build_records(comparisons)
+    records = build_records(comparisons)
     plot_kci_panels(
-        gain_ss_records,
-        GAIN_SS_MODELS,
-        "Raw KCI across gain pairs: No-Gain vs Gain + SS loss",
-        "raw_kci_no_gain_vs_gain_ss",
-        output_dir,
-    )
-    plot_kci_panels(
-        gain_records,
-        GAIN_MODELS,
-        "Raw KCI across gain pairs: No-Gain vs Gain-only",
-        "raw_kci_no_gain_vs_gain_only",
+        records,
+        MODELS,
+        "Four-model Raw KCI comparison across gain pairs",
+        "raw_kci_four_model_comparison",
         output_dir,
     )
     print(f"Saved figures to: {output_dir}")

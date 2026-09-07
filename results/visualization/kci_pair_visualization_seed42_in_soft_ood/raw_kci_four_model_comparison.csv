@@ -1,0 +1,33 @@
+Distribution,Gain pair,Model,Raw KCI (%)
+in_range,air2 $\rightarrow$ H$_2$S,No-Gain,85.97949570518149
+in_range,air2 $\rightarrow$ H$_2$S,Gain,86.11803823773899
+in_range,air2 $\rightarrow$ H$_2$S,Gain + SS=0.01,85.85480742587974
+in_range,air2 $\rightarrow$ H$_2$S,Difficult-GradNorm,98.4898863951233
+in_range,T2 $\rightarrow$ H$_2$S,No-Gain,85.06461838575957
+in_range,T2 $\rightarrow$ H$_2$S,Gain,86.96659351377713
+in_range,T2 $\rightarrow$ H$_2$S,Gain + SS=0.01,92.91636186296026
+in_range,T2 $\rightarrow$ H$_2$S,Difficult-GradNorm,98.79297732260424
+in_range,air2 $\rightarrow$ SO$_2$,No-Gain,99.88420565076424
+in_range,air2 $\rightarrow$ SO$_2$,Gain,99.94210282538212
+in_range,air2 $\rightarrow$ SO$_2$,Gain + SS=0.01,100.0
+in_range,air2 $\rightarrow$ SO$_2$,Difficult-GradNorm,99.82630847614637
+in_range,T2 $\rightarrow$ SO$_2$,No-Gain,68.17502986857825
+in_range,T2 $\rightarrow$ SO$_2$,Gain,77.01612903225806
+in_range,T2 $\rightarrow$ SO$_2$,Gain + SS=0.01,94.36977299880526
+in_range,T2 $\rightarrow$ SO$_2$,Difficult-GradNorm,99.31302270011948
+soft_ood,air2 $\rightarrow$ H$_2$S,No-Gain,74.48938726471766
+soft_ood,air2 $\rightarrow$ H$_2$S,Gain,74.58950740889067
+soft_ood,air2 $\rightarrow$ H$_2$S,Gain + SS=0.01,75.65078093712455
+soft_ood,air2 $\rightarrow$ H$_2$S,Difficult-GradNorm,98.09771726071286
+soft_ood,T2 $\rightarrow$ H$_2$S,No-Gain,85.91071428571429
+soft_ood,T2 $\rightarrow$ H$_2$S,Gain,87.10714285714286
+soft_ood,T2 $\rightarrow$ H$_2$S,Gain + SS=0.01,89.58928571428571
+soft_ood,T2 $\rightarrow$ H$_2$S,Difficult-GradNorm,97.125
+soft_ood,air2 $\rightarrow$ SO$_2$,No-Gain,98.72468117029256
+soft_ood,air2 $\rightarrow$ SO$_2$,Gain,99.0622655663916
+soft_ood,air2 $\rightarrow$ SO$_2$,Gain + SS=0.01,100.0
+soft_ood,air2 $\rightarrow$ SO$_2$,Difficult-GradNorm,96.75543885971491
+soft_ood,T2 $\rightarrow$ SO$_2$,No-Gain,70.0
+soft_ood,T2 $\rightarrow$ SO$_2$,Gain,75.64835164835165
+soft_ood,T2 $\rightarrow$ SO$_2$,Gain + SS=0.01,96.10989010989012
+soft_ood,T2 $\rightarrow$ SO$_2$,Difficult-GradNorm,97.97802197802196

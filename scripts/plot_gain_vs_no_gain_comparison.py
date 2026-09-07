@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 import matplotlib
@@ -22,11 +23,15 @@ EVALUATIONS = ["H1", "H18", "TS"]
 RESULT_DIRS = {
     "No-Gain": "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_no_gain_seed42",
     "Gain": "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42",
+    "Gain + SS=0.01": "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss001_seed42",
+    "Difficult-GradNorm": "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42_difficult_group_gradnorm_no_ss",
 }
 
 MODEL_STYLES = {
-    "No-Gain": {"color": "#0072B2", "marker": "s", "linestyle": "--"},
-    "Gain": {"color": "#D55E00", "marker": "o", "linestyle": "-"},
+    "No-Gain": {"color": "#333333", "marker": "s", "linestyle": "--"},
+    "Gain": {"color": "#0072B2", "marker": "o", "linestyle": "-"},
+    "Gain + SS=0.01": {"color": "#E69F00", "marker": "^", "linestyle": "-."},
+    "Difficult-GradNorm": {"color": "#D81B60", "marker": "D", "linestyle": ":"},
 }
 
 
@@ -135,7 +140,9 @@ def metric_value(
     return float(values.iloc[0])
 
 
-def build_delta_matrices(data: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+def build_delta_matrices(
+    data: pd.DataFrame, comparison_model: str
+) -> tuple[np.ndarray, np.ndarray]:
     row_keys = [(case, target) for case in CASES for target in TARGETS]
     delta_r2 = np.zeros((len(row_keys), len(EVALUATIONS)))
     delta_rmse = np.zeros_like(delta_r2)
@@ -145,12 +152,14 @@ def build_delta_matrices(data: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
             no_gain_r2 = metric_value(
                 data, "No-Gain", case, target, evaluation, "R2"
             )
-            gain_r2 = metric_value(data, "Gain", case, target, evaluation, "R2")
+            gain_r2 = metric_value(
+                data, comparison_model, case, target, evaluation, "R2"
+            )
             no_gain_rmse = metric_value(
                 data, "No-Gain", case, target, evaluation, "RMSE"
             )
             gain_rmse = metric_value(
-                data, "Gain", case, target, evaluation, "RMSE"
+                data, comparison_model, case, target, evaluation, "RMSE"
             )
             delta_r2[row_index, column_index] = gain_r2 - no_gain_r2
             delta_rmse[row_index, column_index] = 100.0 * (
@@ -165,8 +174,10 @@ def set_annotation_colors(axis: plt.Axes, matrix: np.ndarray, limit: float) -> N
         text.set_color("white" if abs(float(value)) >= 0.55 * limit else "#222222")
 
 
-def plot_gain_heatmap(data: pd.DataFrame, output_dir: Path) -> None:
-    delta_r2, delta_rmse = build_delta_matrices(data)
+def plot_gain_heatmap(
+    data: pd.DataFrame, comparison_model: str, output_dir: Path
+) -> None:
+    delta_r2, delta_rmse = build_delta_matrices(data, comparison_model)
     r2_limit = max(0.01, np.ceil(np.abs(delta_r2).max() / 0.01) * 0.01)
     rmse_limit = max(0.5, np.ceil(np.abs(delta_rmse).max() / 0.5) * 0.5)
 
@@ -239,7 +250,7 @@ def plot_gain_heatmap(data: pd.DataFrame, output_dir: Path) -> None:
     rmse_axis.set_ylabel("")
 
     figure.suptitle(
-        "Effect of Gain loss (weight = 0.05) on prediction accuracy",
+        f"{comparison_model} vs No-Gain prediction accuracy",
         fontsize=13,
         fontweight="bold",
         y=0.99,
@@ -254,9 +265,11 @@ def plot_gain_heatmap(data: pd.DataFrame, output_dir: Path) -> None:
     )
     figure.subplots_adjust(top=0.90, bottom=0.10, left=0.12, right=0.92)
 
+    filename_model = comparison_model.lower().replace(" ", "_").replace("+", "plus")
+    filename_model = filename_model.replace("=", "").replace(".", "")
     for extension in ("png", "pdf"):
         figure.savefig(
-            output_dir / f"gain005_vs_no_gain_r2_rmse_heatmap.{extension}",
+            output_dir / f"{filename_model}_vs_no_gain_r2_rmse_heatmap.{extension}",
             dpi=300,
             bbox_inches="tight",
         )
@@ -282,7 +295,7 @@ def plot_raw_rmse_grid(
     for row_index, target in enumerate(TARGETS):
         for column_index, case in enumerate(cases):
             axis = axes[row_index, column_index]
-            for model in ("No-Gain", "Gain"):
+            for model in RESULT_DIRS:
                 values = [
                     metric_value(data, model, case, target, evaluation, "RMSE")
                     for evaluation in EVALUATIONS
@@ -298,19 +311,6 @@ def plot_raw_rmse_grid(
                     linewidth=1.8,
                     label=model,
                 )
-                vertical_offset = 8 if model == "No-Gain" else -13
-                for x_value, value in zip(x_values, values):
-                    axis.annotate(
-                        f"{value:.4g}",
-                        (x_value, value),
-                        xytext=(0, vertical_offset),
-                        textcoords="offset points",
-                        ha="center",
-                        va="bottom" if model == "No-Gain" else "top",
-                        color=style["color"],
-                        fontsize=6.8,
-                    )
-
             axis.set_title(
                 f"{case} | {TARGET_LABELS[target]}",
                 fontweight="bold",
@@ -334,11 +334,11 @@ def plot_raw_rmse_grid(
         labels,
         loc="upper center",
         bbox_to_anchor=(0.5, 0.94),
-        ncol=2,
+        ncol=4,
         frameon=False,
     )
     figure.suptitle(
-        f"Gain vs No-Gain: original RMSE ({group_label})",
+        f"Four-model original RMSE comparison ({group_label})",
         fontsize=13,
         fontweight="bold",
         y=0.985,
@@ -367,30 +367,66 @@ def plot_raw_rmse_lines(data: pd.DataFrame, output_dir: Path) -> None:
         data,
         INTERNAL_CASES,
         "internal test",
-        "gain005_vs_no_gain_raw_rmse_internal_test",
+        "four_model_raw_rmse_internal_test",
         output_dir,
     )
     plot_raw_rmse_grid(
         data,
         EXTERNAL_CASES,
         "external all-data",
-        "gain005_vs_no_gain_raw_rmse_external_all_data",
+        "four_model_raw_rmse_external_all_data",
         output_dir,
     )
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--gain-result-dir",
+        default=RESULT_DIRS["Gain"],
+        help="Gain model directory name under results/.",
+    )
+    parser.add_argument(
+        "--gain-ss001-result-dir",
+        default=RESULT_DIRS["Gain + SS=0.01"],
+        help="Gain + SS=0.01 model directory name under results/.",
+    )
+    parser.add_argument(
+        "--difficult-gradnorm-result-dir",
+        default=RESULT_DIRS["Difficult-GradNorm"],
+        help="Difficult-GradNorm without SS model directory name under results/.",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default="results/four_model_rmse_visualization_seed42",
+    )
+    return parser.parse_args()
+
+
 def main() -> None:
+    args = parse_args()
     repo_root = Path(__file__).resolve().parents[1]
-    output_dir = repo_root / "results" / "gain_vs_no_gain_visualization_seed42"
+    output_dir = Path(args.output_dir)
+    if not output_dir.is_absolute():
+        output_dir = repo_root / output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
 
     configure_style()
+    result_dirs = {
+        **RESULT_DIRS,
+        "Gain": args.gain_result_dir,
+        "Gain + SS=0.01": args.gain_ss001_result_dir,
+        "Difficult-GradNorm": args.difficult_gradnorm_result_dir,
+    }
     frames = [
         load_model_metrics(repo_root, model, result_dir)
-        for model, result_dir in RESULT_DIRS.items()
+        for model, result_dir in result_dirs.items()
     ]
     data = pd.concat(frames, ignore_index=True)
-    plot_gain_heatmap(data, output_dir)
+    data.to_csv(output_dir / "four_model_rmse_values.csv", index=False)
+    for comparison_model in result_dirs:
+        if comparison_model != "No-Gain":
+            plot_gain_heatmap(data, comparison_model, output_dir)
     plot_raw_rmse_lines(data, output_dir)
     print(f"Saved figures to: {output_dir}")
 

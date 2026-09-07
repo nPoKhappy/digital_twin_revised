@@ -1,0 +1,17 @@
+Distribution,Gain pair,Model,Raw KCI (%)
+in_range,H$_2$S × air2,No-Gain,85.97949570518149
+in_range,H$_2$S × air2,Gain-only,86.11803823773899
+in_range,H$_2$S × T2,No-Gain,85.06461838575957
+in_range,H$_2$S × T2,Gain-only,86.96659351377713
+in_range,SO$_2$ × air2,No-Gain,99.88420565076424
+in_range,SO$_2$ × air2,Gain-only,99.94210282538212
+in_range,SO$_2$ × T2,No-Gain,68.17502986857825
+in_range,SO$_2$ × T2,Gain-only,77.01612903225806
+soft_ood,H$_2$S × air2,No-Gain,74.48938726471766
+soft_ood,H$_2$S × air2,Gain-only,74.58950740889067
+soft_ood,H$_2$S × T2,No-Gain,85.91071428571429
+soft_ood,H$_2$S × T2,Gain-only,87.10714285714286
+soft_ood,SO$_2$ × air2,No-Gain,98.72468117029256
+soft_ood,SO$_2$ × air2,Gain-only,99.0622655663916
+soft_ood,SO$_2$ × T2,No-Gain,70.0
+soft_ood,SO$_2$ × T2,Gain-only,75.64835164835165
