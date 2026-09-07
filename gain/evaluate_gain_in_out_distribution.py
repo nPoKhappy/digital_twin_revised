@@ -1,4 +1,4 @@
-"""Evaluate trained Gain/No-Gain Transformers on held-out in/OOD steady states.
+"""Evaluate Gain/No-Gain Transformers on held-out in-range and soft-OOD states.
 
 The input files must be completed Aspen steady-state exports containing all
 63-variable model columns. Generator input CSVs are not sufficient because a
@@ -29,11 +29,7 @@ from src.variable_selection import variable_selection
 
 DEFAULT_CONFIGS = [
     "configs/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42.yaml",
-    "configs/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed43.yaml",
-    "configs/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed44.yaml",
     "configs/transformer_layerwise_63var_decoder_input_sp_pgin_no_gain_seed42.yaml",
-    "configs/transformer_layerwise_63var_decoder_input_sp_pgin_no_gain_seed43.yaml",
-    "configs/transformer_layerwise_63var_decoder_input_sp_pgin_no_gain_seed44.yaml",
 ]
 
 TAB_INPUT_COLS = [
@@ -46,13 +42,20 @@ TAB_INPUT_COLS = [
 FULL_TARGET_COLS = ["B35_H2S", "B35_SO2"]
 CORE_AIR2_RANGE = (140.0, 300.0)
 CORE_T2_RANGE = (140.0, 240.0)
+GAIN_ANN_RANGES = {
+    "air2_SP": (110.0, 340.0),
+    "HEATER2_output_T_SP": (125.0, 250.0),
+    "acidgas_Fm": (110.5, 160.5),
+    "acidgas_T": (82.6, 84.6),
+    "acidgas_P": (1.66, 1.69),
+}
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
         description=(
             "Compare trained Gain/No-Gain Transformer gain consistency on "
-            "held-out in-range and out-of-range Aspen steady-state exports."
+            "held-out in-range and soft-OOD Aspen steady-state exports."
         )
     )
     parser.add_argument(
@@ -61,21 +64,24 @@ def parse_args():
         help="Held-out in-range completed Aspen XLSX/CSV path or glob.",
     )
     parser.add_argument(
-        "--out-range",
+        "--soft-ood",
         required=True,
-        help="Held-out soft-OOD completed Aspen XLSX/CSV path or glob.",
+        help=(
+            "Held-out soft-OOD completed Aspen XLSX/CSV path or glob. Rows must "
+            "be outside the dynamic core but inside the five-input Gain ANN range."
+        ),
     )
     parser.add_argument(
         "--configs",
         nargs="+",
         default=DEFAULT_CONFIGS,
-        help="Model configs to evaluate. Defaults to the six seed42-44 configs.",
+        help="Model configs to evaluate. Defaults to Gain and No-Gain seed42.",
     )
     parser.add_argument(
         "--max-points",
         type=int,
-        default=512,
-        help="Fixed probes per distribution; 0 uses every usable row.",
+        default=0,
+        help="Fixed probes per distribution; defaults to 0 (every usable row).",
     )
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--sample-seed", type=int, default=20260729)
@@ -86,7 +92,7 @@ def parse_args():
     )
     parser.add_argument(
         "--output-dir",
-        default="results/gain_in_out_distribution_evaluation",
+        default="results/gain_in_soft_ood_distribution_evaluation",
     )
     return parser.parse_args()
 
@@ -207,20 +213,29 @@ def validate_distribution_file(data, distribution):
             *CORE_T2_RANGE, inclusive="both"
         )
     )
-    expected_fraction = (
-        float(inside_core.mean())
-        if distribution == "in_range"
-        else float((~inside_core).mean())
-    )
+    inside_gain_ann = pd.Series(True, index=data.index)
+    for column, bounds in GAIN_ANN_RANGES.items():
+        inside_gain_ann &= data[column].between(*bounds, inclusive="both")
+
+    if distribution == "in_range":
+        expected_rows = inside_core & inside_gain_ann
+    elif distribution == "soft_ood":
+        expected_rows = (~inside_core) & inside_gain_ann
+    else:
+        raise ValueError(f"Unsupported distribution label: {distribution}")
+
+    expected_fraction = float(expected_rows.mean())
     print(
         f"[Info] {distribution} range-label match: "
-        f"{expected_fraction * 100:.2f}%"
+        f"{expected_fraction * 100:.2f}% | "
+        f"inside Gain ANN range: {inside_gain_ann.mean() * 100:.2f}%"
     )
     if expected_fraction < 0.95:
         raise ValueError(
             f"{distribution} file has only {expected_fraction * 100:.2f}% "
-            "rows matching its expected air2/T2 range."
+            "rows matching its expected dynamic-core/Gain-ANN range."
         )
+    return data.loc[expected_rows].reset_index(drop=True)
 
 
 def load_teacher(device):
@@ -420,21 +435,15 @@ def dynamic_gain_matrix(
         )
     )
     step_change_idx = step_change_step - 1
-    configured_tail_start = config["training"].get(
-        "stepwise_gain_tail_start_step",
-        max(
-            config["training"].get(
-                "dynamic_gain_tail_start_step", step_change_step
-            ),
-            step_change_step,
-        ),
-    )
-    tail_start_idx = (
-        min(max(int(configured_tail_start), step_change_step) - 1, rollout_steps - 1)
-    )
-    finite_diff_delta_std = float(
-        config["training"].get("finite_diff_delta_std", 0.5)
-    )
+    evaluation_tail_length = 18
+    post_step_points = rollout_steps - step_change_idx
+    if evaluation_tail_length > post_step_points:
+        raise ValueError(
+            f"Evaluation tail length {evaluation_tail_length} exceeds the "
+            f"{post_step_points} available post-step points."
+        )
+    tail_start_idx = rollout_steps - evaluation_tail_length
+    finite_diff_delta_std = 0.1
 
     history = build_history(batch_df, mean, std, en_cols, window, device)
     base_de_p = torch.tensor(
@@ -550,6 +559,87 @@ def update_counts(
             pair["fn"] += int((mask & truth & ~pred).sum().item())
 
 
+def probe_rows_for_batch(
+    exp_name,
+    distribution,
+    probe_offset,
+    batch_df,
+    teacher_gain,
+    dynamic_gain,
+    target_cols,
+    mv_cols,
+    valid_threshold,
+):
+    """Build one diagnostic row per probe, direction, target, and MV."""
+
+    seed_match = re.search(r"_seed(\d+)", exp_name)
+    seed = int(seed_match.group(1)) if seed_match else np.nan
+    training_type = "no_gain" if "no_gain" in exp_name else "gain"
+    teacher_np = teacher_gain.detach().cpu().numpy()
+    dynamic_np = dynamic_gain.detach().cpu().numpy()
+    input_np = batch_df[TAB_INPUT_COLS].to_numpy(dtype=float)
+    rows = []
+
+    for direction_idx, direction in enumerate(("plus", "minus")):
+        for batch_idx in range(len(batch_df)):
+            ann_inputs = {
+                name: input_np[batch_idx, input_idx]
+                for input_idx, name in enumerate(TAB_INPUT_COLS)
+            }
+            for target_idx, target in enumerate(target_cols):
+                for mv_idx, mv in enumerate(mv_cols):
+                    teacher_value = float(
+                        teacher_np[batch_idx, target_idx, mv_idx]
+                    )
+                    dynamic_value = float(
+                        dynamic_np[
+                            direction_idx,
+                            batch_idx,
+                            target_idx,
+                            mv_idx,
+                        ]
+                    )
+                    teacher_sign = int(np.sign(teacher_value))
+                    dynamic_sign = int(np.sign(dynamic_value))
+                    valid = abs(teacher_value) >= valid_threshold
+                    teacher_class = (
+                        "positive" if teacher_value > 0 else "negative"
+                    )
+                    dynamic_class = (
+                        "positive" if dynamic_value > 0 else "negative"
+                    )
+                    agreement = (
+                        "correct"
+                        if valid and teacher_class == dynamic_class
+                        else "wrong" if valid else "invalid_teacher_gain"
+                    )
+                    rows.append(
+                        {
+                            "experiment": exp_name,
+                            "training_type": training_type,
+                            "seed": seed,
+                            "distribution": distribution,
+                            "probe_index": probe_offset + batch_idx,
+                            **ann_inputs,
+                            "target": target,
+                            "mv": mv,
+                            "direction": direction,
+                            "teacher_gain": teacher_value,
+                            "teacher_sign": teacher_sign,
+                            "teacher_class": teacher_class,
+                            "dynamic_gain": dynamic_value,
+                            "dynamic_sign": dynamic_sign,
+                            "dynamic_class": dynamic_class,
+                            "dynamic_gain_times_teacher_sign": (
+                                dynamic_value * teacher_sign
+                            ),
+                            "valid_teacher_gain": valid,
+                            "agreement": agreement,
+                        }
+                    )
+    return rows
+
+
 def safe_percent(numerator, denominator):
     if denominator == 0:
         return np.nan
@@ -624,6 +714,7 @@ def evaluate_model_on_distribution(
 
     teacher, tab_mean, tab_std, target_mean, target_std = teacher_artifacts
     counts = empty_counts(target_cols, mv_cols)
+    probe_rows = []
     threshold = float(
         config["training"].get("gain_valid_delta_threshold", 1e-5)
     )
@@ -662,6 +753,19 @@ def evaluate_model_on_distribution(
             mv_cols,
             threshold,
         )
+        probe_rows.extend(
+            probe_rows_for_batch(
+                exp_name,
+                distribution,
+                start,
+                batch_df,
+                teacher_gain,
+                dynamic_gain,
+                target_cols,
+                mv_cols,
+                threshold,
+            )
+        )
 
     rows = []
     for target in target_cols:
@@ -680,7 +784,7 @@ def evaluate_model_on_distribution(
         f"[Done] {exp_name} | {distribution} | "
         f"{len(data)} fixed probe points"
     )
-    return rows
+    return rows, probe_rows
 
 
 def build_comparison(detail_df):
@@ -770,44 +874,45 @@ def main():
         keep_cols,
         log_target_cols=FULL_TARGET_COLS,
     )
-    out_data = load_steady_state_source(
-        args.out_range,
+    soft_ood_data = load_steady_state_source(
+        args.soft_ood,
         keep_cols,
         log_target_cols=FULL_TARGET_COLS,
     )
-    validate_distribution_file(in_data, "in_range")
-    validate_distribution_file(out_data, "out_range")
+    in_data = validate_distribution_file(in_data, "in_range")
+    soft_ood_data = validate_distribution_file(soft_ood_data, "soft_ood")
     in_indices = choose_probe_indices(
         len(in_data), args.max_points, args.sample_seed
     )
-    out_indices = choose_probe_indices(
-        len(out_data), args.max_points, args.sample_seed + 1
+    soft_ood_indices = choose_probe_indices(
+        len(soft_ood_data), args.max_points, args.sample_seed + 1
     )
     probe_sets = {
         "in_range": in_data.iloc[in_indices].reset_index(drop=True),
-        "out_range": out_data.iloc[out_indices].reset_index(drop=True),
+        "soft_ood": soft_ood_data.iloc[soft_ood_indices].reset_index(drop=True),
     }
     print(
         f"[Info] Fixed probes | in_range={len(probe_sets['in_range'])}, "
-        f"out_range={len(probe_sets['out_range'])}"
+        f"soft_ood={len(probe_sets['soft_ood'])}"
     )
 
     teacher_artifacts = load_teacher(device)
     detail_rows = []
+    probe_rows = []
     for config_path, config in configs:
         for distribution, data in probe_sets.items():
-            detail_rows.extend(
-                evaluate_model_on_distribution(
-                    config,
-                    config_path,
-                    data,
-                    distribution,
-                    teacher_artifacts,
-                    reference_contract,
-                    args.batch_size,
-                    device,
-                )
+            model_detail_rows, model_probe_rows = evaluate_model_on_distribution(
+                config,
+                config_path,
+                data,
+                distribution,
+                teacher_artifacts,
+                reference_contract,
+                args.batch_size,
+                device,
             )
+            detail_rows.extend(model_detail_rows)
+            probe_rows.extend(model_probe_rows)
 
     os.makedirs(args.output_dir, exist_ok=True)
     detail_df = pd.DataFrame(detail_rows)
@@ -824,9 +929,14 @@ def main():
     )
     comparison_df.to_csv(comparison_path, index=False)
 
+    probe_df = pd.DataFrame(probe_rows)
+    probe_path = os.path.join(args.output_dir, "gain_probe_diagnostics.csv")
+    probe_df.to_csv(probe_path, index=False)
+
     print(f"[Save] Detailed metrics: {detail_path}")
     print(f"[Save] Model/distribution summary: {summary_path}")
     print(f"[Save] Gain vs No-Gain comparison: {comparison_path}")
+    print(f"[Save] Probe-level diagnostics: {probe_path}")
 
 
 if __name__ == "__main__":
