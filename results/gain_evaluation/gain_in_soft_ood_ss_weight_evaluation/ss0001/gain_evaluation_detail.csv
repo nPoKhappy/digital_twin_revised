@@ -1,0 +1,9 @@
+experiment,training_type,seed,distribution,target,mv,probe_points,possible_comparisons,valid_comparisons,coverage_percent,teacher_positive_percent,dynamic_positive_percent,kci_percent,tp,tn,fp,fn
+transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss0001_seed42,gain,42,in_range,B35_H2S,air2_SP,4417,8834,7218,81.70704097803939,14.408423385979496,0.7896924355777224,85.32834580216127,19,6140,38,1021
+transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss0001_seed42,gain,42,in_range,B35_H2S,HEATER2_output_T_SP,4417,8834,8202,92.84582295675798,61.37527432333577,55.900999756157034,92.30675445013411,4494,3077,91,540
+transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss0001_seed42,gain,42,in_range,B35_SO2,air2_SP,4417,8834,8636,97.75865972379444,100.0,100.0,100.0,8636,0,0,0
+transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss0001_seed42,gain,42,in_range,B35_SO2,HEATER2_output_T_SP,4417,8834,6696,75.7980529771338,57.317801672640385,70.44504181600956,85.52867383512545,3793,1934,924,45
+transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss0001_seed42,gain,42,soft_ood,B35_H2S,air2_SP,3194,6388,4994,78.17783343769568,27.673207849419303,3.924709651581898,72.64717661193433,106,3522,90,1276
+transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss0001_seed42,gain,42,soft_ood,B35_H2S,HEATER2_output_T_SP,3194,6388,5600,87.66437069505322,50.0,43.75,87.21428571428571,2267,2617,183,533
+transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss0001_seed42,gain,42,soft_ood,B35_SO2,air2_SP,3194,6388,5332,83.46900438321853,100.0,100.0,100.0,5332,0,0,0
+transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss0001_seed42,gain,42,soft_ood,B35_SO2,HEATER2_output_T_SP,3194,6388,4550,71.22730118973074,42.1978021978022,59.31868131868132,79.49450549450549,1843,1774,856,77

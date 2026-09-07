@@ -1,0 +1,3 @@
+experiment,training_type,seed,distribution,probe_points,possible_comparisons,valid_comparisons,coverage_percent,micro_kci_percent
+transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss0001_seed42,gain,42,in_range,4417,35336,30752,87.0273941589314,91.35340790842872
+transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss0001_seed42,gain,42,soft_ood,3194,25552,20476,80.13462742642454,85.27544442273881
