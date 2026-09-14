@@ -3,6 +3,8 @@
 The input files must be completed Aspen steady-state exports containing all
 63-variable model columns. Generator input CSVs are not sufficient because a
 Transformer gain rollout needs a complete encoder history at each probe point.
+KCI pools strict sign agreement over the selected 18 rollout steps (all18).
+Zero dynamic gains remain in the denominator but never count as correct.
 """
 
 import argparse
@@ -230,7 +232,16 @@ def validate_distribution_file(data, distribution):
         f"{expected_fraction * 100:.2f}% | "
         f"inside Gain ANN range: {inside_gain_ann.mean() * 100:.2f}%"
     )
-    if expected_fraction < 0.95:
+    kept_count = int(expected_rows.sum())
+    if distribution == "soft_ood":
+        print(
+            f"[Info] soft_ood filtering: kept={kept_count}, "
+            f"excluded={len(data) - kept_count}, total={len(data)} | "
+            "retain only outside dynamic core AND inside Gain ANN range"
+        )
+    if kept_count == 0:
+        raise ValueError(f"{distribution} has no rows matching its expected range.")
+    if distribution == "in_range" and expected_fraction < 0.95:
         raise ValueError(
             f"{distribution} file has only {expected_fraction * 100:.2f}% "
             "rows matching its expected dynamic-core/Gain-ANN range."
@@ -465,10 +476,10 @@ def dynamic_gain_matrix(
         y_sv,
         rollout_steps,
         step_change_idx,
-    )[tail_start_idx:].mean(dim=0)
+    )[tail_start_idx:]
 
-    plus_gains = []
-    minus_gains = []
+    plus_step_gains = []
+    minus_step_gains = []
     for mv_name in mv_cols:
         mv_idx = de_mv.index(mv_name)
         delta = finite_diff_delta_std * float(std[mv_name])
@@ -492,7 +503,7 @@ def dynamic_gain_matrix(
             y_sv,
             rollout_steps,
             step_change_idx,
-        )[tail_start_idx:].mean(dim=0)
+        )[tail_start_idx:]
         minus = rollout_targets(
             model,
             history,
@@ -505,14 +516,17 @@ def dynamic_gain_matrix(
             y_sv,
             rollout_steps,
             step_change_idx,
-        )[tail_start_idx:].mean(dim=0)
+        )[tail_start_idx:]
 
-        plus_gains.append((plus - baseline) / delta)
-        minus_gains.append((baseline - minus) / delta)
+        plus_step_gains.append((plus - baseline) / delta)
+        minus_step_gains.append((baseline - minus) / delta)
 
-    plus_matrix = torch.stack(plus_gains, dim=2)
-    minus_matrix = torch.stack(minus_gains, dim=2)
-    return torch.stack([plus_matrix, minus_matrix], dim=0)
+    # [direction, time, batch, target, MV]; do not average before sign checks.
+    step_gain = torch.stack([
+        torch.stack(plus_step_gains, dim=-1),
+        torch.stack(minus_step_gains, dim=-1),
+    ], dim=0)
+    return step_gain, tail_start_idx - step_change_idx + 1
 
 
 def empty_counts(target_cols, mv_cols):
@@ -524,6 +538,8 @@ def empty_counts(target_cols, mv_cols):
             "tn": 0,
             "fp": 0,
             "fn": 0,
+            "zero_gain": 0,
+            "teacher_positive": 0,
         }
         for target in target_cols
         for mv in mv_cols
@@ -543,20 +559,28 @@ def update_counts(
         torch.abs(teacher_gain) >= valid_threshold
     ).unsqueeze(0).expand_as(dynamic_gain)
     teacher_positive = teacher_sign > 0
+    teacher_negative = teacher_sign < 0
     dynamic_positive = dynamic_gain > 0
+    dynamic_negative = dynamic_gain < 0
 
     for target_idx, target in enumerate(target_cols):
         for mv_idx, mv in enumerate(mv_cols):
             mask = valid[:, :, target_idx, mv_idx]
             truth = teacher_positive[:, :, target_idx, mv_idx]
+            truth_negative = teacher_negative[:, :, target_idx, mv_idx]
             pred = dynamic_positive[:, :, target_idx, mv_idx]
+            negative = dynamic_negative[:, :, target_idx, mv_idx]
             pair = counts[(target, mv)]
             pair["possible"] += int(mask.numel())
             pair["valid"] += int(mask.sum().item())
             pair["tp"] += int((mask & truth & pred).sum().item())
-            pair["tn"] += int((mask & ~truth & ~pred).sum().item())
-            pair["fp"] += int((mask & ~truth & pred).sum().item())
-            pair["fn"] += int((mask & truth & ~pred).sum().item())
+            pair["tn"] += int((mask & truth_negative & negative).sum().item())
+            pair["fp"] += int((mask & truth_negative & pred).sum().item())
+            pair["fn"] += int((mask & truth & negative).sum().item())
+            pair["zero_gain"] += int(
+                (mask & (dynamic_gain[:, :, target_idx, mv_idx] == 0)).sum().item()
+            )
+            pair["teacher_positive"] += int((mask & truth).sum().item())
 
 
 def probe_rows_for_batch(
@@ -606,11 +630,12 @@ def probe_rows_for_batch(
                         "positive" if teacher_value > 0 else "negative"
                     )
                     dynamic_class = (
-                        "positive" if dynamic_value > 0 else "negative"
+                        "positive" if dynamic_value > 0
+                        else "negative" if dynamic_value < 0 else "zero"
                     )
                     agreement = (
                         "correct"
-                        if valid and teacher_class == dynamic_class
+                        if valid and dynamic_value * teacher_sign > 0
                         else "wrong" if valid else "invalid_teacher_gain"
                     )
                     rows.append(
@@ -655,7 +680,7 @@ def count_row(
     point_count,
 ):
     valid = counts["valid"]
-    positive = counts["tp"] + counts["fn"]
+    positive = counts["teacher_positive"]
     correct = counts["tp"] + counts["tn"]
     kci = safe_percent(correct, valid)
     seed_match = re.search(r"_seed(\d+)", exp_name)
@@ -675,10 +700,13 @@ def count_row(
             counts["tp"] + counts["fp"], valid
         ),
         "kci_percent": kci,
+        "horizon": "all18",
+        "gain_definition": "pooled_step_comparisons",
         "tp": counts["tp"],
         "tn": counts["tn"],
         "fp": counts["fp"],
         "fn": counts["fn"],
+        "zero_gain": counts["zero_gain"],
     }
 
 
@@ -732,7 +760,7 @@ def evaluate_model_on_distribution(
             mv_cols,
             device,
         )
-        dynamic_gain = dynamic_gain_matrix(
+        step_gains, first_post_step = dynamic_gain_matrix(
             model,
             batch_df,
             mean,
@@ -745,27 +773,24 @@ def evaluate_model_on_distribution(
             config,
             device,
         )
-        update_counts(
-            counts,
-            teacher_gain,
-            dynamic_gain,
-            target_cols,
-            mv_cols,
-            threshold,
-        )
-        probe_rows.extend(
-            probe_rows_for_batch(
+        for step_index in range(18):
+            update_counts(counts, teacher_gain,
+                          step_gains[:, step_index], target_cols, mv_cols, threshold)
+            current_probe_rows = probe_rows_for_batch(
                 exp_name,
                 distribution,
                 start,
                 batch_df,
                 teacher_gain,
-                dynamic_gain,
+                step_gains[:, step_index],
                 target_cols,
                 mv_cols,
                 threshold,
             )
-        )
+            for row in current_probe_rows:
+                row.update(step_index=step_index + 1,
+                           post_step_index=first_post_step + step_index)
+            probe_rows.extend(current_probe_rows)
 
     rows = []
     for target in target_cols:
@@ -780,6 +805,8 @@ def evaluate_model_on_distribution(
                     len(data),
                 )
             )
+    for row in rows:
+        row.update(post_step_start=first_post_step, post_step_end=first_post_step + 17)
     print(
         f"[Done] {exp_name} | {distribution} | "
         f"{len(data)} fixed probe points"
@@ -792,7 +819,8 @@ def build_comparison(detail_df):
     no_gain_df = detail_df[
         detail_df["training_type"] == "no_gain"
     ].copy()
-    keys = ["seed", "distribution", "target", "mv"]
+    keys = ["seed", "distribution", "target", "mv", "horizon",
+            "post_step_start", "post_step_end"]
     value_cols = [
         "kci_percent",
         "coverage_percent",
@@ -831,6 +859,11 @@ def build_summary(detail_df):
                 "valid_comparisons": valid,
                 "coverage_percent": safe_percent(valid, possible),
                 "micro_kci_percent": safe_percent(correct, valid),
+                "horizon": "all18",
+                "gain_definition": "pooled_step_comparisons",
+                "post_step_start": int(group["post_step_start"].iloc[0]),
+                "post_step_end": int(group["post_step_end"].iloc[0]),
+                "zero_gain": int(group["zero_gain"].sum()),
             }
         )
     return pd.DataFrame(rows)
@@ -937,6 +970,7 @@ def main():
     print(f"[Save] Model/distribution summary: {summary_path}")
     print(f"[Save] Gain vs No-Gain comparison: {comparison_path}")
     print(f"[Save] Probe-level diagnostics: {probe_path}")
+    print("[Info] KCI: all18 only; strict same sign; zero gain is incorrect.")
 
 
 if __name__ == "__main__":
