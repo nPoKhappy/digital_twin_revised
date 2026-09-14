@@ -53,11 +53,11 @@ data:
       filename: "Test_dataform_change_air2_R=5-6_valid_split.csv"
       inference_strategy: 'sliding_window'
 
-    - name: "R5-11"
-      filename: "Test_dataform_change_air2_R=5-11.csv"
+    - name: "R5-13"
+      filename: "Test_dataform_change_air2_R=5-13.csv"
       inference_strategy: 'sliding_window'
-    - name: "R5-12"
-      filename: "Test_dataform_change_air2_R=5-12.csv"
+    - name: "R5-14"
+      filename: "Test_dataform_change_air2_R=5-14.csv"
       inference_strategy: 'sliding_window'
 
 window:
