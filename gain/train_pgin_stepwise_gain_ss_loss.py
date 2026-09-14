@@ -535,6 +535,7 @@ def main(config_path: str):
         f"Dynamic gain rollout: {H_gain} step-wise steps; "
         f"Step change starts at step {dynamic_gain_step_change_step}; "
         f"Dynamic gain output: steps {dynamic_gain_tail_start_idx + 1}-{dynamic_gain_tail_end_idx}; "
+        f"Gain reduction: per-step sign penalty, then mean; KCI counts step comparisons; "
         f"FD delta std: {finite_diff_delta_std}; "
         f"SS batch: {ss_batch_size}; SS coverage: full permutation without replacement"
     )
@@ -745,9 +746,9 @@ def main(config_path: str):
 
                 baseline_target_steps = gain_log_stack[
                     dynamic_gain_tail_start_idx:dynamic_gain_tail_end_idx, :, :
-                ].mean(dim=0)
+                ]
 
-                # Finite-difference gain: plus-baseline and baseline-minus tail means.
+                # Keep each time step: apply the sign penalty before averaging losses.
                 K_dyn_plus_by_mv = []
                 K_dyn_minus_by_mv = []
                 for mv_name in gain_target_mv:
@@ -768,17 +769,22 @@ def main(config_path: str):
                     )
                     plus_target_steps = plus_log_stack[
                         dynamic_gain_tail_start_idx:dynamic_gain_tail_end_idx, :, :
-                    ].mean(dim=0)
+                    ]
                     minus_target_steps = minus_log_stack[
                         dynamic_gain_tail_start_idx:dynamic_gain_tail_end_idx, :, :
-                    ].mean(dim=0)
+                    ]
 
                     K_dyn_plus_by_mv.append((plus_target_steps - baseline_target_steps) / delta)
                     K_dyn_minus_by_mv.append((baseline_target_steps - minus_target_steps) / delta)
 
-                K_dyn_plus_matrix = torch.stack(K_dyn_plus_by_mv, dim=2)
-                K_dyn_minus_matrix = torch.stack(K_dyn_minus_by_mv, dim=2)
+                # [time, batch, target, MV] -> [time*batch, target, MV].
+                # Existing pair reductions now average over time as well.
+                K_dyn_plus_matrix = torch.stack(K_dyn_plus_by_mv, dim=-1).flatten(0, 1)
+                K_dyn_minus_matrix = torch.stack(K_dyn_minus_by_mv, dim=-1).flatten(0, 1)
                 K_dyn_matrix_stack = torch.stack([K_dyn_plus_matrix, K_dyn_minus_matrix], dim=0)
+                gain_step_count = baseline_target_steps.shape[0]
+                K_ss_matrix = K_ss_matrix.repeat(gain_step_count, 1, 1)
+                K_ss_direction = torch.sign(K_ss_matrix)
 
                 if pgin_runtime_plot and step == 0:
                     # Runtime plot exposes baseline/plus/minus dynamic traces against ANN targets.
