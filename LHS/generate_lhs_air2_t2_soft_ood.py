@@ -24,14 +24,13 @@ SAFE_INNER_AIR2_RANGE = (142.5, 297.5)
 SAFE_INNER_T2_RANGE = (142.5, 237.5)
 AIR2_LOW_RANGE = (110.0, 140.0)
 AIR2_HIGH_RANGE = (300.0, 340.0)
-T2_LOW_RANGE = (125.0, 140.0)
-T2_HIGH_RANGE = (240.0, 250.0)
+T2_LOW_RANGE = (100.0, 140.0)
+T2_HIGH_RANGE = (240.0, 280.0)
 
-# Keep the three acid-gas conditions near the Dynamics training center while
-# air2 and/or T2 are softly extrapolated.
+# Acid-gas operating bounds for the expanded LHS region.
 SAFE_ACIDGAS_RANGES = {
-    ACIDGAS_F_TAG: (125.0, 155.0),
-    ACIDGAS_T_TAG: (82.8, 84.4),
+    ACIDGAS_F_TAG: (110.5, 160.5),
+    ACIDGAS_T_TAG: (82.6, 84.6),
     ACIDGAS_P_TAG: (1.66, 1.69),
 }
 
