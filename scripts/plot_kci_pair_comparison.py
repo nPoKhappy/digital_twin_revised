@@ -14,19 +14,19 @@ import seaborn as sns
 
 RESULT_FILES = {
     "No-Gain": (
-        "gain_in_soft_ood_distribution_evaluation/gain_evaluation_detail.csv",
+        "transformer_layerwise_63var_decoder_input_sp_pgin_no_gain_seed42/gain_evaluation_detail.csv",
         "no_gain",
     ),
     "Gain": (
-        "gain_in_soft_ood_distribution_evaluation/gain_evaluation_detail.csv",
+        "transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42/gain_evaluation_detail.csv",
         "gain",
     ),
     "Gain + SS=0.01": (
-        "gain_in_soft_ood_ss_weight_evaluation/ss001/gain_evaluation_detail.csv",
+        "transformer_layerwise_63var_decoder_input_sp_pgin_gain005_ss001_seed42/gain_evaluation_detail.csv",
         "gain",
     ),
     "Difficult-GradNorm": (
-        "gain_in_soft_ood_difficult_group_gradnorm_no_ss_evaluation/gain_evaluation_detail.csv",
+        "transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42_difficult_group_gradnorm_no_ss/gain_evaluation_detail.csv",
         "gain",
     ),
 }
@@ -72,8 +72,10 @@ def configure_style() -> None:
 
 def load_model_kci(repo_root: Path, model: str) -> pd.DataFrame:
     relative_path, training_type = RESULT_FILES[model]
-    path = repo_root / "results" / relative_path
+    path = repo_root / "results" / "gain_eval_all18" / relative_path
     data = pd.read_csv(path)
+    if "horizon" not in data or not data["horizon"].eq("all18").all():
+        raise ValueError(f"{path} must contain only all18 KCI results.")
     expected = len(DISTRIBUTIONS) * len(PAIR_KEYS)
     data = data[
         data["distribution"].isin(DISTRIBUTIONS)
@@ -152,7 +154,7 @@ def plot_kci_panels(
         axis.grid(axis="x", visible=False)
         sns.despine(ax=axis)
 
-    axes[0].set_ylabel("Raw KCI (%)")
+    axes[0].set_ylabel("All18 KCI (%)")
     handles, labels = axes[0].get_legend_handles_labels()
     figure.legend(
         handles,
@@ -163,14 +165,6 @@ def plot_kci_panels(
         frameon=False,
     )
     figure.suptitle(title, fontsize=13, fontweight="bold", y=0.99)
-    figure.text(
-        0.5,
-        0.015,
-        "Higher Raw KCI means stronger sign agreement with ANN-reference gradients; "
-        "it is not direct process-physics validation.",
-        ha="center",
-        fontsize=8.8,
-    )
     figure.subplots_adjust(top=0.78, bottom=0.25, wspace=0.16)
 
     for extension in ("png", "pdf"):
@@ -194,6 +188,7 @@ def build_records(comparisons: dict[str, pd.DataFrame]) -> pd.DataFrame:
                         "Distribution": distribution,
                         "Gain pair": pair_label,
                         "Model": model,
+                        "horizon": "all18",
                         "Raw KCI (%)": kci_value(
                             comparisons[model], distribution, pair
                         ),
@@ -206,7 +201,10 @@ def build_records(comparisons: dict[str, pd.DataFrame]) -> pd.DataFrame:
 def main() -> None:
     repo_root = Path(__file__).resolve().parents[1]
     output_dir = (
-        repo_root / "results" / "kci_pair_visualization_seed42_in_soft_ood"
+        repo_root
+        / "results"
+        / "visualization"
+        / "kci_pair_visualization_seed42_in_soft_ood"
     )
     output_dir.mkdir(parents=True, exist_ok=True)
     configure_style()
@@ -218,7 +216,7 @@ def main() -> None:
     plot_kci_panels(
         records,
         MODELS,
-        "Four-model Raw KCI comparison across gain pairs",
+        "Four-model all18 KCI comparison across gain pairs",
         "raw_kci_four_model_comparison",
         output_dir,
     )

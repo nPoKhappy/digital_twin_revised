@@ -14,7 +14,7 @@ import seaborn as sns
 
 
 INTERNAL_CASES = ["R5", "R5-1", "R5-2", "R5-6"]
-EXTERNAL_CASES = ["R5-11", "R5-12"]
+EXTERNAL_CASES = ["R5-13", "R5-14"]
 CASES = INTERNAL_CASES + EXTERNAL_CASES
 TARGETS = ["B35_H2S", "B35_SO2"]
 TARGET_LABELS = {"B35_H2S": r"H$_2$S", "B35_SO2": r"SO$_2$"}
@@ -398,7 +398,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--output-dir",
-        default="results/four_model_rmse_visualization_seed42",
+        default="results/visualization/four_model_rmse_visualization_seed42",
     )
     return parser.parse_args()
 
