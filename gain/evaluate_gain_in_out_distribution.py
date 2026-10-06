@@ -44,12 +44,19 @@ TAB_INPUT_COLS = [
 FULL_TARGET_COLS = ["B35_H2S", "B35_SO2"]
 CORE_AIR2_RANGE = (140.0, 300.0)
 CORE_T2_RANGE = (140.0, 240.0)
-GAIN_ANN_RANGES = {
+# Keep these bounds synchronized with LHS/generate_lhs_air2_t2_soft_ood.py.
+SOFT_OOD_RANGES = {
     "air2_SP": (110.0, 340.0),
-    "HEATER2_output_T_SP": (125.0, 250.0),
+    "HEATER2_output_T_SP": (100.0, 280.0),
     "acidgas_Fm": (110.5, 160.5),
     "acidgas_T": (82.6, 84.6),
     "acidgas_P": (1.66, 1.69),
+}
+# Retain the previous Gain-ANN envelope as a reported coverage diagnostic. It no
+# longer filters Soft-OOD rows because the evaluator now follows the generator.
+GAIN_ANN_REFERENCE_RANGES = {
+    **SOFT_OOD_RANGES,
+    "HEATER2_output_T_SP": (125.0, 250.0),
 }
 
 
@@ -70,7 +77,8 @@ def parse_args():
         required=True,
         help=(
             "Held-out soft-OOD completed Aspen XLSX/CSV path or glob. Rows must "
-            "be outside the dynamic core but inside the five-input Gain ANN range."
+            "be outside the dynamic core but inside the five-input soft-OOD "
+            "generation range."
         ),
     )
     parser.add_argument(
@@ -209,20 +217,25 @@ def choose_probe_indices(row_count, max_points, seed):
 
 
 def validate_distribution_file(data, distribution):
-    inside_core = (
-        data["air2_SP"].between(*CORE_AIR2_RANGE, inclusive="both")
-        & data["HEATER2_output_T_SP"].between(
-            *CORE_T2_RANGE, inclusive="both"
-        )
+    outside_core = (
+        data["air2_SP"].le(CORE_AIR2_RANGE[0])
+        | data["air2_SP"].ge(CORE_AIR2_RANGE[1])
+        | data["HEATER2_output_T_SP"].le(CORE_T2_RANGE[0])
+        | data["HEATER2_output_T_SP"].ge(CORE_T2_RANGE[1])
     )
-    inside_gain_ann = pd.Series(True, index=data.index)
-    for column, bounds in GAIN_ANN_RANGES.items():
-        inside_gain_ann &= data[column].between(*bounds, inclusive="both")
+    inside_soft_ood_range = pd.Series(True, index=data.index)
+    for column, bounds in SOFT_OOD_RANGES.items():
+        inside_soft_ood_range &= data[column].between(*bounds, inclusive="both")
+    inside_gain_ann_reference = pd.Series(True, index=data.index)
+    for column, bounds in GAIN_ANN_REFERENCE_RANGES.items():
+        inside_gain_ann_reference &= data[column].between(
+            *bounds, inclusive="both"
+        )
 
     if distribution == "in_range":
-        expected_rows = inside_core & inside_gain_ann
+        expected_rows = (~outside_core) & inside_soft_ood_range
     elif distribution == "soft_ood":
-        expected_rows = (~inside_core) & inside_gain_ann
+        expected_rows = outside_core & inside_soft_ood_range
     else:
         raise ValueError(f"Unsupported distribution label: {distribution}")
 
@@ -230,21 +243,24 @@ def validate_distribution_file(data, distribution):
     print(
         f"[Info] {distribution} range-label match: "
         f"{expected_fraction * 100:.2f}% | "
-        f"inside Gain ANN range: {inside_gain_ann.mean() * 100:.2f}%"
+        "inside soft-OOD generation range: "
+        f"{inside_soft_ood_range.mean() * 100:.2f}% | "
+        "inside Gain ANN reference range: "
+        f"{inside_gain_ann_reference.mean() * 100:.2f}%"
     )
     kept_count = int(expected_rows.sum())
     if distribution == "soft_ood":
         print(
             f"[Info] soft_ood filtering: kept={kept_count}, "
             f"excluded={len(data) - kept_count}, total={len(data)} | "
-            "retain only outside dynamic core AND inside Gain ANN range"
+            "retain only outside dynamic core AND inside soft-OOD generation range"
         )
     if kept_count == 0:
         raise ValueError(f"{distribution} has no rows matching its expected range.")
     if distribution == "in_range" and expected_fraction < 0.95:
         raise ValueError(
             f"{distribution} file has only {expected_fraction * 100:.2f}% "
-            "rows matching its expected dynamic-core/Gain-ANN range."
+            "rows matching its expected dynamic-core/soft-OOD generation range."
         )
     return data.loc[expected_rows].reset_index(drop=True)
 
