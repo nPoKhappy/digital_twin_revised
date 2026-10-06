@@ -1,33 +1,33 @@
 Distribution,Gain pair,Model,horizon,Raw KCI (%)
-in_range,air2 $\rightarrow$ H$_2$S,No-Gain,all18,86.15421323235122
-in_range,air2 $\rightarrow$ H$_2$S,Gain,all18,86.21963609494782
-in_range,air2 $\rightarrow$ H$_2$S,Gain + SS=0.01,all18,86.07801483944459
-in_range,air2 $\rightarrow$ H$_2$S,Difficult-GradNorm,all18,98.61226563221577
-in_range,T2 $\rightarrow$ H$_2$S,No-Gain,all18,86.94491858354331
-in_range,T2 $\rightarrow$ H$_2$S,Gain,all18,88.68704110108645
-in_range,T2 $\rightarrow$ H$_2$S,Gain + SS=0.01,all18,93.79826058684874
-in_range,T2 $\rightarrow$ H$_2$S,Difficult-GradNorm,all18,99.03478826302528
-in_range,air2 $\rightarrow$ SO$_2$,No-Gain,all18,99.47056250321651
-in_range,air2 $\rightarrow$ SO$_2$,Gain,all18,99.7227368637744
-in_range,air2 $\rightarrow$ SO$_2$,Gain + SS=0.01,all18,99.92344706911636
-in_range,air2 $\rightarrow$ SO$_2$,Difficult-GradNorm,all18,99.86683649837887
-in_range,T2 $\rightarrow$ SO$_2$,No-Gain,all18,70.10653126244524
-in_range,T2 $\rightarrow$ SO$_2$,Gain,all18,78.46392539492898
-in_range,T2 $\rightarrow$ SO$_2$,Gain + SS=0.01,all18,93.45380326563122
-in_range,T2 $\rightarrow$ SO$_2$,Difficult-GradNorm,all18,99.58764768352582
-soft_ood,air2 $\rightarrow$ H$_2$S,No-Gain,all18,76.46995937566817
-soft_ood,air2 $\rightarrow$ H$_2$S,Gain,all18,76.34345378091369
-soft_ood,air2 $\rightarrow$ H$_2$S,Gain + SS=0.01,all18,77.24681063359704
-soft_ood,air2 $\rightarrow$ H$_2$S,Difficult-GradNorm,all18,95.12864371748272
-soft_ood,T2 $\rightarrow$ H$_2$S,No-Gain,all18,86.0486074771789
-soft_ood,T2 $\rightarrow$ H$_2$S,Gain,all18,87.56759113901971
-soft_ood,T2 $\rightarrow$ H$_2$S,Gain + SS=0.01,all18,87.34955520669807
-soft_ood,T2 $\rightarrow$ H$_2$S,Difficult-GradNorm,all18,96.97511483225767
-soft_ood,air2 $\rightarrow$ SO$_2$,No-Gain,all18,95.2621793659797
-soft_ood,air2 $\rightarrow$ SO$_2$,Gain,all18,97.07096489569548
-soft_ood,air2 $\rightarrow$ SO$_2$,Gain + SS=0.01,all18,98.14867334719858
-soft_ood,air2 $\rightarrow$ SO$_2$,Difficult-GradNorm,all18,98.17545849877104
-soft_ood,T2 $\rightarrow$ SO$_2$,No-Gain,all18,72.97979797979798
-soft_ood,T2 $\rightarrow$ SO$_2$,Gain,all18,81.45772238514174
-soft_ood,T2 $\rightarrow$ SO$_2$,Gain + SS=0.01,all18,91.90289996741608
-soft_ood,T2 $\rightarrow$ SO$_2$,Difficult-GradNorm,all18,97.6295210166178
+in_range,air2 $\rightarrow$ H$_2$S,No-Gain,all18,86.25294518849206
+in_range,air2 $\rightarrow$ H$_2$S,Gain,all18,86.3188244047619
+in_range,air2 $\rightarrow$ H$_2$S,Gain + SS=0.01,all18,86.15296378968254
+in_range,air2 $\rightarrow$ H$_2$S,Difficult-GradNorm,all18,98.62583705357144
+in_range,T2 $\rightarrow$ H$_2$S,No-Gain,all18,86.98129948129949
+in_range,T2 $\rightarrow$ H$_2$S,Gain,all18,88.72304122304122
+in_range,T2 $\rightarrow$ H$_2$S,Gain + SS=0.01,all18,93.83906633906632
+in_range,T2 $\rightarrow$ H$_2$S,Difficult-GradNorm,all18,99.04995904995906
+in_range,air2 $\rightarrow$ SO$_2$,No-Gain,all18,99.46710696710696
+in_range,air2 $\rightarrow$ SO$_2$,Gain,all18,99.72092722092722
+in_range,air2 $\rightarrow$ SO$_2$,Gain + SS=0.01,all18,99.92294742294742
+in_range,air2 $\rightarrow$ SO$_2$,Difficult-GradNorm,all18,99.86596736596736
+in_range,T2 $\rightarrow$ SO$_2$,No-Gain,all18,70.0753777242947
+in_range,T2 $\rightarrow$ SO$_2$,Gain,all18,78.4287672148683
+in_range,T2 $\rightarrow$ SO$_2$,Gain + SS=0.01,all18,93.44581494852252
+in_range,T2 $\rightarrow$ SO$_2$,Difficult-GradNorm,all18,99.58467041048269
+soft_ood,air2 $\rightarrow$ H$_2$S,No-Gain,all18,80.24147495513134
+soft_ood,air2 $\rightarrow$ H$_2$S,Gain,all18,80.18300973513895
+soft_ood,air2 $\rightarrow$ H$_2$S,Gain + SS=0.01,all18,80.50524827323653
+soft_ood,air2 $\rightarrow$ H$_2$S,Difficult-GradNorm,all18,94.98694729972264
+soft_ood,T2 $\rightarrow$ H$_2$S,No-Gain,all18,86.61626528005839
+soft_ood,T2 $\rightarrow$ H$_2$S,Gain,all18,87.9162105455209
+soft_ood,T2 $\rightarrow$ H$_2$S,Gain + SS=0.01,all18,88.76231527093596
+soft_ood,T2 $\rightarrow$ H$_2$S,Difficult-GradNorm,all18,97.31914796569968
+soft_ood,air2 $\rightarrow$ SO$_2$,No-Gain,all18,95.79879613183344
+soft_ood,air2 $\rightarrow$ SO$_2$,Gain,all18,97.3875074008289
+soft_ood,air2 $\rightarrow$ SO$_2$,Gain + SS=0.01,all18,98.22380106571936
+soft_ood,air2 $\rightarrow$ SO$_2$,Difficult-GradNorm,all18,98.13499111900532
+soft_ood,T2 $\rightarrow$ SO$_2$,No-Gain,all18,74.55060924116299
+soft_ood,T2 $\rightarrow$ SO$_2$,Gain,all18,81.84189890215949
+soft_ood,T2 $\rightarrow$ SO$_2$,Gain + SS=0.01,all18,92.64989745445772
+soft_ood,T2 $\rightarrow$ SO$_2$,Difficult-GradNorm,all18,97.87519604294847
