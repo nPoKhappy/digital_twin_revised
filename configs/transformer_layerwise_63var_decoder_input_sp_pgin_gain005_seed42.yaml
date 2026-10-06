@@ -59,6 +59,30 @@ data:
     - name: "R5-14"
       filename: "Test_dataform_change_air2_R=5-14.csv"
       inference_strategy: 'sliding_window'
+    - name: "R5-19"
+      filename: "Test_dataform_change_air2_R=5-19.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-20"
+      filename: "Test_dataform_change_air2_R=5-20.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-21"
+      filename: "Test_dataform_change_air2_R=5-21.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-22"
+      filename: "Test_dataform_change_air2_R=5-22.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-23"
+      filename: "Test_dataform_change_air2_R=5-23.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-24"
+      filename: "Test_dataform_change_air2_R=5-24.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-25"
+      filename: "Test_dataform_change_air2_R=5-25.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-26"
+      filename: "Test_dataform_change_air2_R=5-26.csv"
+      inference_strategy: 'sliding_window'
 
 window:
   train_window_mins: 180
