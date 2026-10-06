@@ -14,7 +14,16 @@ import seaborn as sns
 
 
 INTERNAL_CASES = ["R5", "R5-1", "R5-2", "R5-6"]
-EXTERNAL_CASES = ["R5-13", "R5-14"]
+EXTERNAL_CASES = [
+    "R5-19",
+    "R5-20",
+    "R5-21",
+    "R5-22",
+    "R5-23",
+    "R5-24",
+    "R5-25",
+    "R5-26",
+]
 CASES = INTERNAL_CASES + EXTERNAL_CASES
 TARGETS = ["B35_H2S", "B35_SO2"]
 TARGET_LABELS = {"B35_H2S": r"H$_2$S", "B35_SO2": r"SO$_2$"}
