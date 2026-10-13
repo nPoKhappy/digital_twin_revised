@@ -470,7 +470,7 @@ def dynamic_gain_matrix(
             f"{post_step_points} available post-step points."
         )
     tail_start_idx = rollout_steps - evaluation_tail_length
-    finite_diff_delta_std = 0.1
+    finite_diff_delta_std = 0.5
 
     history = build_history(batch_df, mean, std, en_cols, window, device)
     base_de_p = torch.tensor(
