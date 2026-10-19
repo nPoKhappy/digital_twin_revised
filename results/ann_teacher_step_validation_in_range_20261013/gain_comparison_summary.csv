@@ -1,0 +1,5 @@
+mv,target,case_count,observed_positive_cases,observed_negative_cases,local_sign_correct,fixed_secant_sign_correct,training_threshold_valid_cases,training_threshold_sign_correct,median_local_gain_abs_relative_error_percent,max_local_gain_abs_relative_error_percent,median_fixed_secant_abs_relative_error_percent
+HEATER2_output_T_SP,B35_H2S,8,4,4,8,8,8,8,21.616052857204515,70.61377432962723,14.27397230875646
+HEATER2_output_T_SP,B35_SO2,8,4,4,8,8,5,5,23.31002262574816,158.8945620190663,14.270330584090605
+air2_SP,B35_H2S,8,1,7,8,8,8,8,16.515301342498294,39.782496167537644,10.292682522122515
+air2_SP,B35_SO2,8,8,0,8,8,8,8,8.087758817165026,17.506546848693816,5.663483898026071

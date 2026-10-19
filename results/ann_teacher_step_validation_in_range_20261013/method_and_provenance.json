@@ -1,0 +1,118 @@
+{
+  "method": {
+    "before": "mean of final 100 original rows before detected step",
+    "after": "mean of final 100 original rows in file",
+    "reference": "recorded finite-step slope, not exact local derivative",
+    "ann": "same physical-output ANN checkpoint and scaler as gain training; local derivative at before mean",
+    "training_teacher_threshold": 1e-05,
+    "window_sensitivity_rows": [
+      50,
+      100,
+      200
+    ],
+    "transient": "18 complete post-step blocks, median of 10 original rows each; descriptive only"
+  },
+  "sources": [
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_180_t2_150_air2_change_10.csv",
+      "sha256": "979a33690cf12019583336526a6acaf64716ae6b6b135968c44542dc67186040",
+      "rows": 1440
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_180_t2_150_TR2_change_10.csv",
+      "sha256": "a422ed1461692039c4b21d525137b6d1a76f47edd986ea8480966bfb3d76c7f0",
+      "rows": 1440
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_190_t2_155_air2_change_-5.csv",
+      "sha256": "d7135385042401c1b1694051fa630449678f6aa484c4e855fcd53944637ca53a",
+      "rows": 1440
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_190_t2_155_t2_change_-5.csv",
+      "sha256": "12ce273ba47e01ba8aa5811df472f3f6b0bf2a0a510ed78a8b1cceecc8085eb2",
+      "rows": 1440
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_190_t2_230_air2_change_-5.csv",
+      "sha256": "c3765b01d1b3ba336c252bad047aa7d074f0dd10ab407ac4d042de7419fec374",
+      "rows": 1440
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_190_t2_230_t2_change_-5.csv",
+      "sha256": "b4a3a50b10246cf9433942bb34c8d702cb538dee25a1f5597fbb16b308d1bf8b",
+      "rows": 1440
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_200_t2_210_air2_change_10.csv",
+      "sha256": "7e707aab66315b6c5bf275f9bbc65a5ef75d23bf596549ab9249561d83154ce2",
+      "rows": 1440
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_200_t2_210_TR2_change_10.csv",
+      "sha256": "633851eb99fda8936f1174fc7419d28bfebaa593a0c901b5ecf0578cd209eb63",
+      "rows": 1440
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_240_t2_170_air2_change_10.csv",
+      "sha256": "440722c630ede1e17b940c726ff0fd3a75277ea9301fa6854aedfc5623a545a3",
+      "rows": 1440
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_240_t2_170_TR2_change_10.csv",
+      "sha256": "1049aa1ad2155b0860c5a0bb4191ae86931188cce41ed23e6813409bc847d305",
+      "rows": 1440
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_270_t2_155_air2_change_-5.csv",
+      "sha256": "c20834600034f17c23954b7afccd46450c42475b4f16bc4c490a6cf2c29ec613",
+      "rows": 1400
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_270_t2_155_t2_change_-5.csv",
+      "sha256": "dd197c829a4c9bd3682f5846e65a6d9b9e693b5cd1d966044efe08ef19219b7a",
+      "rows": 1440
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_270_t2_230_air2_change_-5.csv",
+      "sha256": "54ebe062443d3b52b0ba86c803fdb4d04274def3060c066efa011a7de96fbb13",
+      "rows": 1440
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_270_t2_230_t2_change_-5.csv",
+      "sha256": "3aecc5b68f6120ceff868e5e330a0295d6c54da54b5acfcaef8f3f3aed02cd79",
+      "rows": 1440
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_280_t2_210_air2_change_10.csv",
+      "sha256": "762fa89fbfe3b596ed53792d1df7c0c29bd4357cebd2c0726ae794d6f57b7c0b",
+      "rows": 1440
+    },
+    {
+      "path": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_280_t2_210_TR2_change_10.csv",
+      "sha256": "0e29683b0ca38a725d03534c38c0bd20fef41547bd6a6cf030304c49c785d1ef",
+      "rows": 1440
+    }
+  ],
+  "ann_artifacts": [
+    {
+      "path": "saved_models/Tabular_MLP_5in_2out_QV.pth",
+      "sha256": "421b2f19ce37e58b9185b94ed9529e9167024d93e10fdf59ee9a565f16eb0155"
+    },
+    {
+      "path": "results/Tabular_MLP_New/zscore_mean.csv",
+      "sha256": "80ee9c2a77c6c1407108bc97f963996aad3b4bd2b0fccf893cca7b0c8c4f2ee4"
+    },
+    {
+      "path": "results/Tabular_MLP_New/zscore_std.csv",
+      "sha256": "23954d26a069cc1592722c154f7cb72dc3d0a3e77120e9060bf0e859b9022ea6"
+    }
+  ],
+  "limitations": [
+    "Only 8 base operating conditions, 16 trajectories and 32 case/output comparisons.",
+    "Finite perturbations and incidental changes of other inputs do not identify exact partial derivatives.",
+    "Training-set membership of the actual checkpoint is not certified by a training manifest. Current training source code reads LHS Excel files rather than these step CSVs.",
+    "No Soft-OOD or new 0.5-sigma simulation validation is performed.",
+    "Raw row indices are used; physical time interval is not independently verified."
+  ]
+}
