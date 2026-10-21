@@ -1,0 +1,49 @@
+model,case,rolling_prediction_rows,horizon_windows
+No-Gain,R5_test_split,126,109
+No-Gain,R5-1_test_split,126,109
+No-Gain,R5-2_test_split,126,109
+No-Gain,R5-6_test_split,140,123
+No-Gain,R5-19,126,109
+No-Gain,R5-20,126,109
+No-Gain,R5-21,126,109
+No-Gain,R5-22,126,109
+No-Gain,R5-23,126,109
+No-Gain,R5-24,126,109
+No-Gain,R5-25,126,109
+No-Gain,R5-26,126,109
+Gain,R5_test_split,126,109
+Gain,R5-1_test_split,126,109
+Gain,R5-2_test_split,126,109
+Gain,R5-6_test_split,140,123
+Gain,R5-19,126,109
+Gain,R5-20,126,109
+Gain,R5-21,126,109
+Gain,R5-22,126,109
+Gain,R5-23,126,109
+Gain,R5-24,126,109
+Gain,R5-25,126,109
+Gain,R5-26,126,109
+Gain + SS=0.01,R5_test_split,126,109
+Gain + SS=0.01,R5-1_test_split,126,109
+Gain + SS=0.01,R5-2_test_split,126,109
+Gain + SS=0.01,R5-6_test_split,140,123
+Gain + SS=0.01,R5-19,126,109
+Gain + SS=0.01,R5-20,126,109
+Gain + SS=0.01,R5-21,126,109
+Gain + SS=0.01,R5-22,126,109
+Gain + SS=0.01,R5-23,126,109
+Gain + SS=0.01,R5-24,126,109
+Gain + SS=0.01,R5-25,126,109
+Gain + SS=0.01,R5-26,126,109
+Difficult-GradNorm,R5_test_split,126,109
+Difficult-GradNorm,R5-1_test_split,126,109
+Difficult-GradNorm,R5-2_test_split,126,109
+Difficult-GradNorm,R5-6_test_split,140,123
+Difficult-GradNorm,R5-19,126,109
+Difficult-GradNorm,R5-20,126,109
+Difficult-GradNorm,R5-21,126,109
+Difficult-GradNorm,R5-22,126,109
+Difficult-GradNorm,R5-23,126,109
+Difficult-GradNorm,R5-24,126,109
+Difficult-GradNorm,R5-25,126,109
+Difficult-GradNorm,R5-26,126,109

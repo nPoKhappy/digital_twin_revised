@@ -1,0 +1,14 @@
+[
+  {
+    "model": "no_gain",
+    "internal_cases_rechecked": 4,
+    "passed": true,
+    "maximum_relative_rmse_difference": 0.0
+  },
+  {
+    "model": "gain",
+    "internal_cases_rechecked": 4,
+    "passed": true,
+    "maximum_relative_rmse_difference": 0.0
+  }
+]
