@@ -1,9 +1,0 @@
-{
-  "passed": true,
-  "rmse_rows": 288,
-  "kci_summary_rows": 8,
-  "kci_pair_rows": 32,
-  "same_prediction_indices": true,
-  "protected_files_verified": 446,
-  "existing_internal_prediction_recheck": "exact match"
-}
