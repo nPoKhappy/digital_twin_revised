@@ -1,0 +1,23 @@
+{
+  "conditional_kci_by_gain_magnitude.csv": "91ea30aeeb1a3df5398da022e5776ee1b21963228ccfc2687122dc87386c11f5",
+  "conditional_kci_by_gain_magnitude.pdf": "7d502e80f755c0d0ec26522f3a1828e8c09bfaaee75601526c2ed9d13a60e17e",
+  "conditional_kci_by_gain_magnitude.png": "56d9eef08b575c500c4cf497602b78bda89fc116b40131bc23613b6cb063878e",
+  "conditional_kci_by_teacher_sign.csv": "a26d5bfddd0a546f5e6b73f93c2fad4d6e59d671cd1636b48291b1746a9defad",
+  "conditional_kci_by_teacher_sign.pdf": "e2f90b4e9dd908994f2df05303e8a7f2831450329857a47f5006930952b95d92",
+  "conditional_kci_by_teacher_sign.png": "b4a80bb8bc13f1884bd840f4d94fae64bcc3717737c6f0889ce2f3b707c08cb2",
+  "figure_provenance.json": "f324b3677aff0f2632b434c68d7be49654a521fe5f1cdc51437635ab71f52edb",
+  "figure_validation.json": "21e93395ad0a741c07606e0ebebdfff02dc201fed00ba76575407446435e6367",
+  "five_model_all18_kci.pdf": "83a31420b886774afff6713ff5441d926993713dc6276101deedc408bdaf1a5f",
+  "five_model_all18_kci.png": "5144848326adb8425c4774e25567205113c8c5b7a6791295d1bed678a5bf10e3",
+  "five_model_all18_kci_values.csv": "bb97a39ca9ac41648a4c203300318e9503a499c37706470d9309bb7f5133d919",
+  "five_model_raw_rmse_external_all_data.pdf": "35bb76ce8fafe750e1f5a0d0618023a3853cdbccc465519d38a6e61008a93e94",
+  "five_model_raw_rmse_external_all_data.png": "d3598b53d9c3109c546984ceefda2c05bf8c73d6862b6fdd1a1077d936d7233f",
+  "five_model_raw_rmse_internal_test.pdf": "8a97dee3beeecb0b3b993c3c7e25062f5780ee6dd1361ff8ec112584865299a3",
+  "five_model_raw_rmse_internal_test.png": "8b6d33187302b1056ff16c36056989489f4e4f5318b733f30bb57aaa820961e3",
+  "five_model_rmse_values.csv": "a2b4b1e64ceace9d4d0347f0a68cd83f31740f926378716d83ddf2d23dea3a63",
+  "gain_magnitude_quartile_edges.csv": "dbfb474d48ecf0598581627edacb5c12fb7e34b0e7fd96078389beef9b7cb80e",
+  "README.md": "d0c2e5df1191b8b9991ae814457ad7f2099628d77a08fc803385834d433b483a",
+  "teacher_gain_landscape.pdf": "d81119f54756afaa7b77d9c90ccd4f4028e8474c1173c6662a163009cd1c4830",
+  "teacher_gain_landscape.png": "0ad3caa69279d8c88898c4eb2ccc9bd1f45411776b2bb388715e1a1c7eb95e82",
+  "teacher_gain_summary.csv": "8f41727848a82a359c71bd7a042bff51575cf65f609ba03c35fec3be3064a0cb"
+}

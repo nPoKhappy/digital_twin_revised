@@ -1,0 +1,210 @@
+
+========== Running inference: R5-3 ==========
+File: Test_dataform_change_air2_R=5-3.xlsx
+注意：數據中沒有找到 'DateTime' 列，使用數值索引
+Loaded test data with data_utils.load_data.
+Downsampling test data by MEDIAN resampling: interval=10
+  -> Applied Rolling Median Filter (Window=10)
+  New test data length: 144
+Applying Log Transform to ['B35_H2S', 'B35_SO2']
+Applying Z-score Scaling (Mean/Std)...
+?: sliding_window
+[Strategy: sliding window] Predicting:   0%|          | 0/126 [00:00<?, ?it/s][Strategy: sliding window] Predicting:  41%|████▏     | 52/126 [00:00<00:00, 518.14it/s][Strategy: sliding window] Predicting:  83%|████████▎ | 104/126 [00:00<00:00, 508.02it/s][Strategy: sliding window] Predicting: 100%|██████████| 126/126 [00:00<00:00, 507.77it/s]
+???? ./results\pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss\R5-3\evaluation_metrics.csv
+         MAE      RMSE        R2       MAPE             Variable
+0   0.213609  0.261087  0.997079   0.172756                  air
+1   1.514805  1.966736  0.997388   0.712178          second_air2
+2   0.227492  0.279734  0.997104   0.814938                  COG
+3   0.113954  0.173079  0.782337   0.018999    burner_input_T_PV
+4   0.000019  0.000028  0.912718   0.001182        burner_inputP
+5   0.215702  0.332248  0.581037   0.017691   burner_output_T_PV
+6   0.000019  0.000028  0.911622   0.001192   burner_output_P_PV
+7   0.373506  0.448184  0.998334   0.134096                fur_F
+8   2.027869  2.699016  0.947902   1.493414           fur_inputT
+9   0.000011  0.000014  0.994579   0.000706           fur_inputP
+10  1.284449  1.663851  0.980066   0.138592             fur_temp
+11  1.251520  1.668226  0.984040   0.135060          fur_outputT
+12  0.000011  0.000014  0.991353   0.000709       fur_outputP_PV
+13  0.354425  0.437489  0.998385   0.128840                WHB_F
+14  1.238148  1.637014  0.984632   0.133570           WHB_inputT
+15  0.000048  0.000060  0.994933   0.003129           WHB_inputP
+16  1.715198  2.192382  0.996095   0.871304          WHB_outputT
+17  0.000047  0.000058  0.995078   0.003080          WHB_outputP
+18  0.347714  0.431268  0.998431   0.127220               SEP1_F
+19  0.000046  0.000058  0.995059   0.003048            SEP1_P_PV
+20  0.156941  0.198043  0.961751   0.133365               SEP1_T
+21  0.429186  0.550263  0.998211   0.166009            HEATER1_F
+22  0.150749  0.190261  0.964698   0.128078      HEATER1_input_T
+23  0.000030  0.000038  0.998175   0.002114      HEATER1_input_P
+24  0.194352  0.235491  0.997801   0.085629  HEATER1_output_T_PV
+25  0.000027  0.000034  0.998307   0.001924     HEATER1_output_P
+26  0.472521  0.609496  0.997805   0.184705               cat1_F
+27  0.126256  0.164179  0.998931   0.055292      cat1_input_temp
+28  0.538159  0.686235  0.993887   0.202507     cat1_output_temp
+29  0.000034  0.000043  0.997211   0.002382         cat1_input_P
+30  0.000014  0.000017  0.991162   0.000992     cat1_output_P_PV
+31  0.456784  0.569811  0.998106   0.179159               SEP2_F
+32  0.000034  0.000045  0.996914   0.002513            SEP2_P_PV
+33  0.478682  0.518550  0.647710   1.082079               SEP2_T
+34  0.430465  0.529001  0.994998   0.257389            HEATER2_F
+35  0.541728  0.574127  0.568149   1.222545      HEATER2_input_T
+36  0.000042  0.000052  0.997564   0.003333      HEATER2_input_P
+37  0.390377  0.497026  0.998166   0.229908  HEATER2_output_T_PV
+38  0.392621  0.474251  0.995980   0.235624               cat2_F
+39  0.460651  0.578821  0.997512   0.271170      cat2_input_temp
+40  0.682955  0.802387  0.996178   0.296634     cat2_output_temp
+41  0.000049  0.000059  0.996639   0.003854         cat2_input_P
+42  0.000015  0.000019  0.989832   0.001208     cat2_output_P_PV
+43  0.372488  0.459020  0.996125   0.225859               SEP3_F
+44  0.000037  0.000047  0.996139   0.003081            SEP3_P_PV
+45  0.399562  0.495726  0.955939   0.329288               SEP3_T
+46  0.000399  0.000514  0.844300   4.243663              B35_H2S
+47  0.000126  0.000159  0.940690  16.469811              B35_SO2
+?: R5-3. ?: ./results\pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss\R5-3
+
+[Horizon Analysis] Evaluating t+1 to t+18 rolling predictions...
+Rolling Prediction:   0%|          | 0/1 [00:00<?, ?it/s]Rolling Prediction: 100%|██████████| 1/1 [00:00<00:00, 11.78it/s]
+  ????..
+  Collecting horizon metrics and t+1/t+18 parity data...
+  ???: ./results\pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss\R5-3\horizon_metrics_t1_to_t18.csv
+Horizon metrics saved to ./results\pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss\R5-3\horizon_metrics_t1_to_t18.csv
+
+========== Running inference: R5-4 ==========
+File: Test_dataform_change_air2_R=5-4.xlsx
+注意：數據中沒有找到 'DateTime' 列，使用數值索引
+Loaded test data with data_utils.load_data.
+Downsampling test data by MEDIAN resampling: interval=10
+  -> Applied Rolling Median Filter (Window=10)
+  New test data length: 144
+Applying Log Transform to ['B35_H2S', 'B35_SO2']
+Applying Z-score Scaling (Mean/Std)...
+?: sliding_window
+[Strategy: sliding window] Predicting:   0%|          | 0/126 [00:00<?, ?it/s][Strategy: sliding window] Predicting:  44%|████▎     | 55/126 [00:00<00:00, 549.66it/s][Strategy: sliding window] Predicting:  87%|████████▋ | 110/126 [00:00<00:00, 544.81it/s][Strategy: sliding window] Predicting: 100%|██████████| 126/126 [00:00<00:00, 549.43it/s]
+???? ./results\pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss\R5-4\evaluation_metrics.csv
+         MAE      RMSE        R2       MAPE             Variable
+0   0.175320  0.230023  0.997998   0.142931                  air
+1   1.464405  1.892146  0.996286   0.685564          second_air2
+2   0.238590  0.277668  0.995611   0.849076                  COG
+3   0.078370  0.105688  0.686282   0.013059    burner_input_T_PV
+4   0.000012  0.000016  0.961666   0.000735        burner_inputP
+5   0.133901  0.187160  0.485207   0.010979   burner_output_T_PV
+6   0.000012  0.000016  0.961022   0.000757   burner_output_P_PV
+7   0.321546  0.437214  0.998525   0.118220                fur_F
+8   2.026961  2.510515  0.921615   1.473622           fur_inputT
+9   0.000012  0.000015  0.993940   0.000757           fur_inputP
+10  1.170856  1.440889  0.975533   0.126114             fur_temp
+11  1.270109  1.498132  0.979086   0.136832          fur_outputT
+12  0.000013  0.000017  0.988533   0.000835       fur_outputP_PV
+13  0.304241  0.402849  0.998730   0.111459                WHB_F
+14  1.450821  1.710352  0.972741   0.156326           WHB_inputT
+15  0.000050  0.000067  0.993882   0.003318           WHB_inputP
+16  1.696173  2.118133  0.995985   0.910991          WHB_outputT
+17  0.000051  0.000067  0.993759   0.003322          WHB_outputP
+18  0.372111  0.482225  0.998181   0.136749               SEP1_F
+19  0.000049  0.000065  0.994081   0.003192            SEP1_P_PV
+20  0.105307  0.127529  0.985028   0.089220               SEP1_T
+21  0.409378  0.509663  0.998333   0.161841            HEATER1_F
+22  0.105223  0.126872  0.985182   0.089092      HEATER1_input_T
+23  0.000028  0.000036  0.998338   0.001957      HEATER1_input_P
+24  0.173088  0.213183  0.998266   0.075767  HEATER1_output_T_PV
+25  0.000030  0.000037  0.997930   0.002116     HEATER1_output_P
+26  0.413930  0.517999  0.998278   0.164609               cat1_F
+27  0.101520  0.147992  0.999164   0.044159      cat1_input_temp
+28  0.546259  0.691826  0.992298   0.204141     cat1_output_temp
+29  0.000031  0.000039  0.997632   0.002156         cat1_input_P
+30  0.000014  0.000018  0.991103   0.000986     cat1_output_P_PV
+31  0.356223  0.439483  0.998768   0.142548               SEP2_F
+32  0.000038  0.000049  0.996559   0.002774            SEP2_P_PV
+33  0.206074  0.240048  0.950448   0.457728               SEP2_T
+34  0.396825  0.490389  0.995803   0.241075            HEATER2_F
+35  0.208913  0.240476  0.950271   0.464720      HEATER2_input_T
+36  0.000060  0.000074  0.994292   0.004744      HEATER2_input_P
+37  0.831220  1.147211  0.988001   0.382322  HEATER2_output_T_PV
+38  0.401995  0.485504  0.995886   0.243524               cat2_F
+39  0.756476  1.123084  0.988501   0.344571      cat2_input_temp
+40  0.663334  0.969144  0.987258   0.244607     cat2_output_temp
+41  0.000059  0.000074  0.994097   0.004654         cat2_input_P
+42  0.000018  0.000022  0.988809   0.001411     cat2_output_P_PV
+43  0.348062  0.427394  0.996729   0.213346               SEP3_F
+44  0.000048  0.000061  0.994287   0.003960            SEP3_P_PV
+45  0.405331  0.511227  0.885576   0.313194               SEP3_T
+46  0.000351  0.000439  0.891789   3.651018              B35_H2S
+47  0.000232  0.000322  0.811579  10.219586              B35_SO2
+?: R5-4. ?: ./results\pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss\R5-4
+
+[Horizon Analysis] Evaluating t+1 to t+18 rolling predictions...
+Rolling Prediction:   0%|          | 0/1 [00:00<?, ?it/s]Rolling Prediction: 100%|██████████| 1/1 [00:00<00:00,  7.43it/s]Rolling Prediction: 100%|██████████| 1/1 [00:00<00:00,  7.43it/s]
+  ????..
+  Collecting horizon metrics and t+1/t+18 parity data...
+  ???: ./results\pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss\R5-4\horizon_metrics_t1_to_t18.csv
+Horizon metrics saved to ./results\pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss\R5-4\horizon_metrics_t1_to_t18.csv
+
+========== Running inference: R5-5 ==========
+File: Test_dataform_change_air2_R=5-5.xlsx
+注意：數據中沒有找到 'DateTime' 列，使用數值索引
+Loaded test data with data_utils.load_data.
+Downsampling test data by MEDIAN resampling: interval=10
+  -> Applied Rolling Median Filter (Window=10)
+  New test data length: 144
+Applying Log Transform to ['B35_H2S', 'B35_SO2']
+Applying Z-score Scaling (Mean/Std)...
+?: sliding_window
+[Strategy: sliding window] Predicting:   0%|          | 0/126 [00:00<?, ?it/s][Strategy: sliding window] Predicting:  44%|████▍     | 56/126 [00:00<00:00, 536.35it/s][Strategy: sliding window] Predicting:  87%|████████▋ | 110/126 [00:00<00:00, 514.03it/s][Strategy: sliding window] Predicting: 100%|██████████| 126/126 [00:00<00:00, 519.37it/s]
+???? ./results\pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss\R5-5\evaluation_metrics.csv
+         MAE      RMSE        R2       MAPE             Variable
+0   0.204251  0.256090  0.997431   0.167246                  air
+1   1.803728  2.339149  0.996592   1.033190          second_air2
+2   0.260364  0.325977  0.996371   1.102761                  COG
+3   0.149973  0.179683  0.786410   0.024997    burner_input_T_PV
+4   0.000024  0.000030  0.894437   0.001502        burner_inputP
+5   0.273025  0.348504  0.580491   0.022391   burner_output_T_PV
+6   0.000024  0.000030  0.892145   0.001509   burner_output_P_PV
+7   0.364248  0.494011  0.998155   0.135604                fur_F
+8   2.455970  3.085161  0.929470   1.877068           fur_inputT
+9   0.000012  0.000016  0.991839   0.000788           fur_inputP
+10  1.626239  2.037863  0.968949   0.176785             fur_temp
+11  1.479629  1.930691  0.978327   0.161121          fur_outputT
+12  0.000013  0.000016  0.987234   0.000800       fur_outputP_PV
+13  0.458478  0.578040  0.997431   0.169525                WHB_F
+14  1.557608  2.011952  0.976464   0.169610           WHB_inputT
+15  0.000048  0.000061  0.994175   0.003127           WHB_inputP
+16  2.578237  3.134841  0.993497   1.542176          WHB_outputT
+17  0.000046  0.000059  0.994510   0.003030          WHB_outputP
+18  0.387224  0.504939  0.998040   0.144893               SEP1_F
+19  0.000048  0.000060  0.994031   0.003165            SEP1_P_PV
+20  0.165076  0.192473  0.966928   0.142348               SEP1_T
+21  0.442696  0.559310  0.998403   0.181555            HEATER1_F
+22  0.184199  0.216484  0.958161   0.158698      HEATER1_input_T
+23  0.000036  0.000046  0.997409   0.002546      HEATER1_input_P
+24  0.173121  0.217300  0.998627   0.076423  HEATER1_output_T_PV
+25  0.000036  0.000044  0.997205   0.002547     HEATER1_output_P
+26  0.556309  0.674838  0.997676   0.227367               cat1_F
+27  0.170800  0.209652  0.998722   0.074833      cat1_input_temp
+28  0.649527  0.808592  0.994040   0.240306     cat1_output_temp
+29  0.000041  0.000050  0.996317   0.002856         cat1_input_P
+30  0.000014  0.000018  0.989987   0.000975     cat1_output_P_PV
+31  0.402222  0.511257  0.998684   0.164339               SEP2_F
+32  0.000038  0.000050  0.995705   0.002824            SEP2_P_PV
+33  0.676878  0.761400  0.631689   1.614533               SEP2_T
+34  0.586781  0.689045  0.991888   0.366750            HEATER2_F
+35  0.690934  0.763209  0.629937   1.646719      HEATER2_input_T
+36  0.000049  0.000060  0.995614   0.003903      HEATER2_input_P
+37  1.100671  1.446112  0.996511   0.684507  HEATER2_output_T_PV
+38  0.654982  0.782938  0.989526   0.407759               cat2_F
+39  1.169012  1.583776  0.995816   0.734872      cat2_input_temp
+40  1.161753  1.598964  0.994097   0.507075     cat2_output_temp
+41  0.000052  0.000066  0.994383   0.004164         cat2_input_P
+42  0.000014  0.000019  0.988234   0.001135     cat2_output_P_PV
+43  0.596186  0.709316  0.991109   0.375325               SEP3_F
+44  0.000045  0.000057  0.993864   0.003733            SEP3_P_PV
+45  3.330300  3.917562 -1.648080   2.738120               SEP3_T
+46  0.000674  0.000899  0.832406   6.076511              B35_H2S
+47  0.000165  0.000218  0.850364  24.020135              B35_SO2
+?: R5-5. ?: ./results\pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss\R5-5
+
+[Horizon Analysis] Evaluating t+1 to t+18 rolling predictions...
+Rolling Prediction:   0%|          | 0/1 [00:00<?, ?it/s]Rolling Prediction: 100%|██████████| 1/1 [00:00<00:00, 11.61it/s]
+  ????..
+  Collecting horizon metrics and t+1/t+18 parity data...
+  ???: ./results\pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss\R5-5\horizon_metrics_t1_to_t18.csv
+Horizon metrics saved to ./results\pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss\R5-5\horizon_metrics_t1_to_t18.csv

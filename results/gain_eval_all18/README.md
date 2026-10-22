@@ -9,7 +9,10 @@
 | No-Gain | [seed42](transformer_layerwise_63var_decoder_input_sp_pgin_no_gain_seed42/) |
 | Gain | [seed42](transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42/) |
 | Gain + SS=0.01 | [seed42](transformer_layerwise_63var_decoder_input_sp_pgin_gain005_ss001_seed42/) |
-| Difficult-GradNorm | [seed42](transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42_difficult_group_gradnorm_no_ss/) |
+| Difficult-GradNorm，target ratio=0.015 | [seed42](transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42_difficult_group_gradnorm_no_ss/) |
+| Difficult-GradNorm，target ratio=0.01，無 SS | [seed42](difficult_gradnorm_ratio0p01_no_ss_seed42/) |
+| Difficult-GradNorm，target ratio=0.005，無 SS | [seed42](difficult_gradnorm_ratio0p005_no_ss_seed42/) |
+| Difficult-GradNorm，target ratio=0.02，無 SS | [seed42](difficult_gradnorm_ratio0p02_no_ss_seed42/) |
 
 動態預測及訓練 history 位於各自的 `results/<experiment>/`，不放在本目錄。
 

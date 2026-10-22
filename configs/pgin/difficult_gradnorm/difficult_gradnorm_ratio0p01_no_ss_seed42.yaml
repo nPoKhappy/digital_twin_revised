@@ -1,0 +1,130 @@
+# Difficult-GradNorm target ratio: 0.01 (baseline CLI ratio: 0.015).
+# IMPORTANT: target ratio is a CLI argument; the trainer does not read it from YAML.
+# Run from the project root:
+# python scripts/training/train_pgin_stepwise_gain_difficult_group_gradnorm.py --config configs/pgin/difficult_gradnorm/difficult_gradnorm_ratio0p01_no_ss_seed42.yaml --no-ss --target-ratio 0.01 --max-scale 50
+# All seven populated sign groups are retained; this is not a group ablation.
+# All other model/data/training settings match the original seed42 no-SS config.
+
+exp_name: "pgin_gain005_ratio0p01_seed42_difficult_group_gradnorm_no_ss"
+
+
+data:
+  path: "./data/Claus_dynamic/"
+  training_files:
+    - "Test_dataform_change_air2_R=5_train_split.csv"
+    - "Test_dataform_change_air2_R=5-1_train_split.csv"
+    - "Test_dataform_change_air2_R=5-2_train_split.csv"
+    - "Test_dataform_change_air2_R=5-6_train_split.csv"
+
+  variables_num: 63
+
+  test_data_split: 0.1
+  valid_data_split: 0.1
+
+  inference_files:
+    - name: "R5_train_split"
+      filename: "Test_dataform_change_air2_R=5_train_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-1_train_split"
+      filename: "Test_dataform_change_air2_R=5-1_train_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-2_train_split"
+      filename: "Test_dataform_change_air2_R=5-2_train_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-6_train_split"
+      filename: "Test_dataform_change_air2_R=5-6_train_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5_test_split"
+      filename: "Test_dataform_change_air2_R=5_test_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-1_test_split"
+      filename: "Test_dataform_change_air2_R=5-1_test_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-2_test_split"
+      filename: "Test_dataform_change_air2_R=5-2_test_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-6_test_split"
+      filename: "Test_dataform_change_air2_R=5-6_test_split.csv"
+      inference_strategy: 'sliding_window'
+
+    - name: "R5_valid_split"
+      filename: "Test_dataform_change_air2_R=5_valid_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-1_valid_split"
+      filename: "Test_dataform_change_air2_R=5-1_valid_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-2_valid_split"
+      filename: "Test_dataform_change_air2_R=5-2_valid_split.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-6_valid_split"
+      filename: "Test_dataform_change_air2_R=5-6_valid_split.csv"
+      inference_strategy: 'sliding_window'
+
+    - name: "R5-13"
+      filename: "Test_dataform_change_air2_R=5-13.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-14"
+      filename: "Test_dataform_change_air2_R=5-14.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-19"
+      filename: "Test_dataform_change_air2_R=5-19.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-20"
+      filename: "Test_dataform_change_air2_R=5-20.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-21"
+      filename: "Test_dataform_change_air2_R=5-21.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-22"
+      filename: "Test_dataform_change_air2_R=5-22.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-23"
+      filename: "Test_dataform_change_air2_R=5-23.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-24"
+      filename: "Test_dataform_change_air2_R=5-24.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-25"
+      filename: "Test_dataform_change_air2_R=5-25.csv"
+      inference_strategy: 'sliding_window'
+    - name: "R5-26"
+      filename: "Test_dataform_change_air2_R=5-26.csv"
+      inference_strategy: 'sliding_window'
+
+window:
+  train_window_mins: 180
+  sampling_interval_min: 10
+  use_median_downsampling: true
+  prediction_length: 18
+
+model:
+  name: "transformer_layerwise"
+  embedding_dim: 64
+  hidden_dim: 64
+  n_layers: 2
+  num_heads: 1
+  activation: 'gelu'
+  dropout: 0.1
+  ffn_expansion: 4
+
+training:
+  device: "cuda"
+  seed: 42
+  batch_size: 64
+  epochs: 1000
+  steps_per_epoch: 10
+  learning_rate: 0.0005
+  ss_loss_weight: 0
+  gain_loss_weight: 0.05
+  monitor_gain_kci: true
+  stepwise_gain_warmup_steps: 35
+  dynamic_gain_tail_start_step: 10
+  finite_diff_delta_std: 0.5
+  ss_batch_size: 64
+  inference_strategy: "sliding_window"
+  block_commit_steps: 1
+  patience: 10
+  loss_function: 'mse'
+  loss_weighting:
+    weights: [1.0, 1.0, 1.0, 1.0]
+

@@ -1,0 +1,81 @@
+model,distribution,pair,teacher_sign_label,probe_points,comparisons,correct,kci_percent
+No-Gain,in_range,air2 → H₂S,Negative,3071,110556,110026,99.52060494229168
+No-Gain,in_range,air2 → H₂S,Positive,513,18468,1099,5.950833874810483
+No-Gain,in_range,T2 → H₂S,Negative,1569,56484,54842,97.09298208342186
+No-Gain,in_range,T2 → H₂S,Positive,2501,90036,71302,79.19276733750944
+No-Gain,in_range,air2 → SO₂,Negative,0,0,0,
+No-Gain,in_range,air2 → SO₂,Positive,4290,154440,153393,99.32206682206682
+No-Gain,in_range,T2 → SO₂,Negative,1416,50976,26239,51.47324231010672
+No-Gain,in_range,T2 → SO₂,Positive,1908,68688,57086,83.10913114372234
+No-Gain,soft_ood,air2 → H₂S,Negative,1625,58500,57139,97.67350427350428
+No-Gain,soft_ood,air2 → H₂S,Positive,418,15048,1839,12.220893141945773
+No-Gain,soft_ood,T2 → H₂S,Negative,957,34452,34336,99.66329966329967
+No-Gain,soft_ood,T2 → H₂S,Positive,1479,53244,40893,76.80302005859815
+No-Gain,soft_ood,air2 → SO₂,Negative,0,0,0,
+No-Gain,soft_ood,air2 → SO₂,Positive,2252,81072,77865,96.04425695677917
+No-Gain,soft_ood,T2 → SO₂,Negative,880,31680,22861,72.16224747474747
+No-Gain,soft_ood,T2 → SO₂,Positive,962,34632,26622,76.87110187110187
+Gain,in_range,air2 → H₂S,Negative,3071,110556,110023,99.51789138536127
+Gain,in_range,air2 → H₂S,Positive,513,18468,1248,6.757634827810266
+Gain,in_range,T2 → H₂S,Negative,1569,56484,54796,97.01154309184902
+Gain,in_range,T2 → H₂S,Positive,2501,90036,73745,81.90612643831356
+Gain,in_range,air2 → SO₂,Negative,0,0,0,
+Gain,in_range,air2 → SO₂,Positive,4290,154440,153908,99.65552965552966
+Gain,in_range,T2 → SO₂,Negative,1416,50976,34051,66.79810106716886
+Gain,in_range,T2 → SO₂,Positive,1908,68688,59214,86.20719776380153
+Gain,soft_ood,air2 → H₂S,Negative,1625,58500,57146,97.68547008547009
+Gain,soft_ood,air2 → H₂S,Positive,418,15048,1869,12.420255183413078
+Gain,soft_ood,T2 → H₂S,Negative,957,34452,34296,99.54719609892024
+Gain,soft_ood,T2 → H₂S,Positive,1479,53244,41833,78.56847719930884
+Gain,soft_ood,air2 → SO₂,Negative,0,0,0,
+Gain,soft_ood,air2 → SO₂,Positive,2252,81072,79015,97.46274916123939
+Gain,soft_ood,T2 → SO₂,Negative,880,31680,26195,82.68623737373737
+Gain,soft_ood,T2 → SO₂,Positive,962,34632,27951,80.70859320859321
+Gain + SS=0.01,in_range,air2 → H₂S,Negative,3071,110556,109694,99.22030464199139
+Gain + SS=0.01,in_range,air2 → H₂S,Positive,513,18468,1249,6.7630495993069095
+Gain + SS=0.01,in_range,T2 → H₂S,Negative,1569,56484,54608,96.67870547411657
+Gain + SS=0.01,in_range,T2 → H₂S,Positive,2501,90036,82186,91.28126527166911
+Gain + SS=0.01,in_range,air2 → SO₂,Negative,0,0,0,
+Gain + SS=0.01,in_range,air2 → SO₂,Positive,4290,154440,154227,99.86208236208236
+Gain + SS=0.01,in_range,T2 → SO₂,Negative,1416,50976,44809,87.90215003138732
+Gain + SS=0.01,in_range,T2 → SO₂,Positive,1908,68688,67434,98.17435359888191
+Gain + SS=0.01,soft_ood,air2 → H₂S,Negative,1625,58500,56229,96.11794871794872
+Gain + SS=0.01,soft_ood,air2 → H₂S,Positive,418,15048,2844,18.89952153110048
+Gain + SS=0.01,soft_ood,T2 → H₂S,Negative,957,34452,33841,98.22651805410426
+Gain + SS=0.01,soft_ood,T2 → H₂S,Positive,1479,53244,42992,80.74524829088723
+Gain + SS=0.01,soft_ood,air2 → SO₂,Negative,0,0,0,
+Gain + SS=0.01,soft_ood,air2 → SO₂,Positive,2252,81072,79776,98.40142095914743
+Gain + SS=0.01,soft_ood,T2 → SO₂,Negative,880,31680,28827,90.99431818181819
+Gain + SS=0.01,soft_ood,T2 → SO₂,Positive,962,34632,32520,93.9015939015939
+Difficult-GradNorm ratio=0.015,in_range,air2 → H₂S,Negative,3071,110556,110207,99.68432287709396
+Difficult-GradNorm ratio=0.015,in_range,air2 → H₂S,Positive,513,18468,17010,92.10526315789474
+Difficult-GradNorm ratio=0.015,in_range,T2 → H₂S,Negative,1569,56484,54100,95.77933574109483
+Difficult-GradNorm ratio=0.015,in_range,T2 → H₂S,Positive,2501,90036,89056,98.9115464925141
+Difficult-GradNorm ratio=0.015,in_range,air2 → SO₂,Negative,0,0,0,
+Difficult-GradNorm ratio=0.015,in_range,air2 → SO₂,Positive,4290,154440,154070,99.76042476042475
+Difficult-GradNorm ratio=0.015,in_range,T2 → SO₂,Negative,1416,50976,50165,98.40905524168237
+Difficult-GradNorm ratio=0.015,in_range,T2 → SO₂,Positive,1908,68688,68530,99.76997437689262
+Difficult-GradNorm ratio=0.015,soft_ood,air2 → H₂S,Negative,1625,58500,56772,97.04615384615384
+Difficult-GradNorm ratio=0.015,soft_ood,air2 → H₂S,Positive,418,15048,13219,87.84556087187666
+Difficult-GradNorm ratio=0.015,soft_ood,T2 → H₂S,Negative,957,34452,33973,98.60965981655637
+Difficult-GradNorm ratio=0.015,soft_ood,T2 → H₂S,Positive,1479,53244,50659,95.1449928630456
+Difficult-GradNorm ratio=0.015,soft_ood,air2 → SO₂,Negative,0,0,0,
+Difficult-GradNorm ratio=0.015,soft_ood,air2 → SO₂,Positive,2252,81072,79413,97.95367081113085
+Difficult-GradNorm ratio=0.015,soft_ood,T2 → SO₂,Negative,880,31680,30206,95.34722222222223
+Difficult-GradNorm ratio=0.015,soft_ood,T2 → SO₂,Positive,962,34632,34070,98.37722337722337
+Difficult-GradNorm ratio=0.01,in_range,air2 → H₂S,Negative,3071,110556,109751,99.27186222366946
+Difficult-GradNorm ratio=0.01,in_range,air2 → H₂S,Positive,513,18468,16962,91.84535412605588
+Difficult-GradNorm ratio=0.01,in_range,T2 → H₂S,Negative,1569,56484,54126,95.82536647546208
+Difficult-GradNorm ratio=0.01,in_range,T2 → H₂S,Positive,2501,90036,88697,98.51281709538407
+Difficult-GradNorm ratio=0.01,in_range,air2 → SO₂,Negative,0,0,0,
+Difficult-GradNorm ratio=0.01,in_range,air2 → SO₂,Positive,4290,154440,153946,99.68013468013469
+Difficult-GradNorm ratio=0.01,in_range,T2 → SO₂,Negative,1416,50976,50028,98.14030131826742
+Difficult-GradNorm ratio=0.01,in_range,T2 → SO₂,Positive,1908,68688,67950,98.92557651991615
+Difficult-GradNorm ratio=0.01,soft_ood,air2 → H₂S,Negative,1625,58500,56297,96.23418803418804
+Difficult-GradNorm ratio=0.01,soft_ood,air2 → H₂S,Positive,418,15048,13681,90.91573631047315
+Difficult-GradNorm ratio=0.01,soft_ood,T2 → H₂S,Negative,957,34452,33986,98.64739347497968
+Difficult-GradNorm ratio=0.01,soft_ood,T2 → H₂S,Positive,1479,53244,50772,95.35722334910976
+Difficult-GradNorm ratio=0.01,soft_ood,air2 → SO₂,Negative,0,0,0,
+Difficult-GradNorm ratio=0.01,soft_ood,air2 → SO₂,Positive,2252,81072,79494,98.05358200118414
+Difficult-GradNorm ratio=0.01,soft_ood,T2 → SO₂,Negative,880,31680,30426,96.04166666666667
+Difficult-GradNorm ratio=0.01,soft_ood,T2 → SO₂,Positive,962,34632,33769,97.508085008085

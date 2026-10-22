@@ -1,0 +1,17 @@
+distribution,target,mv,teacher_sign,valid_comparisons,correct,kci_percent
+in_range,B35_H2S,HEATER2_output_T_SP,positive,90036,88964,98.80936514283175
+in_range,B35_H2S,HEATER2_output_T_SP,negative,56484,53999,95.60052404220664
+in_range,B35_H2S,air2_SP,positive,18468,17258,93.44812648906216
+in_range,B35_H2S,air2_SP,negative,110556,110173,99.65356923188249
+in_range,B35_SO2,HEATER2_output_T_SP,positive,68688,68557,99.80928255299324
+in_range,B35_SO2,HEATER2_output_T_SP,negative,50976,50125,98.33058694287507
+in_range,B35_SO2,air2_SP,positive,154440,154049,99.74682724682725
+in_range,B35_SO2,air2_SP,negative,0,0,
+soft_ood,B35_H2S,HEATER2_output_T_SP,positive,53244,50977,95.74224325745624
+soft_ood,B35_H2S,HEATER2_output_T_SP,negative,34452,33973,98.60965981655637
+soft_ood,B35_H2S,air2_SP,positive,15048,13530,89.91228070175438
+soft_ood,B35_H2S,air2_SP,negative,58500,56390,96.3931623931624
+soft_ood,B35_SO2,HEATER2_output_T_SP,positive,34632,34230,98.83922383922383
+soft_ood,B35_SO2,HEATER2_output_T_SP,negative,31680,30850,97.3800505050505
+soft_ood,B35_SO2,air2_SP,positive,81072,79322,97.84142490625617
+soft_ood,B35_SO2,air2_SP,negative,0,0,

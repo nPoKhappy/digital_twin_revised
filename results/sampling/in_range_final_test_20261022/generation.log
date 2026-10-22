@@ -1,0 +1,5 @@
+Done.
+Generated rows before target trim: 5500
+Perturbation rows: 5000 -> C:\Users\Administrator\Desktop\digital_twin_revised\data\sampling\LHS_air2_t2_in_range_final_test_20261022.csv
+Varied tags: B33.SPo.SPo, B20.SPo.SPo, B34.SPo.SPo, ACIDGAS.T.T, ACIDGAS.P.P
+Check plots: C:\Users\Administrator\Desktop\digital_twin_revised\results\sampling\in_range_final_test_20261022\LHS_Air2_T2_Local_Check_Plots

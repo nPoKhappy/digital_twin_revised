@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "visual_review": {
+    "passed": true,
+    "PNG_files_inspected": [
+      "six_model_raw_rmse_internal_test",
+      "six_model_raw_rmse_external_all_data",
+      "six_model_rmse_internal_validation",
+      "six_model_rmse_external_validation",
+      "six_model_all18_kci"
+    ],
+    "scope": "All five comparison PNGs; legend, case labels, full data bounds and consistent model styling"
+  },
+  "new_test_RMSE_rows_rechecked": 72,
+  "plot_values_unique": true,
+  "model_updates": 0
+}

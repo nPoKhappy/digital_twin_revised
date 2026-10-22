@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "model_count": 5,
+  "cases": [
+    "R5-3",
+    "R5-4",
+    "R5-5",
+    "R5-13",
+    "R5-14"
+  ],
+  "metric_rows": 150,
+  "TS_metrics_recomputed": 1200,
+  "H1_H18_metrics_recomputed": 100,
+  "optimizer_updates": 0,
+  "protected_inputs_unchanged": true,
+  "visual_review": {
+    "passed": true,
+    "PNG_files_inspected": [
+      "five_model_rmse_external_validation.png",
+      "five_model_rmse_internal_validation.png",
+      "five_model_TS_external_validation.png",
+      "five_model_TS_internal_validation.png"
+    ],
+    "scope": "All four comparison figures; legends, axes, case labels and complete plotted ranges"
+  },
+  "plot_data_bounds_checked": true,
+  "report_links_validated": true,
+  "initialization_and_path_length_recovery": "Completed; reused completed predictions and removed redundant long-name evaluation snapshots"
+}

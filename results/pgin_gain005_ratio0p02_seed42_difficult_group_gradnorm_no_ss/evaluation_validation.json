@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "prediction_cases": 25,
+  "TS_metric_checks": 1200,
+  "H1_H18_metric_checks": 100,
+  "Horizon_replay_tolerance": {
+    "rtol": 1e-05,
+    "atol": 1e-09,
+    "reason": "Independent encoder/decoder GPU replay with float32 model arithmetic"
+  },
+  "maximum_metric_absolute_difference": 6.396377662558003e-10,
+  "KCI_probe_rows_checked": 1019088,
+  "KCI_pair_rows_checked": 8,
+  "KCI_unique_complete_probe_keys": true,
+  "protected_files_unchanged": 287,
+  "optimizer_updates": 0,
+  "same_probe_inputs_and_teacher_as_ratio0p005_rows": 1019088,
+  "figure_visual_review_passed": true
+}

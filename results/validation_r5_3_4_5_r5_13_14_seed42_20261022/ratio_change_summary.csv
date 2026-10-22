@@ -1,0 +1,13 @@
+partition,target,evaluation,cases,mean_case_percent_change,cases_improved
+internal_validation,B35_H2S,H1,3,-7.907544591059049,3
+internal_validation,B35_H2S,H18,3,-9.804221929365509,3
+internal_validation,B35_H2S,TS,3,-10.163972458322327,3
+internal_validation,B35_SO2,H1,3,14.298435190893487,0
+internal_validation,B35_SO2,H18,3,24.727066375649382,0
+internal_validation,B35_SO2,TS,3,45.754188643236546,0
+external_validation,B35_H2S,H1,2,-0.04093663211010501,1
+external_validation,B35_H2S,H18,2,-2.293728295748547,1
+external_validation,B35_H2S,TS,2,-10.03203896491236,1
+external_validation,B35_SO2,H1,2,41.671587234031186,1
+external_validation,B35_SO2,H18,2,13.003734118156395,1
+external_validation,B35_SO2,TS,2,10.633512508675196,1

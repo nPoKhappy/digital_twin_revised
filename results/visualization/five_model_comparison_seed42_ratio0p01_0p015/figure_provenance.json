@@ -1,0 +1,21 @@
+{
+  "dynamic_result_directories": {
+    "No-Gain": "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_no_gain_seed42",
+    "Gain": "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42",
+    "Gain + SS=0.01": "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss001_seed42",
+    "Difficult-GradNorm ratio=0.015": "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42_difficult_group_gradnorm_no_ss",
+    "Difficult-GradNorm ratio=0.01": "pgin_gain005_ratio0p01_seed42_difficult_group_gradnorm_no_ss"
+  },
+  "KCI_directories": {
+    "No-Gain": "transformer_layerwise_63var_decoder_input_sp_pgin_no_gain_seed42",
+    "Gain": "transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42",
+    "Gain + SS=0.01": "transformer_layerwise_63var_decoder_input_sp_pgin_gain005_ss001_seed42",
+    "Difficult-GradNorm ratio=0.015": "transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42_difficult_group_gradnorm_no_ss",
+    "Difficult-GradNorm ratio=0.01": "difficult_gradnorm_ratio0p01_no_ss_seed42"
+  },
+  "script": "scripts\\plotting\\plot_five_models_gradnorm_ratios_seed42.py",
+  "script_sha256": "6b1d82f03d41ef11689ce0f0a6f5d30d68d9c89c2f6023e2423df3913f726101",
+  "comparison": "five models; includes both DG ratios; not a two-model-only comparison",
+  "KCI": "all18 strict sign agreement among valid ANN-teacher comparisons",
+  "conditional_KCI": "pooled comparison counts; common teacher magnitude quartiles; no uncertainty intervals plotted"
+}

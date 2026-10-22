@@ -1,0 +1,29 @@
+{
+  "figures": [
+    "seven_model_raw_rmse_internal_test",
+    "seven_model_raw_rmse_external_all_data",
+    "seven_model_rmse_internal_validation",
+    "seven_model_rmse_external_validation",
+    "seven_model_all18_kci"
+  ],
+  "training_seed": 42,
+  "new_model_ratio": 0.02,
+  "RMSE_test_rows": 504,
+  "RMSE_validation_rows": 210,
+  "KCI_pair_rows": 56,
+  "source_evaluation_manifest": "results/pgin_gain005_ratio0p02_seed42_difficult_group_gradnorm_no_ss/evaluation_input_manifest.json",
+  "optimizer_updates": 0,
+  "plot_data_bounds_checked": true,
+  "visual_review": {
+    "passed": true,
+    "PNG_files_inspected": [
+      "seven_model_raw_rmse_internal_test",
+      "seven_model_raw_rmse_external_all_data",
+      "seven_model_rmse_internal_validation",
+      "seven_model_rmse_external_validation",
+      "seven_model_all18_kci"
+    ],
+    "scope": "All five PNGs: legend, case labels, data bounds, markers, footnotes and consistent model styling"
+  },
+  "same_probe_inputs_and_teacher_as_ratio0p005_rows": 1019088
+}

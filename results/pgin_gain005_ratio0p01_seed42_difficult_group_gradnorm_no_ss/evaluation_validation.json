@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "prediction_cases": 22,
+  "TS_metrics_recomputed": 1056,
+  "H1_H18_metrics_recomputed": 88,
+  "KCI_probe_rows_recomputed": 1019088,
+  "KCI_pair_rows_recomputed": 8,
+  "KCI_distribution_rows_recomputed": 2,
+  "held_out_probe_counts": {
+    "in_range": 4385,
+    "soft_ood": 2692
+  },
+  "KCI_teacher_sign_rows": 16,
+  "protected_inputs_unchanged": true,
+  "protected_files": 51,
+  "model_updates": 0,
+  "visual_review": {
+    "passed": true,
+    "plots": [
+      "comparison_time_series/R5-23_SO2.png",
+      "comparison_time_series/R5-26_H2S.png"
+    ],
+    "scope": "Representative visual inspection; all 24 plots separately passed numeric axis bounds checks"
+  },
+  "comparison_TS_plots": 24,
+  "comparison_TS_plot_series_bounds": "all passed",
+  "comparison_plot_RMSE_recomputed": 24,
+  "report_links_validated": true
+}

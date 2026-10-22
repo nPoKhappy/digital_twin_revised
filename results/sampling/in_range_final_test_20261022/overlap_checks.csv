@@ -1,0 +1,16 @@
+source,numeric_five_input_rows,overlap_on_five_inputs_round8
+data/Claus_dynamic/step_change/in_training_distribution/air2_190_t2_155_t2_change_-5.csv,1440,0
+data/sampling/LHS_air2_t2_in_range_perturbation.csv,5000,0
+data/sampling/LHS_air2_t2_soft_ood_perturbation.csv,5000,0
+data/Claus_steady_state/lhs_test_in_range.xlsx,5000,0
+data/Claus_steady_state/lhs_test_soft_ood.xlsx,5000,0
+data/Claus_steady_state/lhs_test_soft_ood_2.xlsx,5000,0
+data/Claus_steady_state/lhs_test_soft_ood_3.xlsx,5000,0
+data/Claus_steady_state/lhs_generated_dynamic_ss_data_10.xlsx,5000,0
+data/Claus_steady_state/lhs_generated_dynamic_ss_data_11.xlsx,5000,0
+data/Claus_steady_state/lhs_generated_dynamic_ss_data_15.xlsx,5000,0
+data/Claus_steady_state/lhs_generated_dynamic_ss_data_16.xlsx,5000,0
+data/Claus_steady_state/lhs_generated_dynamic_ss_data_17.xlsx,5000,0
+data/Claus_steady_state/lhs_generated_dynamic_ss_data_18.xlsx,5000,0
+data/Claus_steady_state/lhs_generated_dynamic_ss_data_19.xlsx,5000,0
+data/Claus_steady_state/lhs_generated_dynamic_ss_data_20.xlsx,5000,0

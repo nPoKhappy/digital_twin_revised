@@ -1,0 +1,28 @@
+{
+  "figures": [
+    "six_model_raw_rmse_internal_test",
+    "six_model_raw_rmse_external_all_data",
+    "six_model_rmse_internal_validation",
+    "six_model_rmse_external_validation",
+    "six_model_all18_kci"
+  ],
+  "training_seed": 42,
+  "new_model_ratio": 0.005,
+  "RMSE_test_rows": 432,
+  "RMSE_validation_rows": 180,
+  "KCI_pair_rows": 48,
+  "source_evaluation_manifest": "results\\pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss\\evaluation_input_manifest.json",
+  "model_updates": 0,
+  "plot_data_bounds_checked": true,
+  "visual_review": {
+    "passed": true,
+    "PNG_files_inspected": [
+      "six_model_raw_rmse_internal_test",
+      "six_model_raw_rmse_external_all_data",
+      "six_model_rmse_internal_validation",
+      "six_model_rmse_external_validation",
+      "six_model_all18_kci"
+    ],
+    "scope": "All five comparison PNGs; legend, case labels, full data bounds and consistent model styling"
+  }
+}

@@ -1,0 +1,7 @@
+experiment,training_type,seed,distribution,probe_points,possible_comparisons,valid_comparisons,coverage_percent,micro_kci_percent,horizon,gain_definition,post_step_start,post_step_end,zero_gain,ratio
+pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss,gain,42,in_range,4385,631440,549648,87.04675028506271,96.09022501673799,all18,pooled_step_comparisons,1,18,1,0.005
+pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss,gain,42,soft_ood,2692,387648,308628,79.61552748885588,94.39875837577925,all18,pooled_step_comparisons,1,18,0,0.005
+pgin_gain005_ratio0p01_seed42_difficult_group_gradnorm_no_ss,gain,42,in_range,4385,631440,549648,87.04675028506271,98.51031933164498,all18,pooled_step_comparisons,1,18,1,0.01
+pgin_gain005_ratio0p01_seed42_difficult_group_gradnorm_no_ss,gain,42,soft_ood,2692,387648,308628,79.61552748885588,96.69407830786578,all18,pooled_step_comparisons,1,18,2,0.01
+transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42_difficult_group_gradnorm_no_ss,gain,42,in_range,4385,631440,549648,87.04675028506271,98.81560562396297,all18,pooled_step_comparisons,1,18,1,0.015
+transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42_difficult_group_gradnorm_no_ss,gain,42,soft_ood,2692,387648,308628,79.61552748885588,96.65746464999935,all18,pooled_step_comparisons,1,18,0,0.015

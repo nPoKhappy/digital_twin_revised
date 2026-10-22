@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "KCI_probe_rows_recomputed": 1019088,
+  "KCI_pair_rows_recomputed": 8,
+  "KCI_distribution_rows_recomputed": 2,
+  "teacher_sign_rows": 16,
+  "held_out_probe_counts": {
+    "in_range": 4385,
+    "soft_ood": 2692
+  },
+  "threshold": 1e-05,
+  "strict_sign_agreement": true,
+  "zero_dynamic_gain_is_incorrect": true,
+  "same_held_out_inputs_as_ratio0p01": true,
+  "coverage_and_teacher_class_counts_matched_across_ratios": true,
+  "protected_inputs_unchanged": true,
+  "model_updates": 0
+}

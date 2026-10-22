@@ -1,0 +1,35 @@
+{
+  "metrics": "results\\validation_r5_3_4_5_r5_13_14_seed42_20261022\\five_model_validation_metrics.csv",
+  "protocol": {
+    "date": "2026-10-22",
+    "internal_validation": [
+      "R5-3",
+      "R5-4",
+      "R5-5"
+    ],
+    "external_validation": [
+      "R5-13",
+      "R5-14"
+    ],
+    "models": {
+      "No-Gain": "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_no_gain_seed42",
+      "Gain": "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42",
+      "Gain + SS=0.01": "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss001_seed42",
+      "Difficult-GradNorm ratio=0.015": "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42_difficult_group_gradnorm_no_ss",
+      "Difficult-GradNorm ratio=0.01": "pgin_gain005_ratio0p01_seed42_difficult_group_gradnorm_no_ss"
+    },
+    "training_seed": 42,
+    "optimizer_updates": 0,
+    "primary_interest": "SO2 TS RMSE, with H2S tradeoffs shown separately; no automatic model replacement",
+    "evaluations": [
+      "H1",
+      "H18",
+      "TS"
+    ],
+    "case_aggregation": "equal-case mean RMSE within each user-defined partition",
+    "preprocessing": "existing 10-row median downsampling then H2S/SO2 log and saved training statistics",
+    "data_roles": "User-designated validation; no claim that previously evaluated R5-13/14 are newly unseen",
+    "reuse": "Reuse existing R5-13/14 predictions; generate R5-3/4/5 predictions in this isolated output directory"
+  },
+  "script_sha256": "e57ed59c3dfe8305f9769a4c77a3b7e03be2c6765454fe8b1390b74d168535eb"
+}

@@ -1,0 +1,78 @@
+{
+  "source_script": "scripts/sampling/generate_lhs_air2_t2_in_range.py",
+  "source_csv": "data/Claus_dynamic/step_change/in_training_distribution/air2_190_t2_155_t2_change_-5.csv",
+  "output_csv": "data/sampling/LHS_air2_t2_in_range_final_test_20261022.csv",
+  "seed_lhs": 3325265741,
+  "seed_target_trim": 1434680491,
+  "n_base": 500,
+  "target_rows": 5000,
+  "generation_changes": "Only source/output paths, isolated plot directory and two random seeds; sampling ranges and perturbation/trim logic unchanged",
+  "protected_sha256": {
+    "scripts/sampling/generate_lhs_air2_t2_in_range.py": "b70b47c7190d1effae3e182426307544162300982d046544962d73ef36933e73",
+    "data/Claus_dynamic/step_change/in_training_distribution/air2_190_t2_155_t2_change_-5.csv": "12ce273ba47e01ba8aa5811df472f3f6b0bf2a0a510ed78a8b1cceecc8085eb2",
+    "data/sampling/LHS_air2_t2_in_range_perturbation.csv": "ecb4a19f522924971c468ce223698ebdb1836474d608a9c261c43200830e51fa",
+    "data/sampling/LHS_air2_t2_soft_ood_perturbation.csv": "a7905a1c968dae11f060366bbb4e4ecbdcb5714d50de55023095406c62b1f465",
+    "data/Claus_steady_state/lhs_test_in_range.xlsx": "2290970d811c82aeaa0ae88c67e663bc31d851d6e069490a062c59326f7784f4",
+    "data/Claus_steady_state/lhs_test_soft_ood.xlsx": "bc8a55ff7bd74dc44ab83d8a5feeb804ca6241946aead6891077a6ee3e43f879",
+    "data/Claus_steady_state/lhs_test_soft_ood_2.xlsx": "6233155a4ab008eb78571edbe3b60ebdc83f48df4f407ad0ff3401dd392b79fd",
+    "data/Claus_steady_state/lhs_test_soft_ood_3.xlsx": "bb63cd8805b51d4282c9d2cad2d8460156a2e5e937ada2ef08bdb6431cafca8f",
+    "data/Claus_steady_state/lhs_generated_dynamic_ss_data_10.xlsx": "38624b86f577754784fb982c94bbdfae828acf2cdca72f8a6423c82f78111ea2",
+    "data/Claus_steady_state/lhs_generated_dynamic_ss_data_11.xlsx": "fca4e5c739d9a4d30c96c6fa021b0ebf518e312a60c66a1579326106013b2f25",
+    "data/Claus_steady_state/lhs_generated_dynamic_ss_data_15.xlsx": "9aa0f1c8a8625e39f6dedb350f0934dbe794f4ce3ce70d7a2a9dee444f6b66ef",
+    "data/Claus_steady_state/lhs_generated_dynamic_ss_data_16.xlsx": "3ae4e0334fd9b8b5f1d009062018569e1491e128401c7a99414a4e71ec9e8d21",
+    "data/Claus_steady_state/lhs_generated_dynamic_ss_data_17.xlsx": "17b1f82f6aa22813d24779c2b2180d031498c05da397915f721b1068b62bff23",
+    "data/Claus_steady_state/lhs_generated_dynamic_ss_data_18.xlsx": "b9e5541b395b7ee15eb0ddd6b1c149e816a7b0fff8fcddf70ef946c919cc839b",
+    "data/Claus_steady_state/lhs_generated_dynamic_ss_data_19.xlsx": "e0ca3392d09fa88c86142556826bccc7e194960627f1181d009309819825c54b",
+    "data/Claus_steady_state/lhs_generated_dynamic_ss_data_20.xlsx": "9c6cd9187dc527d94b3a1e79e184a4168dd631efc9b7d5918eb2a81d15549f9a"
+  },
+  "configured_script_sha256": "ba5fc0f1b7f551986943ae8b98a5f3b5235241596d5b37d5688d225e2c033059",
+  "Aspen_simulation_completed": false,
+  "ready_for_KCI": false,
+  "numpy_version": "2.3.2",
+  "scipy_version": "1.16.1",
+  "pandas_version": "2.3.2",
+  "output_sha256": "c90cf57de057072fe899f162d49025a06f4e39c728aa04947ab257466db4ceb7",
+  "variable_ranges": {
+    "B33.SPo.SPo": [
+      140.0,
+      300.0
+    ],
+    "B20.SPo.SPo": [
+      140.0,
+      240.0
+    ],
+    "B34.SPo.SPo": [
+      120.5,
+      160.5
+    ],
+    "ACIDGAS.T.T": [
+      82.6,
+      84.6
+    ],
+    "ACIDGAS.P.P": [
+      1.66,
+      1.69
+    ]
+  },
+  "perturbation_deltas": {
+    "B33.SPo.SPo": 2.5,
+    "B20.SPo.SPo": 2.5,
+    "B34.SPo.SPo": 0.5,
+    "ACIDGAS.T.T": 0.2,
+    "ACIDGAS.P.P": 0.005
+  },
+  "fixed_values": {
+    "B19.SPo.SPo": 1219.506406,
+    "SEP3_PC.SPo.SPo": 1.200915,
+    "CAT2_PC.SPo.SPo": 1.251615,
+    "FURANCE_PC.SPo.SPo": 1.571315,
+    "SEP2_PC.SPo.SPo": 1.361375,
+    "ACIDGAS.Fcn.H2S.(\"H2S\")": 54.95221027,
+    "SEP1_PC.SPo.SPo": 1.520795,
+    "ACIDGAS.Fcn.H2O.(\"H2O\")": 45.40793324,
+    "BURNER_PC.SPo.SPo": 1.622195,
+    "B18.SPo.SPo": 599.9999588,
+    "ACIDGAS.Fcn.CO2.(\"CO2\")": 40.13637557,
+    "CAT1_PC.SPo.SPo": 1.411445
+  }
+}

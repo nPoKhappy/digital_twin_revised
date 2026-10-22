@@ -1,0 +1,16 @@
+[Info] Device: cuda
+[Info] Loaded steady-state sources for Gain/ANN teacher: 1 file(s) | 4417 usable rows (0 dropped)
+  - data/Claus_steady_state/lhs_test_in_range.xlsx
+[Info] Loaded steady-state sources for Gain/ANN teacher: 1 file(s) | 2692 usable rows (0 dropped)
+  - data/Claus_steady_state/lhs_test_soft_ood_3.xlsx
+[Info] in_range range-label match: 99.28% | inside soft-OOD generation range: 100.00% | inside Gain ANN reference range: 100.00%
+[Info] soft_ood range-label match: 100.00% | inside soft-OOD generation range: 100.00% | inside Gain ANN reference range: 81.09%
+[Info] soft_ood filtering: kept=2692, excluded=0, total=2692 | retain only outside dynamic core AND inside soft-OOD generation range
+[Info] Fixed probes | in_range=4385, soft_ood=2692
+[Done] pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss | in_range | 4385 fixed probe points
+[Done] pgin_gain005_ratio0p005_seed42_difficult_group_gradnorm_no_ss | soft_ood | 2692 fixed probe points
+[Save] Detailed metrics: results/gain_eval_all18/difficult_gradnorm_ratio0p005_no_ss_seed42\gain_evaluation_detail.csv
+[Save] Model/distribution summary: results/gain_eval_all18/difficult_gradnorm_ratio0p005_no_ss_seed42\gain_evaluation_summary.csv
+[Save] Gain vs No-Gain comparison: results/gain_eval_all18/difficult_gradnorm_ratio0p005_no_ss_seed42\gain_vs_no_gain_comparison.csv
+[Save] Probe-level diagnostics: results/gain_eval_all18/difficult_gradnorm_ratio0p005_no_ss_seed42\gain_probe_diagnostics.csv
+[Info] KCI: all18 only; strict same sign; zero gain is incorrect.

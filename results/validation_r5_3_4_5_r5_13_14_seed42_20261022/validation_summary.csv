@@ -1,0 +1,61 @@
+partition,model,target,evaluation,cases,mean_case_RMSE
+internal_validation,No-Gain,B35_H2S,H1,3,0.00046253751761836343
+internal_validation,No-Gain,B35_H2S,H18,3,0.0006492768613860921
+internal_validation,No-Gain,B35_H2S,TS,3,0.0006661442421260474
+internal_validation,No-Gain,B35_SO2,H1,3,0.00016472419616654987
+internal_validation,No-Gain,B35_SO2,H18,3,0.000251326921455205
+internal_validation,No-Gain,B35_SO2,TS,3,0.0002730888165508872
+external_validation,No-Gain,B35_H2S,H1,2,0.0004994485327352883
+external_validation,No-Gain,B35_H2S,H18,2,0.0006970061867979443
+external_validation,No-Gain,B35_H2S,TS,2,0.0007021921684088621
+external_validation,No-Gain,B35_SO2,H1,2,0.000295879090902488
+external_validation,No-Gain,B35_SO2,H18,2,0.0007224447669960472
+external_validation,No-Gain,B35_SO2,TS,2,0.0006122660386819487
+internal_validation,Gain,B35_H2S,H1,3,0.0004630915239220554
+internal_validation,Gain,B35_H2S,H18,3,0.000649324085096502
+internal_validation,Gain,B35_H2S,TS,3,0.0006651863956491471
+internal_validation,Gain,B35_SO2,H1,3,0.00016274087834883082
+internal_validation,Gain,B35_SO2,H18,3,0.0002504110178627946
+internal_validation,Gain,B35_SO2,TS,3,0.00027195222750556197
+external_validation,Gain,B35_H2S,H1,2,0.0004951346796342182
+external_validation,Gain,B35_H2S,H18,2,0.0006857247322032235
+external_validation,Gain,B35_H2S,TS,2,0.0006891355246835756
+external_validation,Gain,B35_SO2,H1,2,0.00027870381803176585
+external_validation,Gain,B35_SO2,H18,2,0.0007001517063906779
+external_validation,Gain,B35_SO2,TS,2,0.0005870119020327155
+internal_validation,Gain + SS=0.01,B35_H2S,H1,3,0.000498921693297219
+internal_validation,Gain + SS=0.01,B35_H2S,H18,3,0.0006989058147610123
+internal_validation,Gain + SS=0.01,B35_H2S,TS,3,0.0007187515119177189
+internal_validation,Gain + SS=0.01,B35_SO2,H1,3,0.00015167111041999067
+internal_validation,Gain + SS=0.01,B35_SO2,H18,3,0.00021195219657039294
+internal_validation,Gain + SS=0.01,B35_SO2,TS,3,0.00021646392339995314
+external_validation,Gain + SS=0.01,B35_H2S,H1,2,0.0004306809855598827
+external_validation,Gain + SS=0.01,B35_H2S,H18,2,0.000633786953104224
+external_validation,Gain + SS=0.01,B35_H2S,TS,2,0.0007200792734459917
+external_validation,Gain + SS=0.01,B35_SO2,H1,2,0.0005148710629304851
+external_validation,Gain + SS=0.01,B35_SO2,H18,2,0.0009337362305715006
+external_validation,Gain + SS=0.01,B35_SO2,TS,2,0.0009907649994383427
+internal_validation,Difficult-GradNorm ratio=0.015,B35_H2S,H1,3,0.000511280324924649
+internal_validation,Difficult-GradNorm ratio=0.015,B35_H2S,H18,3,0.0007218434063471684
+internal_validation,Difficult-GradNorm ratio=0.015,B35_H2S,TS,3,0.0007087528091319764
+internal_validation,Difficult-GradNorm ratio=0.015,B35_SO2,H1,3,0.00013971804120330804
+internal_validation,Difficult-GradNorm ratio=0.015,B35_SO2,H18,3,0.00020817449751022135
+internal_validation,Difficult-GradNorm ratio=0.015,B35_SO2,TS,3,0.00019904957224515496
+external_validation,Difficult-GradNorm ratio=0.015,B35_H2S,H1,2,0.00038017015541924484
+external_validation,Difficult-GradNorm ratio=0.015,B35_H2S,H18,2,0.00044185600833514043
+external_validation,Difficult-GradNorm ratio=0.015,B35_H2S,TS,2,0.0004563008022952983
+external_validation,Difficult-GradNorm ratio=0.015,B35_SO2,H1,2,0.00015805160343826185
+external_validation,Difficult-GradNorm ratio=0.015,B35_SO2,H18,2,0.0003463639838032627
+external_validation,Difficult-GradNorm ratio=0.015,B35_SO2,TS,2,0.0002540639543850361
+internal_validation,Difficult-GradNorm ratio=0.01,B35_H2S,H1,3,0.00046945072720697053
+internal_validation,Difficult-GradNorm ratio=0.01,B35_H2S,H18,3,0.0006435819636597479
+internal_validation,Difficult-GradNorm ratio=0.01,B35_H2S,TS,3,0.0006372664905312573
+internal_validation,Difficult-GradNorm ratio=0.01,B35_SO2,H1,3,0.0001676530709007911
+internal_validation,Difficult-GradNorm ratio=0.01,B35_SO2,H18,3,0.0002633690271642266
+internal_validation,Difficult-GradNorm ratio=0.01,B35_SO2,TS,3,0.00028263413765351703
+external_validation,Difficult-GradNorm ratio=0.01,B35_H2S,H1,2,0.0004254220574551182
+external_validation,Difficult-GradNorm ratio=0.01,B35_H2S,H18,2,0.0004970023721499678
+external_validation,Difficult-GradNorm ratio=0.01,B35_H2S,TS,2,0.0004889039971922394
+external_validation,Difficult-GradNorm ratio=0.01,B35_SO2,H1,2,0.00020178568771033535
+external_validation,Difficult-GradNorm ratio=0.01,B35_SO2,H18,2,0.00028122728712614436
+external_validation,Difficult-GradNorm ratio=0.01,B35_SO2,TS,2,0.00022759674847388055
