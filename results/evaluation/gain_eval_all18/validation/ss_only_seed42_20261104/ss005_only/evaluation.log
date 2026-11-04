@@ -1,0 +1,16 @@
+[Info] Device: cuda
+[Info] Loaded steady-state sources for Gain/ANN teacher: 1 file(s) | 4433 usable rows (0 dropped)
+  - data\Claus_steady_state\lhs_valid_in_range.xlsx
+[Info] Loaded steady-state sources for Gain/ANN teacher: 1 file(s) | 2585 usable rows (0 dropped)
+  - data\Claus_steady_state\lhs_valid_soft_ood.xlsx
+[Info] in_range range-label match: 99.35% | inside soft-OOD generation range: 100.00% | inside Gain ANN reference range: 100.00%
+[Info] soft_ood range-label match: 100.00% | inside soft-OOD generation range: 100.00% | inside Gain ANN reference range: 84.45%
+[Info] soft_ood filtering: kept=2585, excluded=0, total=2585 | retain only outside dynamic core AND inside soft-OOD generation range
+[Info] Fixed probes | in_range=4404, soft_ood=2585
+[Done] transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_ss005_only_seed42 | in_range | 4404 fixed probe points
+[Done] transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_ss005_only_seed42 | soft_ood | 2585 fixed probe points
+[Save] Detailed metrics: results\gain_eval_all18\ss_only_validation_seed42_20261104\ss005_only\gain_evaluation_detail.csv
+[Save] Model/distribution summary: results\gain_eval_all18\ss_only_validation_seed42_20261104\ss005_only\gain_evaluation_summary.csv
+[Save] Gain vs No-Gain comparison: results\gain_eval_all18\ss_only_validation_seed42_20261104\ss005_only\gain_vs_no_gain_comparison.csv
+[Save] Probe-level diagnostics: results\gain_eval_all18\ss_only_validation_seed42_20261104\ss005_only\gain_probe_diagnostics.csv
+[Info] KCI: all18 only; strict same sign; zero gain is incorrect.

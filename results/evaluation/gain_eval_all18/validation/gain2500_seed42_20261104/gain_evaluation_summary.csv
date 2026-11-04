@@ -1,0 +1,3 @@
+experiment,training_type,seed,distribution,probe_points,possible_comparisons,valid_comparisons,coverage_percent,micro_kci_percent,horizon,gain_definition,post_step_start,post_step_end,zero_gain
+transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2500_seed42,gain,42,in_range,4404,634176,554472,87.43188010899182,98.91554487873148,all18,pooled_step_comparisons,1,18,1
+transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2500_seed42,gain,42,soft_ood,2585,372240,294084,79.00386847195358,99.23593259068838,all18,pooled_step_comparisons,1,18,0

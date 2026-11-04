@@ -14,19 +14,19 @@ import seaborn as sns
 
 RESULT_FILES = {
     "No-Gain": (
-        "transformer_layerwise_63var_decoder_input_sp_pgin_no_gain_seed42/gain_evaluation_detail.csv",
+        "test/no_gain_seed42/gain_evaluation_detail.csv",
         "no_gain",
     ),
     "Gain": (
-        "transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42/gain_evaluation_detail.csv",
+        "test/gain0p05_seed42/gain_evaluation_detail.csv",
         "gain",
     ),
     "Gain + SS=0.01": (
-        "transformer_layerwise_63var_decoder_input_sp_pgin_gain005_ss001_seed42/gain_evaluation_detail.csv",
+        "test/gain_ss/ss0p01_seed42/gain_evaluation_detail.csv",
         "gain",
     ),
     "Difficult-GradNorm": (
-        "transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42_difficult_group_gradnorm_no_ss/gain_evaluation_detail.csv",
+        "test/difficult_gradnorm/rho0p015_seed42/gain_evaluation_detail.csv",
         "gain",
     ),
 }
@@ -72,7 +72,7 @@ def configure_style() -> None:
 
 def load_model_kci(repo_root: Path, model: str) -> pd.DataFrame:
     relative_path, training_type = RESULT_FILES[model]
-    path = repo_root / "results" / "gain_eval_all18" / relative_path
+    path = repo_root / "results" / "evaluation" / "gain_eval_all18" / relative_path
     data = pd.read_csv(path)
     if "horizon" not in data or not data["horizon"].eq("all18").all():
         raise ValueError(f"{path} must contain only all18 KCI results.")

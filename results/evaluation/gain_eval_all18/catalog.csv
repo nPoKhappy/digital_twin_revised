@@ -1,0 +1,10 @@
+﻿role,models,path,original_folder,in_range_probe_points,soft_ood_probe_points,original_files,original_MB
+validation,"Gain=0.05,2.5,25,250",validation/gain_weights_seed42_20261104,gain_weight_validation_seed42_20261104,4404,2585,33,1232.5
+validation,Gain=2500,validation/gain2500_seed42_20261104,gain2500_validation_seed42_20261104,4404,2585,7,309.37
+validation,"SS-only=0.05,2.5,25,250,2500",validation/ss_only_seed42_20261104,ss_only_validation_seed42_20261104,4404,2585,39,1554.49
+test,No-Gain,test/no_gain_seed42,transformer_layerwise_63var_decoder_input_sp_pgin_no_gain_seed42,4385,2692,4,315.23
+test,Gain=0.05,test/gain0p05_seed42,transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42,4385,2692,4,312.33
+test,Difficult-GradNorm rho=0.005,test/difficult_gradnorm/rho0p005_seed42,difficult_gradnorm_ratio0p005_no_ss_seed42,4385,2692,11,296.69
+test,Difficult-GradNorm rho=0.01,test/difficult_gradnorm/rho0p01_seed42,difficult_gradnorm_ratio0p01_no_ss_seed42,4385,2692,9,295.74
+test,Difficult-GradNorm rho=0.015,test/difficult_gradnorm/rho0p015_seed42,transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42_difficult_group_gradnorm_no_ss,4385,2692,4,342.35
+test,Difficult-GradNorm rho=0.02,test/difficult_gradnorm/rho0p02_seed42,difficult_gradnorm_ratio0p02_no_ss_seed42,4385,2692,7,295.7

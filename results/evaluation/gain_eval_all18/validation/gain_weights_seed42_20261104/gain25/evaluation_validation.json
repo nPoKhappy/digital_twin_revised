@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "diagnostic_rows_recounted": 1006416,
+  "detail_rows": 8,
+  "summary_rows": 2,
+  "model": "gain25",
+  "gain_weight": 25
+}

@@ -24,6 +24,7 @@ from scripts.training.train_pgin_stepwise_gain import (
     dataframe_to_z_tensor,
     load_steady_state_source,
 )
+from src.experiment_paths import experiment_results_dir
 from src import utils as data_utils
 from src.models import get_model
 from src.variable_selection import variable_selection
@@ -102,7 +103,7 @@ def parse_args():
     )
     parser.add_argument(
         "--output-dir",
-        default="results/gain_in_soft_ood_distribution_evaluation",
+        default="results/evaluation/gain_in_soft_ood_distribution_evaluation",
     )
     return parser.parse_args()
 
@@ -150,8 +151,8 @@ def model_contract(config):
     return de_mv, y_sv, en_mv_and_sv, target_cols, mv_cols, keep_cols
 
 
-def load_model_stats(exp_name):
-    result_dir = os.path.join("results", exp_name)
+def load_model_stats(exp_name, config=None):
+    result_dir = str(experiment_results_dir(config or exp_name))
     mean_path = os.path.join(result_dir, "zscore_mean.csv")
     std_path = os.path.join(result_dir, "zscore_std.csv")
     if not os.path.exists(mean_path) or not os.path.exists(std_path):
@@ -169,10 +170,10 @@ def load_model_stats(exp_name):
 
 def assert_same_scaling(configs, required_cols):
     reference_name = configs[0][1]["exp_name"]
-    reference_mean, reference_std = load_model_stats(reference_name)
+    reference_mean, reference_std = load_model_stats(reference_name, configs[0][1])
     for _, config in configs[1:]:
         exp_name = config["exp_name"]
-        mean, std = load_model_stats(exp_name)
+        mean, std = load_model_stats(exp_name, config)
         if not np.allclose(
             reference_mean[required_cols].values,
             mean[required_cols].values,
@@ -266,8 +267,8 @@ def validate_distribution_file(data, distribution):
 
 
 def load_teacher(device):
-    mean_path = "results/Tabular_MLP_New/zscore_mean.csv"
-    std_path = "results/Tabular_MLP_New/zscore_std.csv"
+    mean_path = "results/steady_state/Tabular_MLP_New/zscore_mean.csv"
+    std_path = "results/steady_state/Tabular_MLP_New/zscore_std.csv"
     model_path = "saved_models/Tabular_MLP_5in_2out_QV.pth"
     for path in (mean_path, std_path, model_path):
         if not os.path.exists(path):
@@ -738,7 +739,7 @@ def evaluate_model_on_distribution(
 ):
     de_mv, y_sv, en_cols, target_cols, mv_cols, _ = contract
     exp_name = config["exp_name"]
-    mean, std = load_model_stats(exp_name)
+    mean, std = load_model_stats(exp_name, config)
     missing_stats = [
         col
         for col in set(en_cols + de_mv + y_sv)
