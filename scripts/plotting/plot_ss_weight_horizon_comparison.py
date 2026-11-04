@@ -12,6 +12,11 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.experiment_paths import experiment_results_dir
+
 
 CASES = ["R5", "R5-1", "R5-2", "R5-6"]
 EXTERNAL_CASES = ["R5-11", "R5-12"]
@@ -66,7 +71,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("results/ss_weight_horizon_comparison_seed42"),
+        default=Path("results/visualization/ss_weight_horizon_comparison_seed42"),
     )
     return parser.parse_args()
 
@@ -77,9 +82,7 @@ def load_metrics(repo_root: Path) -> pd.DataFrame:
 
     for model, result_dir in RESULT_DIRS.items():
         csv_path = (
-            repo_root
-            / "results"
-            / result_dir
+            experiment_results_dir(result_dir)
             / "grouped_horizon_parity"
             / "grouped_parity_metrics.csv"
         )
@@ -107,9 +110,7 @@ def load_rolling_metrics(repo_root: Path) -> pd.DataFrame:
 
     for model, result_dir in RESULT_DIRS.items():
         csv_path = (
-            repo_root
-            / "results"
-            / result_dir
+            experiment_results_dir(result_dir)
             / "grouped_time_series"
             / "grouped_time_series_metrics.csv"
         )
@@ -132,7 +133,7 @@ def load_rolling_metrics(repo_root: Path) -> pd.DataFrame:
 def load_external_raw_metrics(repo_root: Path) -> pd.DataFrame:
     records = []
     for model in EXTERNAL_MODELS:
-        result_root = repo_root / "results" / RESULT_DIRS[model]
+        result_root = experiment_results_dir(RESULT_DIRS[model])
         horizon = pd.read_csv(
             result_root / "grouped_horizon_parity" / "grouped_parity_metrics.csv"
         )

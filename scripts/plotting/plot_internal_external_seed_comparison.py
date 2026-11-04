@@ -15,6 +15,11 @@ from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.experiment_paths import experiment_results_dir
+
 
 SEEDS = [42, 43, 44]
 INTERNAL = ['R5', 'R5-1', 'R5-2', 'R5-6']
@@ -48,7 +53,7 @@ def main() -> None:
             experiment = f'transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed{seed}{suffix}'
             for case in INTERNAL + EXTERNAL:
                 folder = case + ('_test_split' if case in INTERNAL else '')
-                path = root / 'results' / experiment / folder / 'evaluation_metrics.csv'
+                path = experiment_results_dir(experiment) / folder / 'evaluation_metrics.csv'
                 protected[path.relative_to(root).as_posix()] = sha(path)
                 original = pd.read_csv(path).set_index('Variable')
                 for target in TARGETS:

@@ -12,6 +12,11 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.experiment_paths import experiment_results_dir
+
 
 INTERNAL_CASES = ["R5", "R5-1", "R5-2", "R5-6"]
 EXTERNAL_CASES = [
@@ -66,7 +71,7 @@ def selected_split(case: str) -> str:
 
 
 def load_model_metrics(repo_root: Path, model: str, result_dir: str) -> pd.DataFrame:
-    root = repo_root / "results" / result_dir
+    root = experiment_results_dir(result_dir)
     horizon = pd.read_csv(
         root / "grouped_horizon_parity" / "grouped_parity_metrics.csv"
     )

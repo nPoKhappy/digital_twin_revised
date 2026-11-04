@@ -14,6 +14,11 @@ import pandas as pd
 
 from plot_absolute_rmse_across_seeds import ROOT, SEEDS, INTERNAL, EXTERNAL, TARGETS, STYLES, sha, table
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.experiment_paths import experiment_results_dir
+
 OUT = ROOT / 'results/visualization/h1_h18_rmse_seed42_43_44'
 
 
@@ -74,7 +79,7 @@ def main():
             suffix = '_difficult_group_gradnorm_no_ss' if model == 'Difficult-GradNorm' else ''
             experiment = f'transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed{seed}{suffix}'
             for case in INTERNAL + EXTERNAL:
-                directory = ROOT / 'results' / experiment / (case + ('_test_split' if case in INTERNAL else ''))
+                directory = experiment_results_dir(experiment) / (case + ('_test_split' if case in INTERNAL else ''))
                 paths = [directory / 'horizon_metrics_t1_to_t18.csv', directory / 'evaluation_metrics.csv']
                 for path in paths:
                     protected[path.relative_to(ROOT).as_posix()] = sha(path)

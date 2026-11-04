@@ -14,6 +14,11 @@ from matplotlib.ticker import MaxNLocator
 import numpy as np
 import pandas as pd
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.experiment_paths import experiment_results_dir
+
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'results/visualization/absolute_rmse_seed42_43_44'
@@ -52,7 +57,7 @@ def main():
             experiment = f'transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed{seed}{suffix}'
             for case in INTERNAL + EXTERNAL:
                 case_dir = case + ('_test_split' if case in INTERNAL else '')
-                source = ROOT / 'results' / experiment / case_dir / 'evaluation_metrics.csv'
+                source = experiment_results_dir(experiment) / case_dir / 'evaluation_metrics.csv'
                 protected[source.relative_to(ROOT).as_posix()] = sha(source)
                 original = pd.read_csv(source).set_index('Variable')
                 for target in TARGETS:
