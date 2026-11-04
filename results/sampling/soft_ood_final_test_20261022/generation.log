@@ -1,0 +1,6 @@
+Done.
+Soft-OOD rows: 5000 -> C:\Users\Administrator\Desktop\digital_twin_revised\data\sampling\LHS_air2_t2_soft_ood_final_test_20261022.csv
+Single-variable OOD rows: 4000
+Joint air2 x T2 OOD rows: 1000
+Base operating points: 500
+Check plots: C:\Users\Administrator\Desktop\digital_twin_revised\results\sampling\soft_ood_final_test_20261022\LHS_Air2_T2_Soft_OOD_Check_Plots

@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "rows": 5000,
+  "base_rows": 500,
+  "perturb_rows": 4500,
+  "single_variable_ood_rows": 4000,
+  "joint_ood_rows": 1000,
+  "all_within_five_input_envelope": true,
+  "all_outside_core": true,
+  "region_LHS_seed_reproduced": true,
+  "region_LHS_strata_verified": true,
+  "unique_case_ids": true,
+  "unique_five_input_conditions": true,
+  "perturbations_change_one_variable": true,
+  "perturbation_deltas_verified": true,
+  "fixed_values_match_source_medians": true,
+  "existing_data_sources_checked": 17,
+  "overlap_on_five_inputs_round8": 0,
+  "protected_sources_unchanged": true,
+  "protected_source_count": 19,
+  "Aspen_simulation_completed": false,
+  "ready_for_KCI": false,
+  "plot_visual_review": {
+    "passed": true,
+    "inspected": [
+      "Check_B33_SPo_SPo.png",
+      "Check_B20_SPo_SPo.png"
+    ],
+    "scope": "Air2 and T2 base-point histograms"
+  }
+}
