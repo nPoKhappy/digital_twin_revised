@@ -39,6 +39,7 @@ import matplotlib.pyplot as plt
 # 將專案根目錄加進 import 搜尋路徑，讓直接執行 scripts/training/ 下的腳本也能匯入 src。
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
+from src.experiment_paths import experiment_results_dir
 from src import utils as data_utils
 from src.variable_selection import variable_selection
 from src.models import get_model
@@ -345,7 +346,7 @@ def main(
     gradient_diagnostics_only=False,
     diagnostic_checkpoint=None,
     diagnostic_batches=5,
-    diagnostic_output_dir="results/gain_gradient_conflict_diagnostics_ss001",
+    diagnostic_output_dir="results/analysis/gain_gradient_conflict_diagnostics_ss001",
     experiment_suffix="",
     h2s_group_gradnorm=False,
     h2s_group_target_ratio=0.02,
@@ -495,15 +496,15 @@ def main(
     # 一般訓練會存下 Transformer 的 mean/std 供推論使用；診斷模式跳過這份輸出。
     # Save z-score statistics during training, but keep diagnostics read-only.
     if not gradient_diagnostics_only:
-        zscore_dir = f'./results/{exp}/'
+        zscore_dir = str(experiment_results_dir(config))
         os.makedirs(zscore_dir, exist_ok=True)
         mean_all.to_csv(os.path.join(zscore_dir, 'zscore_mean.csv'))
         std_all.to_csv(os.path.join(zscore_dir, 'zscore_std.csv'))
         print(f"  [Save] Z-score stats saved to {zscore_dir}")
 
     # teacher 使用自己的訓練統計值，不能直接套用 Transformer 的 mean_all/std_all。
-    tab_mean_path = './results/Tabular_MLP_New/zscore_mean.csv'
-    tab_std_path = './results/Tabular_MLP_New/zscore_std.csv'
+    tab_mean_path = './results/steady_state/Tabular_MLP_New/zscore_mean.csv'
+    tab_std_path = './results/steady_state/Tabular_MLP_New/zscore_std.csv'
     if not os.path.exists(tab_mean_path) or not os.path.exists(tab_std_path):
         raise FileNotFoundError(
             "Tabular MLP z-score stats are required for ANN steady-state targets: "
@@ -1099,7 +1100,7 @@ def main(
                 # 圖中的 ANN 水平線是對擾動後操作點重新推論的穩態值，不是 Gain loss 的數值真值。
                 if pgin_runtime_plot and step == 0:
                     # Runtime plot exposes baseline/plus/minus dynamic traces against ANN targets.
-                    runtime_dir = './results/PGIN_Visualizations'
+                    runtime_dir = str(experiment_results_dir(config) / 'runtime_visualizations')
                     os.makedirs(runtime_dir, exist_ok=True)
 
                     # 繪圖時才把 z 真值反標準化、把 log 品質 exp 回濃度，方便用原始物理量閱讀。
@@ -1608,7 +1609,7 @@ def main(
             break
 
     # 訓練結束後輸出本次實際執行的 history；最佳模型已在上方驗證階段儲存。
-    out_dir = f'./results/{exp}'
+    out_dir = str(experiment_results_dir(config))
     os.makedirs(out_dir, exist_ok=True)
 
     # Export compact training diagnostics for loss, KCI, and final pair-level gain signs.
@@ -1749,7 +1750,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--diagnostic-output-dir',
         type=str,
-        default='results/gain_gradient_conflict_diagnostics_ss001',
+        default='results/analysis/gain_gradient_conflict_diagnostics_ss001',
     )
     # parse_args 取得 Namespace；先檢查診斷批數，再決定本次實驗名稱後綴。
     args = parser.parse_args()

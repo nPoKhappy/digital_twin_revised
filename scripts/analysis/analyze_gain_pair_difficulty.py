@@ -32,9 +32,9 @@ PLOT_PAIR_LABELS = {
     "T2 → SO₂": r"T2 $\rightarrow$ SO$_2$",
 }
 MODEL_DIRS = {
-    "No-Gain": "transformer_layerwise_63var_decoder_input_sp_pgin_no_gain_seed42",
-    "Gain": "transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42",
-    "Gain + SS=0.01": "transformer_layerwise_63var_decoder_input_sp_pgin_gain005_ss001_seed42",
+    "No-Gain": "test/no_gain_seed42",
+    "Gain": "test/gain0p05_seed42",
+    "Gain + SS=0.01": "test/gain_ss/ss0p01_seed42",
     "Difficult-GradNorm": (
         "transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42_"
         "difficult_group_gradnorm_no_ss"
@@ -60,10 +60,10 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Analyze teacher-Gain landscape and conditional all18 KCI."
     )
-    parser.add_argument("--input-root", default="results/gain_eval_all18")
+    parser.add_argument("--input-root", default="results/evaluation/gain_eval_all18")
     parser.add_argument(
         "--teacher-scale-file",
-        default="results/Tabular_MLP_New/zscore_std.csv",
+        default="results/steady_state/Tabular_MLP_New/zscore_std.csv",
     )
     parser.add_argument(
         "--output-dir",

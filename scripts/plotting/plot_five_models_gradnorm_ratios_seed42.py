@@ -19,6 +19,11 @@ from scripts.plotting import plot_gain_vs_no_gain_comparison as rmse_tools
 from scripts.plotting import plot_kci_pair_comparison as kci_tools
 from scripts.analysis import analyze_gain_pair_difficulty as difficulty
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.experiment_paths import experiment_results_dir
+
 OUTPUT = ROOT / 'results/visualization/five_model_comparison_seed42_ratio0p01_0p015'
 OLD_DG = 'Difficult-GradNorm ratio=0.015'
 NEW_DG = 'Difficult-GradNorm ratio=0.01'
@@ -28,9 +33,9 @@ MODELS = {
     NEW_DG: 'pgin_gain005_ratio0p01_seed42_difficult_group_gradnorm_no_ss',
 }
 KCI_DIRS = {
-    **{k: v[0].split('/')[0] for k, v in kci_tools.RESULT_FILES.items() if k != 'Difficult-GradNorm'},
-    OLD_DG: kci_tools.RESULT_FILES['Difficult-GradNorm'][0].split('/')[0],
-    NEW_DG: 'difficult_gradnorm_ratio0p01_no_ss_seed42',
+    **{k: str(Path(v[0]).parent) for k, v in kci_tools.RESULT_FILES.items() if k != 'Difficult-GradNorm'},
+    OLD_DG: str(Path(kci_tools.RESULT_FILES['Difficult-GradNorm'][0]).parent),
+    NEW_DG: 'test/difficult_gradnorm/rho0p01_seed42',
 }
 STYLES = {
     **{k: v for k, v in rmse_tools.MODEL_STYLES.items() if k != 'Difficult-GradNorm'},
@@ -169,7 +174,7 @@ def main():
     frames = []
     case_checks = 0
     for model, directory in MODELS.items():
-        base = ROOT / 'results' / directory
+        base = experiment_results_dir(directory)
         for f in ['grouped_horizon_parity/grouped_parity_metrics.csv', 'grouped_time_series/grouped_time_series_metrics.csv']: protect(base / f)
         frame = rmse_tools.load_model_metrics(ROOT, model, directory)
         assert len(frame) == 72
@@ -196,10 +201,10 @@ def main():
     plot_rmse(values, rmse_tools.EXTERNAL_CASES, 'external all-data', 'five_model_raw_rmse_external_all_data')
     print('[Done] 360 RMSE/R2 rows verified and plotted.', flush=True)
 
-    scale_path = ROOT / 'results/Tabular_MLP_New/zscore_std.csv'
+    scale_path = ROOT / 'results/steady_state/Tabular_MLP_New/zscore_std.csv'
     protect(scale_path)
     scales = pd.read_csv(scale_path, index_col=0).squeeze('columns')
-    teacher_path = ROOT / 'results/gain_eval_all18' / KCI_DIRS['No-Gain'] / 'gain_probe_diagnostics.csv'
+    teacher_path = ROOT / 'results/evaluation/gain_eval_all18' / KCI_DIRS['No-Gain'] / 'gain_probe_diagnostics.csv'
     teacher = difficulty.load_teacher_landscape(teacher_path, scales, 200000)
     edges = difficulty.build_quartile_edges(teacher)
     summary = difficulty.summarize_teacher(teacher)
@@ -208,7 +213,7 @@ def main():
     kciframes, magnitudes, signs = [], [], []
     for model, directory in KCI_DIRS.items():
         print('[Read] Full probe diagnostics:', model, flush=True)
-        base = ROOT / 'results/gain_eval_all18' / directory
+        base = ROOT / 'results/evaluation/gain_eval_all18' / directory
         protect(base / 'gain_probe_diagnostics.csv'); protect(base / 'gain_evaluation_detail.csv')
         official = pd.read_csv(base / 'gain_evaluation_detail.csv')
         assert len(official) == 8 and official.horizon.eq('all18').all() and official.seed.eq(42).all()
@@ -217,7 +222,7 @@ def main():
         official.insert(0, 'model', model)
         kciframes.append(official)
         probe = difficulty.load_probe_accuracy(base / 'gain_probe_diagnostics.csv', scales, edges, 200000)
-        difficulty.validate_against_official(ROOT / 'results/gain_eval_all18', model, directory, probe)
+        difficulty.validate_against_official(ROOT / 'results/evaluation/gain_eval_all18', model, directory, probe)
         for column, store in [('magnitude_bin', magnitudes), ('teacher_sign_label', signs)]:
             grouped = conditional_summary(probe, model, column)
             for r in official.itertuples():

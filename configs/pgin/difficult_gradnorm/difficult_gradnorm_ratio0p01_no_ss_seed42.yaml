@@ -128,3 +128,5 @@ training:
   loss_weighting:
     weights: [1.0, 1.0, 1.0, 1.0]
 
+output:
+  results_dir: "./results/pgin/difficult_gradnorm"

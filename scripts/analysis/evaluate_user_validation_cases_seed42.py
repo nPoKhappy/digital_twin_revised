@@ -18,6 +18,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+from src.experiment_paths import experiment_results_dir
 from src import utils
 from src.models import get_model
 from src.variable_selection import variable_selection
@@ -25,7 +26,7 @@ from src.dataset import MultiStepS2SDataset
 from scripts.prediction import predict as native
 from scripts.plotting.plot_five_models_gradnorm_ratios_seed42 import MODELS, STYLES, OLD_DG, NEW_DG
 
-OUTPUT = ROOT / 'results/validation_r5_3_4_5_r5_13_14_seed42_20261022'
+OUTPUT = ROOT / 'results/analysis/validation_r5_3_4_5_r5_13_14_seed42_20261022'
 FIGURES = ROOT / 'results/visualization/validation_r5_3_4_5_r5_13_14_seed42'
 INTERNAL = ['R5-3', 'R5-4', 'R5-5']
 EXTERNAL = ['R5-13', 'R5-14']
@@ -141,7 +142,7 @@ def main():
         config['data']['inference_files'] = [{'name': case, 'filename': source_paths[case].name, 'inference_strategy': 'sliding_window'} for case in INTERNAL]
         W = config['window']['train_window_mins'] // config['window']['sampling_interval_min']
         model_path = ROOT / 'saved_models' / f'{exp}.pth'
-        mu_path, sigma_path = [ROOT / 'results' / exp / name for name in ['zscore_mean.csv', 'zscore_std.csv']]
+        mu_path, sigma_path = [experiment_results_dir(exp) / name for name in ['zscore_mean.csv', 'zscore_std.csv']]
         for path in [model_path, mu_path, sigma_path]: protect(path)
         mu = pd.read_csv(mu_path, index_col=0).squeeze('columns')
         sigma = pd.read_csv(sigma_path, index_col=0).squeeze('columns')
@@ -172,7 +173,7 @@ def main():
                     with (OUTPUT / 'prediction_evaluation.log').open('a', encoding='utf-8') as log, contextlib.redirect_stdout(log), contextlib.redirect_stderr(log):
                         native.run_prediction(config, {'name': case, 'filename': source_paths[case].name, 'inference_strategy': 'sliding_window'}, model, device, mu, sigma, en, de, ys, W)
             else:
-                path = ROOT / 'results' / exp / case
+                path = experiment_results_dir(exp) / case
                 for filename in ['prediction_results.csv', 'evaluation_metrics.csv', 'horizon_metrics_t1_to_t18.csv']: protect(path / filename)
             pred = pd.read_csv(path / 'prediction_results.csv', index_col=0, float_precision='round_trip')
             ts_metrics = pd.read_csv(path / 'evaluation_metrics.csv', float_precision='round_trip').set_index('Variable')

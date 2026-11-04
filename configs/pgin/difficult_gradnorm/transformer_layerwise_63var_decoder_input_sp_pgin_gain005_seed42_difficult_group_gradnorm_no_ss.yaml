@@ -1,4 +1,4 @@
-﻿exp_name: "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42_difficult_group_gradnorm_no_ss"
+exp_name: "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42_difficult_group_gradnorm_no_ss"
 
 
 data:
@@ -121,3 +121,5 @@ training:
   loss_weighting:
     weights: [1.0, 1.0, 1.0, 1.0]
 
+output:
+  results_dir: "./results/pgin/difficult_gradnorm"
