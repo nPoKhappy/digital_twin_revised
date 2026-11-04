@@ -121,3 +121,6 @@ training:
   loss_function: 'mse'
   loss_weighting:
     weights: [1.0, 1.0, 1.0, 1.0]
+
+output:
+  results_dir: "./results/pgin/gain"

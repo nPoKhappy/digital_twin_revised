@@ -1,0 +1,237 @@
+{
+  "date": "2026-11-03T20:28:19",
+  "config": "configs\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_pgin_gain2p5_seed42.yaml",
+  "experiment": "transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42",
+  "gain_weight": 2.5,
+  "ss_weight": 0,
+  "seed": 42,
+  "optimizer_updates": 0,
+  "rerun": true,
+  "backup": false,
+  "dataset_count": 22,
+  "entrypoint": "python -m scripts.prediction.predict --config configs\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_pgin_gain2p5_seed42.yaml",
+  "inference_files": [
+    {
+      "name": "R5_train_split",
+      "filename": "Test_dataform_change_air2_R=5_train_split.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-1_train_split",
+      "filename": "Test_dataform_change_air2_R=5-1_train_split.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-2_train_split",
+      "filename": "Test_dataform_change_air2_R=5-2_train_split.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-6_train_split",
+      "filename": "Test_dataform_change_air2_R=5-6_train_split.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5_test_split",
+      "filename": "Test_dataform_change_air2_R=5_test_split.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-1_test_split",
+      "filename": "Test_dataform_change_air2_R=5-1_test_split.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-2_test_split",
+      "filename": "Test_dataform_change_air2_R=5-2_test_split.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-6_test_split",
+      "filename": "Test_dataform_change_air2_R=5-6_test_split.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5_valid_split",
+      "filename": "Test_dataform_change_air2_R=5_valid_split.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-1_valid_split",
+      "filename": "Test_dataform_change_air2_R=5-1_valid_split.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-2_valid_split",
+      "filename": "Test_dataform_change_air2_R=5-2_valid_split.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-6_valid_split",
+      "filename": "Test_dataform_change_air2_R=5-6_valid_split.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-13",
+      "filename": "Test_dataform_change_air2_R=5-13.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-14",
+      "filename": "Test_dataform_change_air2_R=5-14.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-19",
+      "filename": "Test_dataform_change_air2_R=5-19.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-20",
+      "filename": "Test_dataform_change_air2_R=5-20.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-21",
+      "filename": "Test_dataform_change_air2_R=5-21.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-22",
+      "filename": "Test_dataform_change_air2_R=5-22.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-23",
+      "filename": "Test_dataform_change_air2_R=5-23.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-24",
+      "filename": "Test_dataform_change_air2_R=5-24.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-25",
+      "filename": "Test_dataform_change_air2_R=5-25.csv",
+      "inference_strategy": "sliding_window"
+    },
+    {
+      "name": "R5-26",
+      "filename": "Test_dataform_change_air2_R=5-26.csv",
+      "inference_strategy": "sliding_window"
+    }
+  ],
+  "protected_sha256": {
+    "configs\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_pgin_gain2p5_seed42.yaml": "60f55085aa685c3fc095168a1c07e24d49d0a668758646b6297bd86bf404ac43",
+    "saved_models\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42.pth": "c32bb73ffda731e61487bf428484bbcc4d29b41d766a193a3b321ace266c5cb2",
+    "scripts\\analysis\\compare_gain2p5_four_model_test_seed42.py": "18553fc6082421700a41804a4a09da7446ad922cd26ce29ddf1ed5d668c1059e",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7",
+    "scripts\\prediction\\predict.py": "a9401dc8aea5c24f9078de300728676a49713bd8cda2dfd1514e38e6a8b5d808",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5_test_split.csv": "353121429dd5b0f33bcf7d34da24e98d713ea63b0f191436b6511a581f8de512",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-1_test_split.csv": "d1962c5c858a06bac31fbb663a785008e2a73a4880f67058daddb933012781d7",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-2_test_split.csv": "e38e39c4dde9da34d8ad3c0859991679064e358adf2a1511328a097e93094370",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-6_test_split.csv": "c5a7512ae01a162284953243a343d7c34c3c165a6856f2f888464a27d44f9bd7",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-19.csv": "6878e1177c16dcd15533513e80a6a3d68b6f0c1f0f705ca87170bc023a8f2fb9",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-20.csv": "76ae2ff2e4bdfb7a6667207aa1162a3544adc5a414ab47b7051ae7be440914f3",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-21.csv": "51a4907ee1bdc73a4d4b23e7068119e8654ef1562e180250ccb2872a1a657433",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-22.csv": "a50d3350f5806d9bc8435320d4828d4f99adeb5a84c1434fcb32e8a14aa16806",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-23.csv": "bb03750273fb02fdce1b8f819cf7cb140a7856031c8845d4c4e2270dbb1979ae",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-24.csv": "02d322e35dcb22fa4a48f48b4e47577d8122b78167dbe754256d685aea7fe799",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-25.csv": "2a677681153f0c60d72ca3ecaa46120b5f91bbc0ee5be47f1fd6eb65356e20ec",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-26.csv": "75c58a2d77b56576a4228dc7edc94c66158abefa943e374f0f529124ded2815b",
+    "configs\\pgin\\no_gain\\transformer_layerwise_63var_decoder_input_sp_pgin_no_gain_seed42.yaml": "16d888bcd5d88144244e35f2ff735f20bd366edc609ed6908712c59da308b59c",
+    "saved_models\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_no_gain_seed42.pth": "e45e414822c9e52cb137ff1b93c9e0d8e54fefc82da9a929cbf9980594f833f1",
+    "results\\pgin\\no_gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_no_gain_seed42\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+    "results\\pgin\\no_gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_no_gain_seed42\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7",
+    "configs\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42.yaml": "c9fe4c3f6fe0e400d75a80a37ad4f20908aeb4742a2933a457018d59de2fa479",
+    "saved_models\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42.pth": "a0adf9ddae93450b708459c5fbf8c3885b9742c831f1f834a92f9e44ae69fbd7",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7",
+    "configs\\pgin\\gain_ss\\transformer_layerwise_63var_decoder_input_sp_pgin_gain005_ss001_seed42.yaml": "f27cefb145c4089ba1df1fe8b835f0e98b6b4a6e4c0cb66cb3633a67d1ec657d",
+    "saved_models\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss001_seed42.pth": "564939a76fe9ea1046294bc7b707d3ebf48142954cfd4f24912c0197921c871d",
+    "results\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss001_seed42\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+    "results\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss001_seed42\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7",
+    "configs\\pgin\\difficult_gradnorm\\difficult_gradnorm_ratio0p01_no_ss_seed42.yaml": "8acd67e5873099fc6ac35b1b5209b873fc16fd98e0c2a1d7c6109b37f56db8d9",
+    "saved_models\\pgin_gain005_ratio0p01_seed42_difficult_group_gradnorm_no_ss.pth": "09f8fd2fada1d3320fd704687cf9552100f14f6078ded72dc26e5df31aba9a29",
+    "results\\pgin\\difficult_gradnorm\\pgin_gain005_ratio0p01_seed42_difficult_group_gradnorm_no_ss\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+    "results\\pgin\\difficult_gradnorm\\pgin_gain005_ratio0p01_seed42_difficult_group_gradnorm_no_ss\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5_train_split.csv": "41aa48f3926f1fecf5a1a4732532d17599fce2b984b04226b593fdd981e20202",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5_train_split\\prediction_results.csv": "c4f0c9d84dc33aa3302e455614606b1468d0c2d7ed33f6abae177df40322e9e0",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5_train_split\\evaluation_metrics.csv": "2983916b360984a03fa9b539607c51bfe71c9bf94a5dcbc853d6eaf5e4e3f721",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5_train_split\\horizon_metrics_t1_to_t18.csv": "a0e4fc6117573c39c1f8c6934d64347a772260292356e4b0f0c2fa88ad569cd4",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-1_train_split.csv": "02844b2dfcad526c32ece3f9b3939e49b1ac6412774a052c9b76119090d24c86",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-1_train_split\\prediction_results.csv": "cc03ff5705c0acb3c333bdad67d250ee141fa551a33901101d9a8578cee42f13",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-1_train_split\\evaluation_metrics.csv": "39607f361c81964c057c4f87a1120367ff426356025aebb755360f20648e6790",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-1_train_split\\horizon_metrics_t1_to_t18.csv": "fb8d15491d6c7a573f3a3f616220b6233021fbe394966828c70bbe45a45c664b",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-2_train_split.csv": "68f4a890bc265794be9253919e9b085ef93efad2d8f29037889e3d123dc8b4aa",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-2_train_split\\prediction_results.csv": "c23c473eb40e0ca5efc04cf34bd43d4d1ff93fabba1859a5bc227d48a57307d9",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-2_train_split\\evaluation_metrics.csv": "40e2f5d722d44e66e1ee828886d6e265687c8e410345cbd4d5a49e86d58a3e1a",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-2_train_split\\horizon_metrics_t1_to_t18.csv": "eb81ee61c7b9ad08a4f823f8afef2e5d538bc1825e10b9d4fb9467ccced8d551",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-6_train_split.csv": "d8ba0c3a9b45942f9ef6b160c271025dcdea7b3f862fa41bf0751a78a1b70257",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-6_train_split\\prediction_results.csv": "59d35b9b40ff3c428ae884945d7438225164327a3836feb50b71214150689e3a",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-6_train_split\\evaluation_metrics.csv": "2d68145f612e55f1b4e5d82ce4615eab401873c6815f097f19f08ac358237588",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-6_train_split\\horizon_metrics_t1_to_t18.csv": "8aad4a7b8e798251e9fb3b0dbac3b20dadc58c7e880535cae5f72e03cdbe6f6c",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5_test_split\\prediction_results.csv": "e50dc14fbb39b1d8a3e00819e23225db2db4a2fe52a9c875a4dc110afff1087e",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5_test_split\\evaluation_metrics.csv": "9dd829bcefca0acb7d56c883678a02d83711e3c482c6bb497a8262c40ec9f953",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5_test_split\\horizon_metrics_t1_to_t18.csv": "75baf8a5a17d9b121459687b51a0ef3ef6d8c9e622c009d5d3fb5614487ece80",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-1_test_split\\prediction_results.csv": "9fb230383f88a4d5946f90e3e710a40917123ded9bf9e6eae8262ad35c54a3e9",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-1_test_split\\evaluation_metrics.csv": "508dee19f405aabf5a480e3799ec7e84b314911d2e54653e94cf3370a3bf86de",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-1_test_split\\horizon_metrics_t1_to_t18.csv": "d3e93683e1681b2338bfc950ca6c8e203d5b15e95a5b6c8bc711020ff41914c0",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-2_test_split\\prediction_results.csv": "5e5a023ba05b7cd4a1a9b11ef8a28983a5a7aa2f7eb957639ace70e57d4701b1",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-2_test_split\\evaluation_metrics.csv": "a360ee0704cef25927fd000f7e1af8b4e3e0e9fcaf6d12135a335fa13250ca65",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-2_test_split\\horizon_metrics_t1_to_t18.csv": "d0d2b165e627dc8b4d3880a0d4993ad758b245fcf4c120cf81e21cf0d9ac4a92",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-6_test_split\\prediction_results.csv": "05f317403ea1ffa937c007a436eff8a9737ac05e29af197dff3d5506703c641d",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-6_test_split\\evaluation_metrics.csv": "f5a7082d6be5a061e50b57e9f727b7caa6996ec72e7b8da0e7337180772e8d84",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-6_test_split\\horizon_metrics_t1_to_t18.csv": "b65a1129ad81261e49c122e3f25b379d9f4989c213d5e3635e093e94e9bccdee",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5_valid_split.csv": "9d90564324162e81dbe09f0b62ed65db2e3576a6bb2c7caa3baa630897a6ef86",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5_valid_split\\prediction_results.csv": "3f812bda3e7f72207dd9e6281e90d0ce761d0cf16880f2c27ffc1c2ee0147738",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5_valid_split\\evaluation_metrics.csv": "124eec3342bde9d2391584b4f88d9ea7aa2f3273ea8bee0ab60cd808f14e3255",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5_valid_split\\horizon_metrics_t1_to_t18.csv": "021b2070ca7d97701071e229b843d2f9937493b637880239996e0034bee12627",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-1_valid_split.csv": "39fa3a94d267fdedb607b0cd99a2f129a7e82a249e9a650a6d6f8ab4d4a27fe4",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-1_valid_split\\prediction_results.csv": "2de86ef2ec08f9b68e2a6128595d07badb1c921dfb00458be68eea96dcb1fd66",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-1_valid_split\\evaluation_metrics.csv": "2a5cb852f9b1eb213d2df7a56d9e5a44342c08614654725a024e90a3999a4fc9",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-1_valid_split\\horizon_metrics_t1_to_t18.csv": "643e062d4a6748d5a6f116c0f25f28efa63fadfdddd23ad9a9aee30c484262ad",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-2_valid_split.csv": "0e65a87f383b4e08c5d7147e5cdbadaab52e0cc9b13040de6295460c0ee96aa7",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-2_valid_split\\prediction_results.csv": "dd6ab624c9d4874f2e102b62278e63638ef9c6d3256b051ed2272ff3836d34c2",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-2_valid_split\\evaluation_metrics.csv": "d01058beec160facfd1cf5471d49b040ba81ce7fda26ed46b3bd6be0494bbe58",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-2_valid_split\\horizon_metrics_t1_to_t18.csv": "196ebc811c62f7612f8e461a3b641af0af8c75c267b5b062ac9ee08f5e234b2f",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-6_valid_split.csv": "b9cd2ccda190eb683cda34539eee5a57fa2df109636fbf215d4d7c37579edbb4",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-6_valid_split\\prediction_results.csv": "2c8009c43e8ebe2ab4bb9e949dda54b0af979c5a86ff3be9a2e44513abe08a99",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-6_valid_split\\evaluation_metrics.csv": "50482226492ec7f38c1d6a3103b4b83f4a884e9478094acb4d8c235f99333987",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-6_valid_split\\horizon_metrics_t1_to_t18.csv": "bcc2178b8319f688e22cb3b46e7420a5c44612644f9653f16fa14bff6d731826",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-13.csv": "e69b66d7151c3589c5e40088355e80259bd4d301cd906f61ac6c6f0c0616115e",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-13\\prediction_results.csv": "8ba194a5aaece982ff86547d41bdf401f66e92269e6d950f510d711836681dc8",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-13\\evaluation_metrics.csv": "5fbb5bc97884457e4a70406f1bae3bc84a4108197aba78267bce2b4718c02298",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-13\\horizon_metrics_t1_to_t18.csv": "7d875458b4ca684a4da815dee6be8840815074ff539b6662f45f801e8570de22",
+    "data\\Claus_dynamic\\Test_dataform_change_air2_R=5-14.csv": "ca7840bde4519626a6c9521b3df1e36f5f32426ed64715bd8884ba14926c88d3",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-14\\prediction_results.csv": "61159ece0383e78f58c97d495ec637f9251b94c9a3c7a7537fe999af931dce71",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-14\\evaluation_metrics.csv": "39899df669a7441bc328e7a97aa119126169c4fe16dae6f85b8acf1aa52d8555",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-14\\horizon_metrics_t1_to_t18.csv": "965c18bc73659457d8b12ca6615263b8c4ef7281bf402260d238b6d1b72614bb",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-19\\prediction_results.csv": "36a25fe2c2a0798216ebb73524c0dcc414f322ad02a56e1bd0532a5684533ff0",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-19\\evaluation_metrics.csv": "56b06bb74940c9eefa7214cc5bb9b32759fe99d1497bcee96b7870e5d33cb8a7",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-19\\horizon_metrics_t1_to_t18.csv": "42a657f7ed1529c7607cced6192231f194bd50aa2b5ebb08c05bc33f0b9177cb",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-20\\prediction_results.csv": "ebf4c1c0be02af03416817f7c7c25b3a80e4877489000712186c095e1223796b",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-20\\evaluation_metrics.csv": "d9d02b1461c2f2ae08f7e670386c0f1382ac29c1d42b06915d046204766f0f85",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-20\\horizon_metrics_t1_to_t18.csv": "fb4e225fd4b650e6d5f3bca4ea9e390f5d726943606f7744ed6acbae837fb57a",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-21\\prediction_results.csv": "38eed5850f27546e6081f6bdce0085b955f8522c58ace28c80367fd81b8b2dfc",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-21\\evaluation_metrics.csv": "662143286fb9e5a1e8d81322ab6c36b129fc64633aad4c89e14531022829922d",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-21\\horizon_metrics_t1_to_t18.csv": "fef8cadc3a0e005fef22094cd47854a346626763a9315d1ed4e46d2ebdd90263",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-22\\prediction_results.csv": "3b58fb6865da79df0e25fc110e670690aa879808672f6aa2881d5f6d45b6f874",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-22\\evaluation_metrics.csv": "df766e3daace68cf3d3b57cebba8d4c106ab9290f1c015e99b85af66cb467d7f",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-22\\horizon_metrics_t1_to_t18.csv": "9695f7ae10c0352392dae294d8019a77aa8c01a85dd5d0f87395c9bd93e39bc8",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-23\\prediction_results.csv": "b2f4a78b733762e87c9bb6021499f2300a2c501bf414f518824193d65ddd2ce8",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-23\\evaluation_metrics.csv": "f56d2cea8b39fab32bdb20dee34cd2496f30296716d92f09827e8b294c740cc7",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-23\\horizon_metrics_t1_to_t18.csv": "9eeda19481bbd7e56f8ea0d0ec6f959ef607837ac3d52bfe3d13cae25fd8985c",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-24\\prediction_results.csv": "b320b6fcd50e10d271349a404a1be6968d3d016aff0e9ce9cc73b8637ff7b47b",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-24\\evaluation_metrics.csv": "d48d4edd0bd5533285923c862e5c120d31f41478442cf83a8212c97937bc296c",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-24\\horizon_metrics_t1_to_t18.csv": "ad019658560b501b8e0a84ee0e1f1f498e20f68e42f6c51d5de8d49159292883",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-25\\prediction_results.csv": "b8e99c16c52a25acfc5349ea6f29125739eabe8f8141c987e1b1b436239ccc75",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-25\\evaluation_metrics.csv": "5b979979bf0d3892438fc1affe62a7734e01642cffccaeec5d524d61906af44d",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-25\\horizon_metrics_t1_to_t18.csv": "e295ff176939e84b52db4d1eda2a8653262c078c5d3c7b4e3b1727269521563f",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-26\\prediction_results.csv": "7ac352ce658489a4d580b72549f581be9f3c38cdcf51ade396e9b0ef3455bd31",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-26\\evaluation_metrics.csv": "adbb0299492623cd375d5f9fb3ea8b9d89e1c378d4308144a7e2aebdb216c675",
+    "results\\pgin\\gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42\\R5-26\\horizon_metrics_t1_to_t18.csv": "622f712e2e0e9ad3c45986c9e5d06b3736d50e9a788f87f83bbfacf6f34a02cf"
+  }
+}
