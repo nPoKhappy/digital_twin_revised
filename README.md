@@ -49,11 +49,8 @@ digital_twin_revised/
 ├─ scripts/                     # 執行入口
 │  ├─ training/                # ANN、動態模型與 PGIN 訓練
 │  ├─ prediction/              # 動態、階躍與 ANN 推論
-│  ├─ evaluation/              # Gain／KCI 評估與 ANN Gain 診斷
 │  ├─ sampling/                # LHS 操作條件生成
 │  ├─ preprocessing/           # 動態資料切分
-│  ├─ analysis/                # 分布與 Gain 配對難度分析
-│  ├─ plotting/                # 比較圖、分布圖與濃度曲面圖
 │  └─ maintenance/             # 歷史維護與 ANN 階躍檢查工具
 ├─ configs/
 │  ├─ steady_state/            # 既有穩態 YAML
@@ -68,7 +65,12 @@ digital_twin_revised/
 │  ├─ Claus_steady_state/      # Aspen 穩態訓練與評估資料
 │  └─ sampling/                # LHS 操作條件 CSV
 ├─ saved_models/               # 模型權重
-├─ results/                    # 標準化統計、預測、評估與圖表
+├─ results/                    # 分類總覽見 results/README.md
+│  ├─ pgin/                    # 與 configs/pgin/ 相同的五種模型分類
+│  ├─ steady_state/            # ANN teacher 統計量與產物
+│  ├─ evaluation/              # KCI 評估批次
+│  ├─ analysis/                # 專題分析
+│  ├─ visualization/           # 跨模型比較與圖表
 │  └─ sampling/                # LHS 採樣檢查圖
 ├─ logs/                       # 日誌與歷史備份
 ├─ docs/
@@ -85,8 +87,8 @@ digital_twin_revised/
 | --- | --- | --- |
 | 動態／PGIN 訓練 | YAML `data.path`、`training_files` 指定的 CSV | Gain／SS 方法需要對應穩態資料與 ANN teacher |
 | 穩態 ANN 訓練 | `data/Claus_steady_state/lhs_generated_dynamic_ss_data*.xlsx` | `train_tabular_v2` 使用內建設定與原始 Aspen 欄名對照 |
-| 動態模型推論 | YAML `inference_files` 指定的案例、相符模型權重 | `results/<exp_name>/zscore_mean.csv`、`zscore_std.csv` |
-| ANN 推論 | `results/Tabular_MLP_New/tabular_test_dataset.csv` | ANN 權重與自己的標準化統計 |
+| 動態模型推論 | YAML `inference_files` 指定的案例、相符模型權重 | `results/pgin/<family>/<exp_name>/zscore_mean.csv`、`zscore_std.csv` |
+| ANN 推論 | `results/steady_state/Tabular_MLP_New/tabular_test_dataset.csv` | ANN 權重與自己的標準化統計 |
 | Gain／KCI 評估 | held-out 完整 Aspen 穩態 XLSX／CSV | 各動態模型的 YAML、權重、統計量，以及 ANN teacher |
 | LHS 採樣 | 生成器內的 `SOURCE_CSV` | 原始欄位及固定操作條件來源 |
 
@@ -94,8 +96,8 @@ digital_twin_revised/
 
 ```text
 saved_models/Tabular_MLP_5in_2out_QV.pth
-results/Tabular_MLP_New/zscore_mean.csv
-results/Tabular_MLP_New/zscore_std.csv
+results/steady_state/Tabular_MLP_New/zscore_mean.csv
+results/steady_state/Tabular_MLP_New/zscore_std.csv
 ```
 
 ANN teacher 的五個輸入為 `air2_SP`、`HEATER2_output_T_SP`、`acidgas_Fm`、`acidgas_P`、`acidgas_T`，輸出為 `B35_H2S`、`B35_SO2`。動態模型與 ANN 使用各自的標準化統計，不能互換。
@@ -113,9 +115,9 @@ Difficult-GradNorm 命令列入口固定載入八份訓練穩態來源，編號�
 | 分類 | Gain 權重 | SS 權重 | 用途 |
 | --- | --- | --- | --- |
 | `configs/pgin/no_gain/` | 0 | 0 | 動態預測基準 |
-| `configs/pgin/gain/` | 0.05 | 0 | Gain 引導 |
-| `configs/pgin/gain_ss/` | 0.05 | 0.001／0.01／0.05 | Gain 與 SS value loss 比較 |
-| `configs/pgin/ss_only/` | 0 | 0.001／0.05 | 僅 SS value loss 比較 |
+| `configs/pgin/gain/` | 0.05 / 2.5 / 25 / 250 / 2500 | 0 | Gain 引導 |
+| `configs/pgin/gain_ss/` | 0.05 / 2.5 / 25 / 250 / 2500 | 與 Gain 相同 | 兩個權重同步變動，需重跑；[指令](configs/pgin/gain_ss/README.md) |
+| `configs/pgin/ss_only/` | 0 | 0.05 / 2.5 / 25 / 250 / 2500 | 僅 SS value loss 比較 |
 | `configs/pgin/difficult_gradnorm/` | 0.05 | 0 | 指定配對與 teacher 符號群組的梯度縮放 |
 
 後續命令共用以下四個 seed42 設定變數，請先在同一個 PowerShell 工作階段執行：
@@ -123,11 +125,11 @@ Difficult-GradNorm 命令列入口固定載入八份訓練穩態來源，編號�
 ```powershell
 $noGainConfig = 'configs/pgin/no_gain/transformer_layerwise_63var_decoder_input_sp_pgin_no_gain_seed42.yaml'
 $gainConfig = 'configs/pgin/gain/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42.yaml'
-$gainSSConfig = 'configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_ss001_seed42.yaml'
+$gainSSConfig = 'configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_ss005_seed42.yaml'
 $difficultConfig = 'configs/pgin/difficult_gradnorm/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42_difficult_group_gradnorm_no_ss.yaml'
 ```
 
-設定檔的 `exp_name` 連動 `saved_models/<exp_name>.pth` 與 `results/<exp_name>/`。重新訓練同一名稱會寫入原路徑；要保留既有實驗，先複製 YAML 並設定新的 `exp_name`。不要只改 YAML 檔名。
+設定檔的 `exp_name` 連動 `saved_models/<exp_name>.pth` 與 `results/pgin/<family>/<exp_name>/`。重新訓練同一名稱會寫入原路徑；要保留既有實驗，先複製 YAML 並設定新的 `exp_name`。不要只改 YAML 檔名。
 
 ## 訓練
 
@@ -195,7 +197,7 @@ CLI 固定啟用的 Difficult 配對為 `H2S ← Air2`、`H2S ← T2` 與 `SO2 �
 ### 既有 checkpoint 的梯度診斷
 
 ```powershell
-python -m scripts.training.train_pgin_stepwise_gain_difficult_group_gradnorm --config $difficultConfig --no-ss --gradient-diagnostics-only --diagnostic-batches 1 --diagnostic-output-dir results/gradient_diagnostics_difficult_seed42
+python -m scripts.training.train_pgin_stepwise_gain_difficult_group_gradnorm --config $difficultConfig --no-ss --gradient-diagnostics-only --diagnostic-batches 1 --diagnostic-output-dir results/analysis/gradient_diagnostics_difficult_seed42
 ```
 
 此模式載入 checkpoint 並量測梯度，不執行權重更新；需要的 checkpoint 預設依實驗名稱尋找，也可用 `--diagnostic-checkpoint` 明確指定。輸出包含 `gradient_component_detail.csv`、`gradient_cosine_detail.csv`、對應 summary，以及實際產生時的群組縮放紀錄。
@@ -218,42 +220,13 @@ python -m scripts.prediction.predict_step_change --config $gainConfig --warmup-s
 python -m scripts.prediction.predict_tabular_v2
 ```
 
-階躍程式目前讀取 `data/Claus_dynamic/step_change/in_training_distribution/`，產物位於 `results/<exp_name>/step_change_predictions/`。ANN 推論讀取已保留的 `tabular_test_dataset.csv`，產出 `tabular_predictions.csv`、`tabular_metrics.csv` 與 H2S／SO2 parity 圖。
+階躍程式目前讀取 `data/Claus_dynamic/step_change/in_training_distribution/`，產物位於 `results/pgin/<family>/<exp_name>/step_change_predictions/`。ANN 推論讀取已保留的 `tabular_test_dataset.csv`，產出 `tabular_predictions.csv`、`tabular_metrics.csv` 與 H2S／SO2 parity 圖。
 
 ## Gain 與 KCI 評估
 
-### 使用現有 held-out 穩態資料
+2026-11-04 清理後，五組 Gain 與五組 SS-only 的動態 validation 可用 `scripts/prediction/validate_hyperparameters.py` 完整重跑並覆蓋原比較資料夾。內插為 R5-3／4／5，外插為 R5-27／28／29；AvgRelRMSE 採內外各 50%。KCI 沿用已核對來源雜湊的穩態 validation 結果，沒有用這六個動態案例重算。
 
-```powershell
-python -m scripts.evaluation.evaluate_gain_in_out_distribution --in-range data/Claus_steady_state/lhs_test_in_range.xlsx --soft-ood data/Claus_steady_state/lhs_test_soft_ood_3.xlsx --configs $gainConfig $noGainConfig --device auto --output-dir results/gain_eval_comparison
-```
-
-`--max-points` 預設為 `0`，使用篩選後的全部可用點；設定正整數可對每個分布抽取有限點數，`--sample-seed` 固定抽樣。抽樣結果只代表該子集，完整覆蓋率與正式比較應依研究設計使用完整資料重新計算。
-
-評估器對核心區域採嚴格內部界限：`140 < Air2 < 300`、`140 < T2 < 240`；邊界歸入核心以外。Soft-OOD 保留核心以外且落在生成器五輸入範圍內的資料，Air2 包絡為 `110–340`、T2 為 `100–280`，其他三個輸入也會檢查。來源必須有完整模型欄位，不能直接使用 `data/sampling/` 的操作條件 CSV 代替。
-
-同一 seed 的 Gain、Gain + SS 與 Difficult-GradNorm 應分開與 No-Gain 比較。評估器用 `exp_name` 是否含 `no_gain` 分類，其他方法均視為 `gain`；若一次傳入同 seed 的多個 Gain 變體，一對一比較表會出現重複鍵。
-
-主要輸出：
-
-| 檔案 | 內容 |
-| --- | --- |
-| `gain_evaluation_detail.csv` | 分布、輸出與 MV 配對的 KCI、coverage、符號與計數 |
-| `gain_evaluation_summary.csv` | 每個模型與分布的彙整 |
-| `gain_vs_no_gain_comparison.csv` | Gain 與 No-Gain 的比較 |
-| `gain_probe_diagnostics.csv` | 各 probe、方向、時間步與配對的 Gain 明細；完整評估時檔案可能很大 |
-
-### 指標解讀
-
-KCI 使用擾動後 18 步（`all18`）的嚴格符號一致性，以有效 ANN teacher 比較為分母；動態 Gain 為零仍留在分母，且不算正確。解讀時應一起查看 coverage、各配對、teacher 正負類別比例與 `tp/tn/fp/fn/zero_gain`，不能只看平均 KCI。
-
-預測 RMSE、ANN-reference KCI、Aspen 物理模擬與閉迴路控制表現是不同證據。KCI 代表與 ANN teacher 的方向一致程度，不能直接作為物理正確性或 AI-MPC 閉迴路控制成功的證明。
-
-ANN 自身的 Gain 配對診斷：
-
-```powershell
-python -m scripts.evaluation.diagnose_ann_gain_pair --config $gainConfig --samples 200 --delta-std 0.5
-```
+KCI 為 ANN-reference 方向一致性，不能解讀為物理正確性或閉迴路驗證。
 
 ## 採樣與資料切分
 
@@ -289,31 +262,21 @@ python -m scripts.preprocessing.split_dataset_partitions --config $gainConfig
 
 ## 分析與繪圖
 
-```powershell
-python -m scripts.analysis.analyze_gain_pair_difficulty --input-root results/gain_eval_all18 --output-dir results/visualization/gain_pair_difficulty_seed42
-python -m scripts.plotting.plot_gain_vs_no_gain_comparison
-python -m scripts.plotting.plot_kci_pair_comparison
-python -m scripts.plotting.plot_ss_weight_horizon_comparison
-```
+- [五個 Gain validation](results/visualization/gain005_gain2p5_gain25_gain250_gain2500_casewise_region50_validation_seed42/README.md)
+- [五個 SS-only validation](results/visualization/ss_only_all_weights_casewise_region50_validation_seed42/README.md)
+- [No-Gain、Gain=250、SS-only=2.5 的 test 比較](results/visualization/three_model_no_gain_gain250_ss2p5_test_seed42/README.md)
 
-| 工具 | 主要輸入／注意事項 | 預設輸出位置 |
-| --- | --- | --- |
-| `analyze_gain_pair_difficulty` | `gain_eval_all18` 下的 Gain 明細與 teacher 統計，包含分塊讀取與 bootstrap 分析 | `results/visualization/gain_pair_difficulty_seed42/` |
-| `plot_gain_vs_no_gain_comparison` | 四種方法的既有預測結果；主要方法資料夾可用 CLI 指定 | `results/visualization/four_model_rmse_visualization_seed42/` |
-| `plot_kci_pair_comparison` | 固定讀取 `results/gain_eval_all18/` 下四個既有評估資料夾 | `results/visualization/kci_pair_visualization_seed42_in_soft_ood/` |
-| `plot_ss_weight_horizon_comparison` | 既定 SS 權重與 horizon 比較資料 | `results/ss_weight_horizon_comparison_seed42/` |
-
-繪圖工具讀取的是既有 CSV，不會自動重新推論或評估。若模型、資料或評估定義改變，先更新對應的預測／評估 CSV，再生成圖表。自行指定其他評估輸出目錄，也不會自動改變固定讀取 `gain_eval_all18` 的繪圖程式。
-
-`scripts.analysis.analyze_distribution_html` 可生成資料分布 HTML；資料路徑與比較案例依該程式的內建設定。其餘曲面與工廠分布工具的相依限制見下一節。
+兩者權重均為 0.05、2.5、25、250、2500；逐案例比值採內外區域各 50%。各資料夾提供獨立重畫腳本；11/3 以前的 visualization 結果保留。
 
 ## 輸出與重現實驗
+
+2026-11-04：訓練與推論產物依 YAML `output.results_dir` 寫入分類父目錄，再附加 `exp_name`。對應分類見 [Results 總覽](results/README.md)。Gain+SS 改為五組相同的 Gain／SS 權重；舊專用模型與結果已清除，請依 [Gain+SS 重跑指令](configs/pgin/gain_ss/README.md) 訓練。
 
 以 Difficult-GradNorm 為例，主要產物如下，部分檔案依是否實際產生該項紀錄而輸出：
 
 ```text
 saved_models/<exp_name>.pth
-results/<exp_name>/
+results/pgin/<family>/<exp_name>/
 ├─ zscore_mean.csv
 ├─ zscore_std.csv
 ├─ training_loss_curve.png
