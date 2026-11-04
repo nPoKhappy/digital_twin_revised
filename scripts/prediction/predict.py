@@ -14,6 +14,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 # ????????
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
+from src.experiment_paths import experiment_results_dir, results_base
 from src import utils as data_utils
 from src.variable_selection import variable_selection
 from src.models import get_model
@@ -882,7 +883,7 @@ def run_prediction(config, test_cfg, model, device, mean_all, std_all, en_mv_and
          true_df_inv = data_utils.inverse_log_transform(true_df_inv, target_log_cols)
          
     # Save Metrics
-    results_dir = os.path.join(config.get('output', {}).get('results_dir', './results'), config['exp_name'], test_name)
+    results_dir = str(experiment_results_dir(config) / test_name)
     os.makedirs(results_dir, exist_ok=True)
     
     metrics_list = []
@@ -1183,8 +1184,8 @@ def main(config_path):
     
     # --- ???: ???? ---
     # ?????? zscore_mean.csv (Median) ??zscore_std.csv (IQR)
-    zscore_mean_path = os.path.join('./results/', prefix, 'zscore_mean.csv')
-    zscore_std_path = os.path.join('./results/', prefix, 'zscore_std.csv')
+    zscore_mean_path = str(experiment_results_dir(config) / 'zscore_mean.csv')
+    zscore_std_path = str(experiment_results_dir(config) / 'zscore_std.csv')
     
     cfg_data = config['data']
     
@@ -1258,7 +1259,7 @@ def main(config_path):
         if run_result:
             horizon_runs.append(run_result)
 
-    output_root = config.get('output', {}).get('results_dir', './results')
+    output_root = str(results_base(config))
     plot_grouped_horizon_parity(horizon_runs, config, output_root)
     plot_grouped_time_series(horizon_runs, config, output_root)
 

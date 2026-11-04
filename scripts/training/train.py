@@ -19,6 +19,7 @@ import matplotlib.pyplot as plt
 # 導入自定義模組
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
+from src.experiment_paths import experiment_results_dir
 from src import utils as data_utils  # 為了最小化代碼改動，將 utils 別名為 data_utils
 from src import engine
 from src import variable_selection  # 新的變量選擇模組
@@ -164,7 +165,7 @@ def main(config_path):
     all_dfs_z = [data_utils.apply_zscore(df, stats_mean, stats_std) for df in all_dfs_log]
 
     # 保存 Z-score 參數供預測使用
-    zscore_dir = f'./results/{prefix}/'
+    zscore_dir = str(experiment_results_dir(config))
     os.makedirs(zscore_dir, exist_ok=True)
     stats_mean.to_csv(os.path.join(zscore_dir, 'zscore_mean.csv'))
     stats_std.to_csv(os.path.join(zscore_dir, 'zscore_std.csv'))
@@ -329,7 +330,7 @@ def main(config_path):
     # ===========================================================================
     print("\n保存訓練歷史...")
     
-    results_dir = f'./results/{prefix}/'
+    results_dir = str(experiment_results_dir(config))
     os.makedirs(results_dir, exist_ok=True)
     
     loss_history_df = pd.DataFrame({

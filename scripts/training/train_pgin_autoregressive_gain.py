@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
+from src.experiment_paths import experiment_results_dir
 from src import utils as data_utils
 from src.variable_selection import variable_selection
 from src.models import get_model
@@ -241,14 +242,14 @@ def main(config_path: str):
     mean_all, std_all = data_utils.calculate_zscore_stats(df_all_log)
 
     # Save the z-score statistics used by this PGIN training run.
-    zscore_dir = f'./results/{exp}/'
+    zscore_dir = str(experiment_results_dir(config))
     os.makedirs(zscore_dir, exist_ok=True)
     mean_all.to_csv(os.path.join(zscore_dir, 'zscore_mean.csv'))
     std_all.to_csv(os.path.join(zscore_dir, 'zscore_std.csv'))
     print(f"  [Save] Z-score stats saved to {zscore_dir}")
 
-    tab_mean_path = './results/Tabular_MLP_New/zscore_mean.csv'
-    tab_std_path = './results/Tabular_MLP_New/zscore_std.csv'
+    tab_mean_path = './results/steady_state/Tabular_MLP_New/zscore_mean.csv'
+    tab_std_path = './results/steady_state/Tabular_MLP_New/zscore_std.csv'
     if not os.path.exists(tab_mean_path) or not os.path.exists(tab_std_path):
         raise FileNotFoundError(
             "Tabular MLP z-score stats are required for ANN steady-state targets: "
@@ -580,7 +581,7 @@ def main(config_path: str):
                         if idx not in selected_indices:
                             selected_indices.append(idx)
 
-                    ss_debug_dir = './results/PGIN_Visualizations'
+                    ss_debug_dir = str(experiment_results_dir(config) / 'runtime_visualizations')
                     os.makedirs(ss_debug_dir, exist_ok=True)
 
                     per_var_df = pd.DataFrame({
@@ -761,7 +762,7 @@ def main(config_path: str):
                     K_dyn_matrix_stack = torch.stack([K_dyn_plus_matrix, K_dyn_minus_matrix], dim=0)
 
                 if pgin_runtime_plot and step == 0:
-                    runtime_dir = './results/PGIN_Visualizations'
+                    runtime_dir = str(experiment_results_dir(config) / 'runtime_visualizations')
                     os.makedirs(runtime_dir, exist_ok=True)
 
                     ss_target_sample = ss_target_z[0].detach().cpu().numpy()
@@ -865,9 +866,9 @@ def main(config_path: str):
                         axes[tgt_idx].legend()
                         axes[tgt_idx].grid(True)
 
-                    os.makedirs('./results/PGIN_Visualizations', exist_ok=True)
+                    os.makedirs(str(experiment_results_dir(config) / 'runtime_visualizations'), exist_ok=True)
                     plt.tight_layout()
-                    plt.savefig(f'./results/PGIN_Visualizations/train_rollout_ep{epoch}_step{step}.png')
+                    plt.savefig(str(experiment_results_dir(config) / 'runtime_visualizations' / f'train_rollout_ep{epoch}_step{step}.png'))
                     plt.close()
                     print(f"\n  [Plot] Saved direct H-step rollout visualization at Ep{epoch} Step{step}!")
                 K_ss_direction_exp = K_ss_direction.unsqueeze(0)
@@ -1019,7 +1020,7 @@ def main(config_path: str):
             print(f"\n[Early Stopping] Triggered after {epoch + 1} epochs without improvement in validation loss.")
             break
 
-    out_dir = f'./results/{exp}'
+    out_dir = str(experiment_results_dir(config))
     os.makedirs(out_dir, exist_ok=True)
 
     actual_epochs = len(history_losses)

@@ -17,6 +17,7 @@ from tqdm import tqdm
 # Add the repository root to sys.path.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
+from src.experiment_paths import experiment_results_dir
 from src import utils as data_utils
 from src.models import get_model
 from src.utils import calculate_metrics
@@ -401,8 +402,8 @@ def main():
     H = cfg_win["prediction_length"]
 
     print("\n[2] Loading training z-score statistics...")
-    zscore_mean_path = os.path.join("./results", prefix, "zscore_mean.csv")
-    zscore_std_path = os.path.join("./results", prefix, "zscore_std.csv")
+    zscore_mean_path = str(experiment_results_dir(config) / "zscore_mean.csv")
+    zscore_std_path = str(experiment_results_dir(config) / "zscore_std.csv")
 
     if os.path.exists(zscore_mean_path) and os.path.exists(zscore_std_path):
         mean_all = pd.read_csv(zscore_mean_path, index_col=0).squeeze()
@@ -448,7 +449,7 @@ def main():
     print(f"    Model path: {model_path}")
     print(f"    Device: {device}")
 
-    output_base_dir = os.path.join("./results", prefix, "step_change_predictions")
+    output_base_dir = str(experiment_results_dir(config) / "step_change_predictions")
     print("\n[4] Processing step-change files...")
     print(f"    Output directory: {output_base_dir}")
 

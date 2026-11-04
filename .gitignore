@@ -27,4 +27,4 @@ logs/
 
 
 # Large generated gain diagnostics (keep local)
-/results/gain_eval_all18/*/gain_probe_diagnostics.csv
+/results/evaluation/**/gain_probe_diagnostics.csv
