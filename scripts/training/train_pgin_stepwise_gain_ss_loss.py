@@ -28,6 +28,7 @@ import matplotlib.pyplot as plt
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
+from src.experiment_paths import experiment_results_dir
 from src import utils as data_utils
 from src.variable_selection import variable_selection
 from src.models import get_model
@@ -310,14 +311,14 @@ def main(config_path: str):
     mean_all, std_all = data_utils.calculate_zscore_stats(df_all_log)
 
     # Save the z-score statistics used by this PGIN training run.
-    zscore_dir = f'./results/{exp}/'
+    zscore_dir = str(experiment_results_dir(config))
     os.makedirs(zscore_dir, exist_ok=True)
     mean_all.to_csv(os.path.join(zscore_dir, 'zscore_mean.csv'))
     std_all.to_csv(os.path.join(zscore_dir, 'zscore_std.csv'))
     print(f"  [Save] Z-score stats saved to {zscore_dir}")
 
-    tab_mean_path = './results/Tabular_MLP_New/zscore_mean.csv'
-    tab_std_path = './results/Tabular_MLP_New/zscore_std.csv'
+    tab_mean_path = './results/steady_state/Tabular_MLP_New/zscore_mean.csv'
+    tab_std_path = './results/steady_state/Tabular_MLP_New/zscore_std.csv'
     if not os.path.exists(tab_mean_path) or not os.path.exists(tab_std_path):
         raise FileNotFoundError(
             "Tabular MLP z-score stats are required for ANN steady-state targets: "
@@ -788,7 +789,7 @@ def main(config_path: str):
 
                 if pgin_runtime_plot and step == 0:
                     # Runtime plot exposes baseline/plus/minus dynamic traces against ANN targets.
-                    runtime_dir = './results/PGIN_Visualizations'
+                    runtime_dir = str(experiment_results_dir(config) / 'runtime_visualizations')
                     os.makedirs(runtime_dir, exist_ok=True)
 
                     ss_target_sample = ss_target_z[0].detach().cpu().numpy()
@@ -1033,7 +1034,7 @@ def main(config_path: str):
             print(f"\n[Early Stopping] Triggered after {epoch + 1} epochs without improvement in validation loss.")
             break
 
-    out_dir = f'./results/{exp}'
+    out_dir = str(experiment_results_dir(config))
     os.makedirs(out_dir, exist_ok=True)
 
     # Export compact training diagnostics for loss, KCI, and final pair-level gain signs.
