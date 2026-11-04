@@ -17,11 +17,11 @@ from scripts.evaluation.evaluate_gain_in_out_distribution import (
 )
 
 source_dir = ROOT / 'data/Claus_dynamic/step_change/in_training_distribution'
-output_dir = ROOT / 'results/ann_teacher_step_validation_in_range_20261013'
+output_dir = ROOT / 'results/analysis/ann_teacher_step_validation_in_range_20261013'
 output_dir.mkdir(parents=True, exist_ok=True)
 device = torch.device('cpu')
 teacher, mean, std, target_mean, target_std = load_teacher(device)
-dynamic_std = pd.read_csv(ROOT / 'results/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42/zscore_std.csv', index_col=0).squeeze('columns')
+dynamic_std = pd.read_csv(ROOT / 'results/pgin/gain/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_seed42/zscore_std.csv', index_col=0).squeeze('columns')
 
 
 def predict(inputs):
@@ -155,7 +155,7 @@ axes.flat[0].legend(fontsize=6)
 fig.suptitle('All 16 recorded cases: H2S and SO2 trajectories',fontsize=15)
 fig.tight_layout(rect=(0,0,1,.98));fig.savefig(output_dir/'recorded_responses_all_cases.png',dpi=130);plt.close(fig)
 
-artifacts=['saved_models/Tabular_MLP_5in_2out_QV.pth','results/Tabular_MLP_New/zscore_mean.csv','results/Tabular_MLP_New/zscore_std.csv']
+artifacts=['saved_models/Tabular_MLP_5in_2out_QV.pth','results/steady_state/Tabular_MLP_New/zscore_mean.csv','results/steady_state/Tabular_MLP_New/zscore_std.csv']
 manifest={'method':{'before':'mean of final 100 original rows before detected step','after':'mean of final 100 original rows in file','reference':'recorded finite-step slope, not exact local derivative','ann':'same physical-output ANN checkpoint and scaler as gain training; local derivative at before mean','training_teacher_threshold':1e-5,'window_sensitivity_rows':[50,100,200],'transient':'18 complete post-step blocks, median of 10 original rows each; descriptive only'},'sources':provenance,'ann_artifacts':[{'path':p,'sha256':hashlib.sha256((ROOT/p).read_bytes()).hexdigest()} for p in artifacts],'limitations':['Only 8 base operating conditions, 16 trajectories and 32 case/output comparisons.','Finite perturbations and incidental changes of other inputs do not identify exact partial derivatives.','Training-set membership of the actual checkpoint is not certified by a training manifest. Current training source code reads LHS Excel files rather than these step CSVs.','No Soft-OOD or new 0.5-sigma simulation validation is performed.','Raw row indices are used; physical time interval is not independently verified.']}
 (output_dir/'method_and_provenance.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
 assert len(detail)==32 and len(qc)==16 and len(window)==96 and len(blocks)==576

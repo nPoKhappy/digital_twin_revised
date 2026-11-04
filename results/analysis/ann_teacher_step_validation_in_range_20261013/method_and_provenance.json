@@ -100,11 +100,11 @@
       "sha256": "421b2f19ce37e58b9185b94ed9529e9167024d93e10fdf59ee9a565f16eb0155"
     },
     {
-      "path": "results/Tabular_MLP_New/zscore_mean.csv",
+      "path": "results/steady_state/Tabular_MLP_New/zscore_mean.csv",
       "sha256": "80ee9c2a77c6c1407108bc97f963996aad3b4bd2b0fccf893cca7b0c8c4f2ee4"
     },
     {
-      "path": "results/Tabular_MLP_New/zscore_std.csv",
+      "path": "results/steady_state/Tabular_MLP_New/zscore_std.csv",
       "sha256": "23954d26a069cc1592722c154f7cb72dc3d0a3e77120e9060bf0e859b9022ea6"
     }
   ],

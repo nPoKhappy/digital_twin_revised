@@ -40,4 +40,5 @@ tabular:
     - B35_H2S             
     - B35_SO2
 
-  
+output:
+  results_dir: "./results/steady_state"

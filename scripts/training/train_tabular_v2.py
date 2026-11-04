@@ -205,7 +205,7 @@ def main():
     df_test = df_combined.iloc[n_train+n_valid:].copy()
 
     # 儲存獨立的 Test 測試集給預測程式使用
-    out_dir = os.path.join(base_dir, 'results', 'Tabular_MLP_New')
+    out_dir = os.path.join(base_dir, 'results', 'steady_state', 'Tabular_MLP_New')
     os.makedirs(out_dir, exist_ok=True)
     df_test.to_csv(os.path.join(out_dir, 'tabular_test_dataset.csv'), index=False)
     print(f"已儲存 {len(df_test)} 筆獨立 Test 資料至 tabular_test_dataset.csv")

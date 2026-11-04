@@ -18,7 +18,7 @@ from show_lhs_air2_tr2_surface import (
 
 
 INPUT_FILE = "data/Claus_steady_state/lhs_generated_dynamic_ss_data_11.xlsx"
-OUTPUT_DIR = Path("results/lhs_steady_state_analysis/data11_concentration_surfaces")
+OUTPUT_DIR = Path("results/analysis/lhs_steady_state_analysis/data11_concentration_surfaces")
 
 TARGETS = {
     "h2s": (H2S_COL, "H2S"),

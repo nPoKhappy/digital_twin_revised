@@ -11,7 +11,7 @@
 ## 方法
 
 - 輸入：`data/Claus_dynamic/step_change/in_training_distribution/*.csv`，共 16 檔。
-- ANN：`saved_models/Tabular_MLP_5in_2out_QV.pth`，使用 `results/Tabular_MLP_New` 的既有標準化統計值及評估程式的 teacher 載入／求導函式。ANN 採 eval 模式，沒有更新參數。
+- ANN：`saved_models/Tabular_MLP_5in_2out_QV.pth`，使用 `results/steady_state/Tabular_MLP_New` 的既有標準化統計值及評估程式的 teacher 載入／求導函式。ANN 採 eval 模式，沒有更新參數。
 - 各檔在原始零起算列索引 400 發生主要 MV step change；15 檔有 1440 列，1 檔有 1400 列。
 - 擾動前：最後 100 列 pre-step 平均，即列索引 300–399。
 - 擾動後：檔案最後 100 列平均。

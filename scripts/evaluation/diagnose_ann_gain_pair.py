@@ -135,8 +135,8 @@ def main():
     qv_cols = config['training'].get('gain_target_qv', ['B35_H2S', 'B35_SO2'])
     mv_cols = config['training'].get('gain_target_mv', ['air2_SP', 'HEATER2_output_T_SP'])
 
-    tab_mean = pd.read_csv('./results/Tabular_MLP_New/zscore_mean.csv', index_col=0).squeeze('columns')
-    tab_std = pd.read_csv('./results/Tabular_MLP_New/zscore_std.csv', index_col=0).squeeze('columns').replace(0, 1)
+    tab_mean = pd.read_csv('./results/steady_state/Tabular_MLP_New/zscore_mean.csv', index_col=0).squeeze('columns')
+    tab_std = pd.read_csv('./results/steady_state/Tabular_MLP_New/zscore_std.csv', index_col=0).squeeze('columns').replace(0, 1)
 
     df = load_lhs_steady_state_sources(args.lhs_source, tab_input_cols)
 
@@ -204,7 +204,7 @@ def main():
                     'autograd_sign': int(np.sign(autograd_gain[i])),
                 })
 
-    out_dir = './results/PGIN_Visualizations'
+    out_dir = './results/visualization/runtime_legacy'
     os.makedirs(out_dir, exist_ok=True)
     out_csv = os.path.join(out_dir, 'ann_gain_pair_diagnostics.csv')
     result_df = pd.DataFrame(rows)

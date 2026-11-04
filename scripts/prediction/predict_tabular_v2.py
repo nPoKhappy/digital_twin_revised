@@ -151,7 +151,7 @@ def main():
     excel_target_cols = [INV_MAPPING[col] for col in target_cols]
 
     print("--- 載入獨立預留的 Test 測試集 ---")
-    out_dir = os.path.join(base_dir, 'results', 'Tabular_MLP_New')
+    out_dir = os.path.join(base_dir, 'results', 'steady_state', 'Tabular_MLP_New')
     test_csv_path = os.path.join(out_dir, 'tabular_test_dataset.csv')
     
     if not os.path.exists(test_csv_path):
@@ -165,8 +165,8 @@ def main():
     print(f"測試樣本數總計: {len(df_x)}")
 
     # 讀取 preprocessing stats
-    mean_path = os.path.join(base_dir, 'results', 'Tabular_MLP_New', 'zscore_mean.csv')
-    std_path = os.path.join(base_dir, 'results', 'Tabular_MLP_New', 'zscore_std.csv')
+    mean_path = os.path.join(base_dir, 'results', 'steady_state', 'Tabular_MLP_New', 'zscore_mean.csv')
+    std_path = os.path.join(base_dir, 'results', 'steady_state', 'Tabular_MLP_New', 'zscore_std.csv')
     
     if not os.path.exists(mean_path) or not os.path.exists(std_path):
         raise FileNotFoundError("找不到正規化算出的 zscore_mean.csv 與 zscore_std.csv！請先確定 train_tabular_v2.py 已經跑完。")
@@ -202,7 +202,7 @@ def main():
     y_true = df_y.values
 
     # 輸出資料夾
-    out_dir = os.path.join(base_dir, 'results', 'Tabular_MLP_New')
+    out_dir = os.path.join(base_dir, 'results', 'steady_state', 'Tabular_MLP_New')
     os.makedirs(out_dir, exist_ok=True)
     
     out_csv = os.path.join(out_dir, 'tabular_predictions.csv')
