@@ -1,0 +1,16 @@
+region,endpoint_region,crosses_core_boundary,pair_status,pairs
+core,core,False,base_failed,35
+core,core,False,both_failed,273
+core,core,False,step_failed,9
+core,core,False,valid,778
+core,soft_ood,True,base_failed,6
+core,soft_ood,True,both_failed,43
+core,soft_ood,True,step_failed,8
+core,soft_ood,True,valid,98
+soft_ood,core,True,base_failed,6
+soft_ood,core,True,both_failed,49
+soft_ood,core,True,valid,59
+soft_ood,soft_ood,False,base_failed,55
+soft_ood,soft_ood,False,both_failed,645
+soft_ood,soft_ood,False,step_failed,36
+soft_ood,soft_ood,False,valid,400

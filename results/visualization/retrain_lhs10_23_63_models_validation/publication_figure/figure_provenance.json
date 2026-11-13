@@ -1,0 +1,30 @@
+{
+  "source": "results\\visualization\\retrain_lhs10_23_63_models_validation\\regional_coordinates_63_models.csv",
+  "source_sha256": "04710ca53042c918b7821c4d7a66203190526540bce002daa83b33c4fa77ebc7",
+  "distinct_models": 63,
+  "regions": 2,
+  "unique_coordinates": 126,
+  "seed_values": [
+    42,
+    43,
+    44
+  ],
+  "layout": "rows are model families; columns are internal and external validation",
+  "markers": "seed",
+  "colors": "parameter, independently keyed in each row",
+  "x_axes": "All panels and split figures share identical x limits; label is KCI(%)",
+  "y_axes": "All panels and split figures share identical y limits",
+  "no_gain": "3 references in each region repeated for each family, not new models",
+  "jitter": false,
+  "per_region_baseline": "same-seed No-Gain",
+  "figure_sha256": {
+    "regional_63_models_4x2.png": "548cd5d383278940b5b1f37a92af27491a925edab21eca2e37d32c5ba17d8f17",
+    "regional_63_models_4x2.pdf": "a160445e4ad18da9d89c4be3ee725c9ae4a021dead156773c6ee15ff99e334bd",
+    "regional_63_models_4x2_common_y.png": "548cd5d383278940b5b1f37a92af27491a925edab21eca2e37d32c5ba17d8f17",
+    "regional_63_models_4x2_common_y.pdf": "83a112dfea99b6ba2b8aef8c64f405fad3049dd12affe6f10c580a746ba17cce",
+    "regional_63_models_part1.png": "7c75010690789e28b6d5d49f1f71f7a1664ff4e8f92e9483353c9ee56145347a",
+    "regional_63_models_part1.pdf": "16d22b7b46a2766bfbc15f63ebe48c233719523e57beff61b71136d9ff2da83b",
+    "regional_63_models_part2.png": "3f855ce6434ba989d899ebf05ecc949a25ded61c3349439a75624c6f8d4f3635",
+    "regional_63_models_part2.pdf": "ea472f7c1d87dcee8754949514437a40aa5e3aaf4269ef82c6774145644d7bc1"
+  }
+}

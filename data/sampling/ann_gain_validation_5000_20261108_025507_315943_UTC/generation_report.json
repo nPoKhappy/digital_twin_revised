@@ -1,0 +1,314 @@
+{
+  "randomness": "Fresh system-entropy random generator; no fixed seed",
+  "data_role": "Aspen input conditions; not solved Aspen outputs",
+  "pairs": 2500,
+  "rows": 5000,
+  "step_magnitude": 2.5,
+  "source_csv": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_190_t2_155_t2_change_-5.csv",
+  "source_sha256": "12ce273ba47e01ba8aa5811df472f3f6b0bf2a0a510ed78a8b1cceecc8085eb2",
+  "fixed_values": {
+    "ACIDGAS.Fcn.CO2.(\"CO2\")": 40.13637557,
+    "ACIDGAS.Fcn.H2O.(\"H2O\")": 45.40793324,
+    "ACIDGAS.Fcn.H2S.(\"H2S\")": 54.95221027,
+    "B18.SPo.SPo": 599.9999588,
+    "B19.SPo.SPo": 1219.506406,
+    "BURNER_PC.SPo.SPo": 1.622195,
+    "FURANCE_PC.SPo.SPo": 1.571315,
+    "CAT1_PC.SPo.SPo": 1.411445,
+    "CAT2_PC.SPo.SPo": 1.251615,
+    "SEP2_PC.SPo.SPo": 1.361375,
+    "SEP1_PC.SPo.SPo": 1.520795,
+    "SEP3_PC.SPo.SPo": 1.200915
+  },
+  "arm_definition": "one specified MV per base, one signed step; two rows per pair",
+  "sampling": "5-dimensional random LHS separately within stratum and MV-direction arm",
+  "boundary_rule": "base sampling bounds shortened by 2.5 only on selected MV's assigned direction; both endpoints stay in the same stratum, without clipping",
+  "coverage_note": "Core acidgas_Fm 120.5-160.5; Soft-OOD 110.5-160.5; not the full enclosing five-dimensional rectangle. Region/stratum weights are design choices, not volume weights.",
+  "independence_note": "Fresh random input points; exact or near overlap with teacher training data has not been established by generation alone.",
+  "strata": {
+    "core": {
+      "region": "core",
+      "bounds": {
+        "B33.SPo.SPo": [
+          140.0,
+          300.0
+        ],
+        "B20.SPo.SPo": [
+          140.0,
+          240.0
+        ],
+        "B34.SPo.SPo": [
+          120.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arm_counts": {
+        "air2_SP_plus": 313,
+        "air2_SP_minus": 312,
+        "HEATER2_output_T_SP_plus": 313,
+        "HEATER2_output_T_SP_minus": 312
+      }
+    },
+    "single_air2_low": {
+      "region": "soft_ood",
+      "bounds": {
+        "B33.SPo.SPo": [
+          110.0,
+          140.0
+        ],
+        "B20.SPo.SPo": [
+          142.5,
+          237.5
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arm_counts": {
+        "air2_SP_plus": 62,
+        "air2_SP_minus": 63,
+        "HEATER2_output_T_SP_plus": 62,
+        "HEATER2_output_T_SP_minus": 63
+      }
+    },
+    "single_air2_high": {
+      "region": "soft_ood",
+      "bounds": {
+        "B33.SPo.SPo": [
+          300.0,
+          340.0
+        ],
+        "B20.SPo.SPo": [
+          142.5,
+          237.5
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arm_counts": {
+        "air2_SP_plus": 62,
+        "air2_SP_minus": 62,
+        "HEATER2_output_T_SP_plus": 63,
+        "HEATER2_output_T_SP_minus": 63
+      }
+    },
+    "single_t2_low": {
+      "region": "soft_ood",
+      "bounds": {
+        "B33.SPo.SPo": [
+          142.5,
+          297.5
+        ],
+        "B20.SPo.SPo": [
+          100.0,
+          140.0
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arm_counts": {
+        "air2_SP_plus": 63,
+        "air2_SP_minus": 63,
+        "HEATER2_output_T_SP_plus": 62,
+        "HEATER2_output_T_SP_minus": 62
+      }
+    },
+    "single_t2_high": {
+      "region": "soft_ood",
+      "bounds": {
+        "B33.SPo.SPo": [
+          142.5,
+          297.5
+        ],
+        "B20.SPo.SPo": [
+          240.0,
+          280.0
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arm_counts": {
+        "air2_SP_plus": 63,
+        "air2_SP_minus": 63,
+        "HEATER2_output_T_SP_plus": 62,
+        "HEATER2_output_T_SP_minus": 62
+      }
+    },
+    "joint_air2_low_t2_low": {
+      "region": "soft_ood",
+      "bounds": {
+        "B33.SPo.SPo": [
+          110.0,
+          140.0
+        ],
+        "B20.SPo.SPo": [
+          100.0,
+          140.0
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arm_counts": {
+        "air2_SP_plus": 16,
+        "air2_SP_minus": 15,
+        "HEATER2_output_T_SP_plus": 16,
+        "HEATER2_output_T_SP_minus": 16
+      }
+    },
+    "joint_air2_low_t2_high": {
+      "region": "soft_ood",
+      "bounds": {
+        "B33.SPo.SPo": [
+          110.0,
+          140.0
+        ],
+        "B20.SPo.SPo": [
+          240.0,
+          280.0
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arm_counts": {
+        "air2_SP_plus": 15,
+        "air2_SP_minus": 16,
+        "HEATER2_output_T_SP_plus": 15,
+        "HEATER2_output_T_SP_minus": 16
+      }
+    },
+    "joint_air2_high_t2_low": {
+      "region": "soft_ood",
+      "bounds": {
+        "B33.SPo.SPo": [
+          300.0,
+          340.0
+        ],
+        "B20.SPo.SPo": [
+          100.0,
+          140.0
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arm_counts": {
+        "air2_SP_plus": 16,
+        "air2_SP_minus": 15,
+        "HEATER2_output_T_SP_plus": 16,
+        "HEATER2_output_T_SP_minus": 15
+      }
+    },
+    "joint_air2_high_t2_high": {
+      "region": "soft_ood",
+      "bounds": {
+        "B33.SPo.SPo": [
+          300.0,
+          340.0
+        ],
+        "B20.SPo.SPo": [
+          240.0,
+          280.0
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arm_counts": {
+        "air2_SP_plus": 15,
+        "air2_SP_minus": 16,
+        "HEATER2_output_T_SP_plus": 16,
+        "HEATER2_output_T_SP_minus": 16
+      }
+    }
+  },
+  "verification": "passed: saved files reloaded; pair, arm, stratum, range, and signed step checks",
+  "output_sha256": {
+    "aspen_inputs.csv": "b421933e219c873ddb0b00c3232ad7724846c6d9eb8f6d2faddc1b6c49b2f159",
+    "row_manifest.csv": "db6398534a62646a7a7412250ca67ed16e1bb261ebf6b5fe3d9e7b5354936994"
+  }
+}

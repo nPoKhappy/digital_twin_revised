@@ -1,0 +1,50 @@
+{
+  "input_rows": 5000,
+  "aspen_status_counts": {
+    "Run Completed": 2825,
+    "Run failed": 2175
+  },
+  "pair_status_counts": {
+    "valid": 1335,
+    "both_failed": 1010,
+    "base_failed": 102,
+    "step_failed": 53
+  },
+  "valid_comparisons": 2670,
+  "max_input_absolute_difference": 1.0231815394945443e-12,
+  "input_match_tolerance_atol": 1e-08,
+  "finite_step_overall": [
+    {
+      "comparisons": 2670,
+      "matches": 2604,
+      "mismatches": 66,
+      "aspen_zero": 0,
+      "ann_zero": 0,
+      "both_zero": 0,
+      "agreement_percent": 97.52808988764045
+    }
+  ],
+  "mismatch_distinct_pairs": 56,
+  "float32_vs_float64_sign_changed": 0,
+  "teacher_threshold_comparisons": 2252,
+  "step_magnitudes": {
+    "air2_SP": 22.24311225638926,
+    "HEATER2_output_T_SP": 10.70800806361464
+  },
+  "protected_sha256": {
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_step_change_valid.xlsx": "3b6929623a9e9ae72f96ed4d7e29e291e00c9c19d56d916c77225ab37eb59e49",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\sampling\\ann_gain_validation_5000_large_step_20261109_043637_912963_UTC\\aspen_inputs.csv": "0594d78f1b907c32b821e94701ad97d6e55216c5b566b128f11367d5d4dd14b9",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\sampling\\ann_gain_validation_5000_large_step_20261109_043637_912963_UTC\\row_manifest.csv": "8fde4e77c81d0e3babc6529f0679abf40f9a6d360e166dd40be5adce82d4db2a",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\sampling\\ann_gain_validation_5000_large_step_20261109_043637_912963_UTC\\generation_report.json": "07d18213380ee19ac87273ff7db0e0df6d42ae3df61d2c287cb344a30943d104",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\Tabular_MLP_5in_2out_QV.pth": "421b2f19ce37e58b9185b94ed9529e9167024d93e10fdf59ee9a565f16eb0155",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\steady_state\\Tabular_MLP_New\\zscore_mean.csv": "80ee9c2a77c6c1407108bc97f963996aad3b4bd2b0fccf893cca7b0c8c4f2ee4",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\steady_state\\Tabular_MLP_New\\zscore_std.csv": "23954d26a069cc1592722c154f7cb72dc3d0a3e77120e9060bf0e859b9022ea6",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\scripts\\evaluation\\validate_ann_aspen_steps.py": "7c7ce5e0eef1e8d8aced46ec6fe65994d40604d153f579bc61eb8c74bc89b27b",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\scripts\\evaluation\\evaluate_gain_in_out_distribution.py": "17a29135812a15e4dbdee0d1db49b82581059472aa63404f572b7427f72d4c0f",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\scripts\\training\\train_pgin_stepwise_gain.py": "4c549662974cbe680d6f0c08315bf79c48c581998667f20b9eeef6b2dd6f662a"
+  },
+  "primary_rule": "same sign of (y_step - y_base)/(MV_step - MV_base), exact zero categories; no near-zero filtering",
+  "precision": "same float32 network as existing KCI; float64 network sensitivity separately",
+  "local_gradient": "ANN autograd at base vs Aspen finite-step; KCI threshold 1e-5 applies only to ANN gradient",
+  "caveat": "Aspen solver completed status is not independent proof of convergence; no time-response or closed-loop validation"
+}

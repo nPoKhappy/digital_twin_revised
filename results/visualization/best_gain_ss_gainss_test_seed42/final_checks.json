@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "figure_count": 6,
+  "five_table_row_counts": [
+    4,
+    8,
+    24,
+    24,
+    24
+  ],
+  "delta_values_checked": 216,
+  "unit_conversion_checked": true,
+  "region50_weighted_log_reconstruction": true,
+  "NoGain_test_KCI_reproduced": true,
+  "documentation_links_checked": 32,
+  "large_diagnostic_files_ignored": 8,
+  "unit_tests_passed": 9,
+  "protected_inputs_unchanged": 94,
+  "retained_outputs_unchanged": 429,
+  "visual_review": "passed: grouped H1/H18/TS core and external tables reviewed; merged case labels, red/green changes and bold minima visible; figures 1/2/6 preserved",
+  "presentation_update": "table_horizon_update.json",
+  "unchanged_numeric_inputs_after_presentation_update": 93
+}

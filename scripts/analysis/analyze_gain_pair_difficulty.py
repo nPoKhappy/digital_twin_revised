@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import math
 from pathlib import Path
 
@@ -11,6 +13,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from PIL import Image
 
 
 PAIR_ORDER = [
@@ -32,21 +35,18 @@ PLOT_PAIR_LABELS = {
     "T2 → SO₂": r"T2 $\rightarrow$ SO$_2$",
 }
 MODEL_DIRS = {
-    "No-Gain": "test/no_gain_seed42",
-    "Gain": "test/gain0p05_seed42",
-    "Gain + SS=0.01": "test/gain_ss/ss0p01_seed42",
-    "Difficult-GradNorm": (
-        "transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42_"
-        "difficult_group_gradnorm_no_ss"
-    ),
+    "No-Gain": "no_gain",
+    "Gain=250": "gain",
+    "SS-only=2.5": "ss_only",
+    "Gain+SS=2.5/2.5": "gain_ss",
 }
 MODEL_STYLES = {
     "No-Gain": {"color": "#333333", "marker": "s", "linestyle": "--"},
-    "Gain": {"color": "#0072B2", "marker": "o", "linestyle": "-"},
-    "Gain + SS=0.01": {"color": "#E69F00", "marker": "^", "linestyle": "-."},
-    "Difficult-GradNorm": {
-        "color": "#D81B60",
-        "marker": "D",
+    "Gain=250": {"color": "#0072B2", "marker": "o", "linestyle": "-"},
+    "SS-only=2.5": {"color": "#D55E00", "marker": "^", "linestyle": "-."},
+    "Gain+SS=2.5/2.5": {
+        "color": "#009E73",
+        "marker": "s",
         "linestyle": ":",
     },
 }
@@ -54,20 +54,37 @@ DISTRIBUTIONS = ["in_range", "soft_ood"]
 DISTRIBUTION_LABELS = {"in_range": "In-range", "soft_ood": "Soft-OOD"}
 QUARTILES = ["Q1", "Q2", "Q3", "Q4"]
 SIGN_ORDER = ["Negative", "Positive"]
+FIGURE_NAMES = [
+    "teacher_gain_landscape",
+    "conditional_kci_by_gain_magnitude",
+    "conditional_kci_by_teacher_sign",
+]
+ANALYSIS_NAMES = {
+    "teacher_gain_summary.csv", "gain_magnitude_quartile_edges.csv",
+    "teacher_gain_landscape.csv", "gain_pair_probe_accuracy.csv",
+    "conditional_kci_by_gain_magnitude.csv", "conditional_kci_by_teacher_sign.csv",
+    "gain_pair_difficulty_protocol.json", "gain_pair_difficulty_validation.json",
+    "gain_pair_difficulty_README.md", "rebuild_gain_pair_difficulty.py",
+    "gain_pair_difficulty_contact_sheet.png", "gain_pair_difficulty_contact_sheet_grayscale.png",
+    *[name+suffix for name in FIGURE_NAMES for suffix in [".png", ".pdf", "_grayscale.png"]],
+}
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Analyze teacher-Gain landscape and conditional all18 KCI."
     )
-    parser.add_argument("--input-root", default="results/evaluation/gain_eval_all18")
+    parser.add_argument(
+        "--input-root",
+        default="results/evaluation/gain_eval_all18/test/best_family_models_seed42_20261106",
+    )
     parser.add_argument(
         "--teacher-scale-file",
         default="results/steady_state/Tabular_MLP_New/zscore_std.csv",
     )
     parser.add_argument(
         "--output-dir",
-        default="results/visualization/gain_pair_difficulty_seed42",
+        default="results/visualization/best_gain_ss_gainss_test_seed42",
     )
     parser.add_argument("--chunk-size", type=int, default=200_000)
     parser.add_argument("--bootstrap-resamples", type=int, default=2_000)
@@ -108,8 +125,25 @@ def bool_series(values: pd.Series) -> pd.Series:
     return values.astype(str).str.lower().eq("true")
 
 
+def model_files(directory: Path, filename: str) -> list[Path]:
+    """Support both the original combined CSV and distribution-specific exports."""
+    combined = directory / filename
+    if combined.is_file():
+        return [combined]
+    paths = [directory / distribution / filename for distribution in DISTRIBUTIONS]
+    for path in paths:
+        if not path.is_file():
+            raise FileNotFoundError(path)
+    return paths
+
+
+def diagnostic_chunks(paths: Path | list[Path], columns: list[str], chunk_size: int):
+    for path in ([paths] if isinstance(paths, Path) else paths):
+        yield from pd.read_csv(path, usecols=columns, chunksize=chunk_size)
+
+
 def load_teacher_landscape(
-    diagnostic_path: Path, scales: pd.Series, chunk_size: int
+    diagnostic_path: Path | list[Path], scales: pd.Series, chunk_size: int
 ) -> pd.DataFrame:
     columns = [
         "distribution",
@@ -122,7 +156,7 @@ def load_teacher_landscape(
         "step_index",
     ]
     pieces = []
-    for chunk in pd.read_csv(diagnostic_path, usecols=columns, chunksize=chunk_size):
+    for chunk in diagnostic_chunks(diagnostic_path, columns, chunk_size):
         selected = chunk.loc[
             (chunk["direction"] == "plus") & (chunk["step_index"] == 1)
         ].copy()
@@ -238,7 +272,7 @@ def assign_quartiles(frame: pd.DataFrame, edge_lookup: dict) -> pd.Series:
 
 
 def load_probe_accuracy(
-    diagnostic_path: Path,
+    diagnostic_path: Path | list[Path],
     scales: pd.Series,
     quartile_edges: pd.DataFrame,
     chunk_size: int,
@@ -264,7 +298,7 @@ def load_probe_accuracy(
         for row in quartile_edges.itertuples(index=False)
     }
     pieces = []
-    for chunk in pd.read_csv(diagnostic_path, usecols=columns, chunksize=chunk_size):
+    for chunk in diagnostic_chunks(diagnostic_path, columns, chunk_size):
         chunk = chunk.loc[bool_series(chunk["valid_teacher_gain"])].copy()
         if chunk.empty:
             continue
@@ -382,13 +416,20 @@ def summarize_conditional_kci(
 def validate_against_official(
     input_root: Path, model: str, model_dir: str, probe: pd.DataFrame
 ) -> None:
-    official = pd.read_csv(input_root / model_dir / "gain_evaluation_detail.csv")
+    official = pd.concat(
+        [pd.read_csv(path) for path in model_files(input_root / model_dir, "gain_evaluation_detail.csv")],
+        ignore_index=True,
+    )
     official = add_pair_label(official)
+    if len(official) != 8 or official.duplicated(["distribution", "pair"]).any():
+        raise ValueError(f"{model}: expected exactly eight official distribution/pair rows.")
     for row in official.itertuples(index=False):
         group = probe.loc[
             (probe["distribution"] == row.distribution) & (probe["pair"] == row.pair)
         ]
         calculated = 100.0 * group["correct"].sum() / group["total"].sum()
+        if int(group["correct"].sum()) != row.tp + row.tn or int(group["total"].sum()) != row.valid_comparisons:
+            raise AssertionError(f"{model}, {row.distribution}, {row.pair}: counts differ from the official result.")
         if not np.isclose(calculated, row.kci_percent, rtol=0, atol=1e-10):
             raise AssertionError(
                 f"{model}, {row.distribution}, {row.pair}: calculated KCI "
@@ -502,7 +543,7 @@ def plot_teacher_landscape(
     figure.text(
         0.5,
         0.01,
-        "Normalized Gain uses Tabular-MLP IQR scales. Near-zero / invalid follows "
+        "Normalized Gain uses saved Tabular-MLP input/output scales. Near-zero / invalid follows "
         "the existing physical-Gain validity threshold.",
         ha="center",
         fontsize=8.5,
@@ -595,12 +636,120 @@ def plot_conditional_kci(
     plt.close(figure)
 
 
+def verify_partition_summaries(magnitude, sign, probes) -> None:
+    keys = ["model", "distribution", "pair"]
+    expected = pd.concat(probes).groupby(keys)[["correct", "total"]].sum().sort_index()
+    for frame in [magnitude, sign]:
+        partitioned = frame.groupby(keys)[["correct", "comparisons"]].sum().sort_index()
+        np.testing.assert_array_equal(partitioned.correct, expected.correct)
+        np.testing.assert_array_equal(partitioned.comparisons, expected.total)
+        valid = frame[frame.probe_points > 0]
+        if not np.isfinite(valid[["kci_percent", "ci95_low", "ci95_high"]]).all().all():
+            raise AssertionError("Nonempty conditional groups must have finite KCI and confidence intervals.")
+        if not ((valid.ci95_low >= 0) & (valid.ci95_high <= 100) & (valid.ci95_low <= valid.ci95_high)).all():
+            raise AssertionError("Invalid bootstrap interval.")
+
+
+def finish_analysis(output_dir, protocol, teacher_summary, magnitude, sign) -> None:
+    contact = Image.new("RGB", (1500, 1650), "white")
+    for index, name in enumerate(FIGURE_NAMES):
+        with Image.open(output_dir / f"{name}.png") as source:
+            thumbnail = source.convert("RGB")
+            thumbnail.convert("L").save(output_dir / f"{name}_grayscale.png")
+        thumbnail.thumbnail((1500, 550))
+        contact.paste(thumbnail, ((1500-thumbnail.width)//2, index*550+(550-thumbnail.height)//2))
+    contact.save(output_dir / "gain_pair_difficulty_contact_sheet.png")
+    contact.convert("L").save(output_dir / "gain_pair_difficulty_contact_sheet_grayscale.png")
+    lines = ["# 四模型 test：增益配對難度分析", "",
+             "模型：No-Gain、Gain=250、SS-only=2.5、Gain+SS=(2.5,2.5)，seed42。使用剛才四模型 test KCI 的原始逐點明細，不重新訓練或推論。", "",
+             "## 圖與數據", ""]
+    for name in FIGURE_NAMES:
+        lines.append(f"- [{name} PNG]({name}.png)／[PDF]({name}.pdf)／[灰階]({name}_grayscale.png)")
+    lines += ["", "- [Teacher 統計](teacher_gain_summary.csv)／[逐點 teacher 增益](teacher_gain_landscape.csv)",
+              "- [Q1～Q4 邊界](gain_magnitude_quartile_edges.csv)／[依增益大小的 KCI](conditional_kci_by_gain_magnitude.csv)",
+              "- [依正負方向的 KCI](conditional_kci_by_teacher_sign.csv)／[每個操作點的36次比較](gain_pair_probe_accuracy.csv)",
+              "- [來源與計算定義](gain_pair_difficulty_protocol.json)／[核對紀錄](gain_pair_difficulty_validation.json)", "",
+              "## 定義", "",
+              "Teacher 增益取同一個 probe 的 plus 方向、第1個 post-step 時刻作為唯一參考，避免重複計數；模型的KCI仍使用±方向各18個時刻，共36次比較。", "",
+              "正規化增益為 teacher_gain × teacher輸入scale / teacher輸出scale。使用保存的Tabular-MLP尺度；這份程式原先圖註的IQR已修正為保存尺度，數值公式維持原樣。", "",
+              "Q1～Q4在每個區域、每個增益配對的有效teacher探測點內各自計算25/50/75百分位；四個模型共用No-Gain teacher邊界。Q1為較小增益，Q4為較大增益；原本無效／近零增益不納入條件式KCI。", "",
+              f"誤差棒為{protocol['bootstrap_resamples']:,}次bootstrap的95%區間。重抽樣單位是操作點，其36次方向／時刻比較保留為一整組；不是把36次比較當成獨立樣本，也不是跨訓練seed的不確定性。", "",
+              "沒有有效探測點的正／負增益組別保留NaN，不畫成0%。所有四分位與正負組別相加後，correct與valid均重現原本test KCI計數。", "",
+              "穩態test核心4385點、近外插2692點；KCI是ANN-reference方向一致性。Teacher大小與正負分布反映參考模型與本批探測點，不等同實際製程的物理增益真值。", "",
+              "## 重跑與重畫", "", "完整分析：`python -m scripts.analysis.analyze_gain_pair_difficulty`。",
+              "只用保存CSV重畫：`python results/visualization/best_gain_ss_gainss_test_seed42/rebuild_gain_pair_difficulty.py`。", ""]
+    (output_dir / "gain_pair_difficulty_README.md").write_text("\n".join(lines), encoding="utf-8")
+    (output_dir / "rebuild_gain_pair_difficulty.py").write_text('''from pathlib import Path
+import sys
+import pandas as pd
+ROOT=Path(__file__).resolve().parents[3]
+sys.path.insert(0,str(ROOT))
+from scripts.analysis.analyze_gain_pair_difficulty import configure_style, plot_teacher_landscape, plot_conditional_kci, finish_analysis, QUARTILES, SIGN_ORDER
+if __name__=='__main__':
+    import json
+    p=Path(__file__).resolve().parent
+    teacher=pd.read_csv(p/'teacher_gain_landscape.csv')
+    summary=pd.read_csv(p/'teacher_gain_summary.csv')
+    magnitude=pd.read_csv(p/'conditional_kci_by_gain_magnitude.csv')
+    sign=pd.read_csv(p/'conditional_kci_by_teacher_sign.csv')
+    configure_style()
+    plot_teacher_landscape(teacher,summary,p)
+    plot_conditional_kci(magnitude,'magnitude_bin',QUARTILES,'All18 KCI conditioned on teacher Gain magnitude','conditional_kci_by_gain_magnitude',p)
+    plot_conditional_kci(sign,'teacher_sign_label',SIGN_ORDER,'All18 KCI conditioned on teacher Gain sign','conditional_kci_by_teacher_sign',p)
+    finish_analysis(p,json.loads((p/'gain_pair_difficulty_protocol.json').read_text(encoding='utf-8')),summary,magnitude,sign)
+''', encoding="utf-8")
+
+
 def main() -> None:
     args = parse_args()
     repo_root = Path(__file__).resolve().parents[2]
     input_root = repo_root / args.input_root
     output_dir = repo_root / args.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
+    if args.chunk_size < 1 or args.bootstrap_resamples < 1:
+        raise ValueError("Chunk size and bootstrap resamples must be positive.")
+    digest = lambda path: hashlib.file_digest(path.open("rb"), "sha256").hexdigest()
+    retained = {
+        str(path.relative_to(repo_root)): digest(path)
+        for path in output_dir.rglob("*")
+        if path.is_file() and path.name not in ANALYSIS_NAMES
+    }
+    inputs = [Path(__file__).resolve(), repo_root / args.teacher_scale_file]
+    for name in ["selected_models.csv", "run_protocol.json"]:
+        if (output_dir / name).is_file():
+            inputs.append(output_dir / name)
+    for model_dir in MODEL_DIRS.values():
+        inputs.extend(model_files(input_root / model_dir, "gain_probe_diagnostics.csv"))
+        inputs.extend(model_files(input_root / model_dir, "gain_evaluation_detail.csv"))
+        # These cached arrays prove that the bins/signs use identical teacher states.
+        for distribution in DISTRIBUTIONS:
+            array_path = input_root / model_dir / distribution / "gain_arrays.npz"
+            if array_path.exists():
+                inputs.append(array_path)
+                with np.load(input_root / MODEL_DIRS["No-Gain"] / distribution / "gain_arrays.npz") as reference, np.load(array_path) as current:
+                    np.testing.assert_array_equal(reference["teacher_gain"], current["teacher_gain"])
+                    np.testing.assert_array_equal(reference["physical_ANN_inputs"], current["physical_ANN_inputs"])
+            validation = array_path.with_name("evaluation_validation.json")
+            if validation.exists():
+                inputs.append(validation)
+                proof = json.loads(validation.read_text(encoding="utf-8"))
+                if not proof["passed"]:
+                    raise AssertionError(f"Unverified KCI input: {validation}")
+                for name, value in proof["output_sha256"].items():
+                    if digest(validation.parent / name) != value:
+                        raise AssertionError(f"KCI input changed: {validation.parent / name}")
+    protected = {str(path.relative_to(repo_root)): digest(path) for path in inputs}
+    protocol = dict(
+        input_root=str(input_root.relative_to(repo_root)), models=MODEL_DIRS,
+        teacher_normalization="teacher_gain * saved_teacher_scale[mv] / saved_teacher_scale[target]",
+        quartiles="Within each distribution and pair; valid No-Gain teacher probes only; shared across all models",
+        bootstrap_resamples=args.bootstrap_resamples, bootstrap_seed=args.bootstrap_seed,
+        bootstrap_unit="Operating point; its two directions x 18 time steps stay together",
+        data_role="Same steady-state test probes as the best-model comparison; not validation",
+        protected_sha256=protected, retained_test_outputs_sha256=retained,
+    )
+    (output_dir / "gain_pair_difficulty_protocol.json").write_text(json.dumps(protocol, indent=2), encoding="utf-8")
+    print("[Info] Input hashes verified; identical teacher arrays and probe inputs across four models.", flush=True)
     scales = pd.read_csv(repo_root / args.teacher_scale_file, index_col=0).squeeze(
         "columns"
     )
@@ -610,25 +759,29 @@ def main() -> None:
     missing_scales = sorted(required_scales - set(scales.index))
     if missing_scales:
         raise ValueError(f"Teacher scale file is missing: {missing_scales}")
+    if not np.isfinite(scales[list(required_scales)]).all() or not scales[list(required_scales)].gt(0).all():
+        raise ValueError("Teacher normalization scales must be finite and positive.")
 
-    teacher_path = (
-        input_root / MODEL_DIRS["No-Gain"] / "gain_probe_diagnostics.csv"
-    )
+    teacher_path = model_files(input_root / MODEL_DIRS["No-Gain"], "gain_probe_diagnostics.csv")
     teacher = load_teacher_landscape(teacher_path, scales, args.chunk_size)
     teacher_summary = summarize_teacher(teacher)
     quartile_edges = build_quartile_edges(teacher)
     teacher_summary.to_csv(output_dir / "teacher_gain_summary.csv", index=False)
     quartile_edges.to_csv(output_dir / "gain_magnitude_quartile_edges.csv", index=False)
+    teacher.to_csv(output_dir / "teacher_gain_landscape.csv", index=False)
 
     magnitude_frames = []
     sign_frames = []
+    probe_frames = []
     for model_index, (model, model_dir) in enumerate(MODEL_DIRS.items()):
         print(f"[Info] Processing {model}", flush=True)
-        diagnostic_path = input_root / model_dir / "gain_probe_diagnostics.csv"
+        diagnostic_path = model_files(input_root / model_dir, "gain_probe_diagnostics.csv")
         probe = load_probe_accuracy(
             diagnostic_path, scales, quartile_edges, args.chunk_size
         )
         validate_against_official(input_root, model, model_dir, probe)
+        probe_frames.append(probe.assign(model=model))
+        print(f"[Pass] {model}: all eight official KCI counts reproduced; {len(probe)} valid probe/pair clusters.", flush=True)
         magnitude_frames.append(
             summarize_conditional_kci(
                 probe,
@@ -654,6 +807,9 @@ def main() -> None:
     sign_kci = pd.concat(sign_frames, ignore_index=True)
     magnitude_kci.to_csv(output_dir / "conditional_kci_by_gain_magnitude.csv", index=False)
     sign_kci.to_csv(output_dir / "conditional_kci_by_teacher_sign.csv", index=False)
+    pd.concat(probe_frames, ignore_index=True).to_csv(output_dir / "gain_pair_probe_accuracy.csv", index=False)
+    assert len(magnitude_kci) == 128 and len(sign_kci) == 64
+    verify_partition_summaries(magnitude_kci, sign_kci, probe_frames)
 
     configure_style()
     plot_teacher_landscape(teacher, teacher_summary, output_dir)
@@ -673,6 +829,22 @@ def main() -> None:
         "conditional_kci_by_teacher_sign",
         output_dir,
     )
+    finish_analysis(output_dir, protocol, teacher_summary, magnitude_kci, sign_kci)
+    if any(digest(repo_root / name) != value for name, value in protected.items()):
+        raise AssertionError("Analysis input changed during execution.")
+    if any(digest(repo_root / name) != value for name, value in retained.items()):
+        raise AssertionError("An existing test comparison output was changed.")
+    validation = dict(
+        passed=True, models=list(MODEL_DIRS), official_distribution_pair_counts_checked=32,
+        teacher_landscape_rows=len(teacher), valid_probe_pair_clusters_per_model=[len(p) for p in probe_frames],
+        conditional_magnitude_rows=128, conditional_sign_rows=64,
+        shared_teacher_and_probe_arrays_verified=True, partitions_reconstruct_official_counts=True,
+        bootstrap_resamples=args.bootstrap_resamples, bootstrap_unit="Operating point, 36 comparisons per cluster",
+        protected_inputs_unchanged=True, retained_test_outputs_unchanged=True,
+        visual_review="pending", output_sha256={name: digest(output_dir / name) for name in ANALYSIS_NAMES
+                                               if (output_dir / name).is_file() and name != "gain_pair_difficulty_validation.json"},
+    )
+    (output_dir / "gain_pair_difficulty_validation.json").write_text(json.dumps(validation, indent=2), encoding="utf-8")
     print(f"[Done] Saved analysis to {output_dir}", flush=True)
 
 

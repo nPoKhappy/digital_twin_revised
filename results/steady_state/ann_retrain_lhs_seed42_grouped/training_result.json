@@ -1,0 +1,42 @@
+{
+  "completed": true,
+  "best_epoch": 52,
+  "best_valid_mse": 0.006829923014595187,
+  "epochs_run": 102,
+  "test_metrics": [
+    {
+      "target": "B35_H2S",
+      "n": 4297,
+      "MAE": 0.00028240491002794,
+      "RMSE": 0.00035836157006610757,
+      "R2": 0.9903890531636632,
+      "MAPE": 3.2548326148538655
+    },
+    {
+      "target": "B35_SO2",
+      "n": 4297,
+      "MAE": 0.00012365969238902058,
+      "RMSE": 0.00016129415667517653,
+      "R2": 0.9948414997234982,
+      "MAPE": 38.215337817723274
+    }
+  ],
+  "output_sha256": {
+    "epoch_loss.csv": "6693d1798b4e5bcdb477a6871a4874162604ee2e3dfb059c6af287d94d646c73",
+    "group_component_summary.csv": "2587e91ddd81cf197a168b9af2c7490709caa910289b778fefd9fe0ce02a1ce8",
+    "group_evidence_all_rows.csv": "f4315c0f859084adfafa48da949c59bbedaeade7a1bb1b6a4a8f9e07eb586c7e",
+    "parity_plot_B35_H2S.png": "a73c1fe3c42b963dae8419607ee1328109ba48257afdd11bdddb176d6bc6e40c",
+    "parity_plot_B35_SO2.png": "139bf849c2b4240d51de7ec6ea82992423ccff6310c357a19478b722ae9d4c48",
+    "split_manifest.csv": "00bc739fedbe05a62951dca0e0f46b9ad3c5406144b422c175ea1ad014832fd4",
+    "tabular_metrics.csv": "b1bb2cb5c9b82e87695182bc7e1f30079edc96492187d0614f93d570122ca8f7",
+    "tabular_predictions.csv": "f4976feaf75891dabc9eed8db3646e12379ac6ef9486a16addeba83667b4a56c",
+    "tabular_test_dataset.csv": "6ff88f496e4b4c7005a77e18defb870ded7b575d76cb56d870b3cc867821bf65",
+    "teacher.pth": "5ccef7ed9f66efede64edfb6ea4ce6fea5e482245b6f714f2b32f181ee177e52",
+    "test_metrics.csv": "4a12c3281ad265da293dbdcd9c290a108f5d5d9173534eee8e932b8833647dad",
+    "test_predictions.csv": "048c4c2e422d4385c9e73257a9fcb4bcefc224a37b79792bb1e68c129fd9faed",
+    "training_curve.png": "862f4e95e1eb578d80acdc8da0b7176557743a2503fafb579d338e6f72923047",
+    "training_protocol.json": "3d7108dcda2584b658a6a974dd0fd5515653b9494ed8d9f3f3bff3e44663e74a",
+    "zscore_mean.csv": "28c84eb6b3d3cdc9c3847b2e730ad1e312cc3f320c2a158e8c3c518885e04e41",
+    "zscore_std.csv": "61ca90e99deb091ff1c559dcfe3dc880f4740ff7cadc0f9c396be17c643ac7c0"
+  }
+}

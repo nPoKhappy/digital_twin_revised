@@ -28,15 +28,20 @@ def build_report(folder):
         'validation_metrics', 'validation_rmse_summary']}
     overall, regional, horizons = [tables[n] for n in ['avgrelrmse_overall', 'avgrelrmse_by_region', 'avgrelrmse_by_region_evaluation']]
     components, metrics = tables['relative_rmse_components'], tables['validation_metrics']
+    protocol = json.loads((folder/'metric_protocol.json').read_text(encoding='utf-8'))
+    combined = protocol.get('model_family') == 'gain_ss'
     gain = 'gain_weight' in overall.columns
     weight_col = 'gain_weight' if gain else 'ss_weight'
     title, prefix, fixed = ('Gain-only', 'Gain', 'SS=0') if gain else ('SS-only', 'SS', 'Gain=0')
+    if combined:
+        title, prefix, fixed = 'Gain+SS', 'Gain=SS', 'Gain=SS; SS targets: all 48 outputs'
+        np.testing.assert_array_equal(overall.gain_weight, overall.ss_weight)
     models = overall.sort_values(weight_col)[['model', weight_col]].values.tolist()
     assert [float(w) for _, w in models] == WEIGHTS and len(components) == 180
     assert components.groupby('model').size().eq(36).all()
     assert components.n.eq(components.NoGain_n).all()
     np.testing.assert_allclose(components.relative_RMSE, components.RMSE/components.NoGain_RMSE, rtol=1e-12)
-    kci_file = 'kci_pair_counts.csv' if gain else 'ss_only_kci_components.csv'
+    kci_file = 'gain_ss_kci_components.csv' if combined else ('kci_pair_counts.csv' if gain else 'ss_only_kci_components.csv')
     kci = pd.read_csv(folder/kci_file)
     coordinates = regional[['model', weight_col, 'partition', 'micro_kci_percent', 'AvgRelRMSE']].rename(columns={weight_col:'loss_weight', 'micro_kci_percent':'ANN_reference_KCI_percent'})
     for row in overall.itertuples():
@@ -70,7 +75,6 @@ def build_report(folder):
     assert len(prior) == 60
     np.testing.assert_allclose(prior.mean_case_RMSE_saved, prior.mean_case_RMSE_recomputed, rtol=1e-12)
     raw.to_csv(folder/'rmse_summary_with_no_gain.csv', index=False)
-    protocol = json.loads((folder/'metric_protocol.json').read_text(encoding='utf-8'))
     assert protocol['internal_validation'] == ['R5-3', 'R5-4', 'R5-5']
     assert protocol['external_validation'] == ['R5-27', 'R5-28', 'R5-29']
     assert protocol['region_weights'] == [.5, .5]
@@ -157,11 +161,11 @@ def build_report(folder):
         contact.paste(thumb,((i%2)*900+(900-thumb.width)//2,(i//2)*700))
     contact.save(folder/'contact_sheet.png')
     contact.convert('L').save(folder/'contact_sheet_grayscale.png')
-    label='Gain' if gain else 'SS-only'
+    label='Gain+SS' if combined else ('Gain' if gain else 'SS-only')
     relative_folder=protocol.get('output_directory',f'results/visualization/{folder.name}')
     lines=[f'# 五個 {label} 超參數 validation 比較','',
-           '權重：0.05、2.5、25、250、2500；seed42。五個 Gain 與五個 SS-only 使用相同分析、檔案結構及產圖程式。','',
-           '**內插：R5-3、R5-4、R5-5；外插：R5-27、R5-28、R5-29。這兩組資料夾都是 validation，比三模型 test 使用不同案例。**','',
+           ('Gain 與 SS 權重同步為 0.05、2.5、25、250、2500；seed42；SS 使用全部 48 個輸出。與五個 Gain、五個 SS-only 使用相同分析、檔案結構及產圖程式。' if combined else '權重：0.05、2.5、25、250、2500；seed42。五個 Gain 與五個 SS-only 使用相同分析、檔案結構及產圖程式。'),'',
+           '**內插：R5-3、R5-4、R5-5；外插：R5-27、R5-28、R5-29。這是 validation，比三模型 test 使用不同案例。**','',
            '## 內插／外插比較圖','',
            '[內外插雙面板 PNG](regional_kci_vs_avgrelrmse.png)／[PDF](regional_kci_vs_avgrelrmse.pdf)／[灰階](regional_kci_vs_avgrelrmse_grayscale.png)／[10 個繪圖座標](regional_plot_coordinates.csv)','',
            'X 是對應穩態 validation 分布的 ANN-reference micro KCI；Y 是該區域內 18 項同案例 RMSE 比值的幾何平均。No-Gain=1；同一權重在兩組圖使用相同顏色與標記，各面板座標範圍依資料調整。','',
@@ -183,14 +187,14 @@ def build_report(folder):
             '- [整體分數](avgrelrmse_overall.csv)／[區域分數](avgrelrmse_by_region.csv)／[H1/H18/TS 分數](avgrelrmse_by_evaluation.csv)',
             '- [區域 × H1/H18/TS](avgrelrmse_by_region_evaluation.csv)／[180 個逐案例比值與原始 RMSE](relative_rmse_components.csv)',
             '- [216 項指標，含 No-Gain](validation_metrics.csv)／[1296 項 H1～H18 指標](horizon_metrics.csv)／[1368 項 RMSE 重算](RMSE_recheck.csv)',
-            '- [資料來源](data_audit.csv)／[內插重現核對](internal_metrics_recheck.csv)／[預測陣列](predictions/)',
+            f'- [資料來源](data_audit.csv)／[{"No-Gain 內插重現核對" if combined else "內插重現核對"}](internal_metrics_recheck.csv)／[預測陣列](predictions/)',
             f'- [KCI 計數]({kci_file})／[計算協定](metric_protocol.json)／[評估核對](evaluation_validation.json)／[圖表核對](plot_validation.json)','',
-            f'目標權重欄位為 `{weight_col}`；共用繪圖座標統一使用 `loss_weight`。Gain 與 SS-only 是不同訓練目標，因此數值與排名可以不同。','',
+            f'目標權重欄位為 `{weight_col}`；共用繪圖座標統一使用 `loss_weight`。Gain、SS-only 與 Gain+SS 是不同訓練目標，因此數值與排名可以不同。','',
             '## 重畫與重跑','',
             '僅重畫（不重跑模型）：','', '```powershell',f'.\\.venv\\Scripts\\python.exe {relative_folder}/rebuild_figures.py','```','',
-            '完整重跑兩組 validation：','', '```powershell','.\\.venv\\Scripts\\python.exe scripts/prediction/validate_hyperparameters.py','```','',
+            ('完整重跑這五組 Gain+SS validation（固定 checkpoint 推論，不訓練）：' if combined else '完整重跑兩組 validation：'),'', '```powershell',protocol.get('full_rerun_command','.\\.venv\\Scripts\\python.exe scripts/prediction/validate_hyperparameters.py'),'```','',
             'H1/H18 每個起點重新給 18 點真實歷史，再遞迴至第 1／18 步；TS 僅最初 18 點使用真實歷史，其後持續回填預測。皆使用已知未來 decoder inputs。R5-5 沿用內部分類，部分操作點超出 core。','',
-            'KCI 沿用已核對來源的穩態 validation 結果。單一 seed42、相關軌跡不是獨立重複實驗；未新增誤差棒。ANN-reference KCI 不代表物理正確性或閉迴路控制驗證。','']
+            ('KCI 使用 lhs_valid_in_range.xlsx 與 lhs_valid_soft_ood.xlsx 全部有效探測點重新評估，沒有使用訓練 KCI history。' if combined else 'KCI 沿用已核對來源的穩態 validation 結果。')+'單一 seed42、相關軌跡不是獨立重複實驗；未新增誤差棒。ANN-reference KCI 不代表物理正確性或閉迴路控制驗證。','']
     (folder/'README.md').write_text('\n'.join(lines),encoding='utf-8')
     report=dict(passed=True,shared_report_module='scripts/prediction/validation_comparison_report.py',shared_report_sha256=sha(Path(__file__)),
                 model_count=5,component_count_per_model=36,regional_components_per_model=18,matched_ratios=180,

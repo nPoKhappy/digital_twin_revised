@@ -1,0 +1,9 @@
+region,mv,target,comparisons,matches,mismatches,aspen_zero,ann_zero,both_zero,agreement_percent
+core,HEATER2_output_T_SP,B35_H2S,420,396,24,0,0,0,94.285714285714292
+core,HEATER2_output_T_SP,B35_SO2,420,401,19,0,0,0,95.476190476190482
+core,air2_SP,B35_H2S,456,452,4,0,0,0,99.122807017543863
+core,air2_SP,B35_SO2,456,456,0,0,0,0,100
+soft_ood,HEATER2_output_T_SP,B35_H2S,233,218,15,0,0,0,93.562231759656655
+soft_ood,HEATER2_output_T_SP,B35_SO2,233,221,12,0,0,0,94.849785407725321
+soft_ood,air2_SP,B35_H2S,226,216,10,0,0,0,95.575221238938056
+soft_ood,air2_SP,B35_SO2,226,226,0,0,0,0,100

@@ -64,3 +64,5 @@ python -m scripts.prediction.predict_step_change --config configs/pgin/gain/tran
 所有 YAML 已加入 `output.results_dir`，例如 `./results/pgin/gain_ss`。訓練、動態推論及 KCI 評估透過 `src/experiment_paths.py` 取得同一份標準化統計位置。完整位置見 [Results 總覽](../results/README.md)。ANN teacher 專用入口仍使用 `results/steady_state/Tabular_MLP_New/`。
 
 新五組 Gain+SS 的兩個權重分別同為 0.05、2.5、25、250、2500，沿用 seed42 及全部 48 個 SS 輸出目標。依 [重跑指令](../configs/pgin/gain_ss/README.md) 訓練；本次整理沒有啟動訓練。保留的混合模型歷史圖含有舊 Gain+SS 結果，不能當作這五組的新結果。舊的特定 Gain+SS 消融繪圖入口仍描述原來實驗，需要相符的歷史產物才能重跑。
+
+2026-11-05 五組 Gain+SS 已完成訓練。使用 `python -m scripts.prediction.validate_gain_ss_hyperparameters` 重新評估固定 checkpoint；內插 R5-3／4／5、外插 R5-27／28／29，AvgRelRMSE 內外各 50%。穩態 KCI 使用同一批 validation XLSX，獨立於動態 RMSE 案例。輸出見 [Gain+SS validation](../results/visualization/gain_ss_all_weights_casewise_region50_validation_seed42/README.md)。此評估入口提供 `--phase dynamic|kci|report`，完整預設為 `all`；相同輸入可使用已保存的預測或完成批次，輸入雜湊改變則停止。

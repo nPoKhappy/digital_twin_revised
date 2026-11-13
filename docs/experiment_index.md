@@ -1,6 +1,6 @@
 # 實驗設定與輸出索引
 
-2026-11-04 分類完成時的狀態；完整機器可讀對照見 [experiment_catalog.csv](../results/experiment_catalog.csv)。
+2026-11-04 分類快照；Gain+SS 五組已於 2026-11-05 更新訓練狀態。完整機器可讀對照見 [experiment_catalog.csv](../results/experiment_catalog.csv)。
 每個 YAML 的 `output.results_dir` 對應其 config 分類，程式再附加 `exp_name`。Checkpoint 仍在 `saved_models/`。
 
 | 分類 | Gain | SS | 設定 | 結果位置 | 權重／統計 |
@@ -14,11 +14,11 @@
 | `pgin/gain` | 250.0 | 0 | [gain250_seed42](../configs/pgin/gain/transformer_layerwise_63var_decoder_input_sp_pgin_gain250_seed42.yaml) | [transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain250_seed42](../results/pgin/gain/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain250_seed42/) | checkpoint=有；統計=有 |
 | `pgin/gain` | 25.0 | 0 | [gain25_seed42](../configs/pgin/gain/transformer_layerwise_63var_decoder_input_sp_pgin_gain25_seed42.yaml) | [transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain25_seed42](../results/pgin/gain/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain25_seed42/) | checkpoint=有；統計=有 |
 | `pgin/gain` | 2.5 | 0 | [gain2p5_seed42](../configs/pgin/gain/transformer_layerwise_63var_decoder_input_sp_pgin_gain2p5_seed42.yaml) | [transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42](../results/pgin/gain/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_seed42/) | checkpoint=有；統計=有 |
-| `pgin/gain_ss` | 0.05 | 0.05 | [gain005_ss005_seed42](../configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_ss005_seed42.yaml) | `results/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss005_seed42/`（待產生） | 待重跑 |
-| `pgin/gain_ss` | 2500 | 2500 | [gain2500_ss2500_seed42](../configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain2500_ss2500_seed42.yaml) | `results/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2500_ss2500_seed42/`（待產生） | 待重跑 |
-| `pgin/gain_ss` | 250 | 250 | [gain250_ss250_seed42](../configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain250_ss250_seed42.yaml) | `results/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain250_ss250_seed42/`（待產生） | 待重跑 |
-| `pgin/gain_ss` | 25 | 25 | [gain25_ss25_seed42](../configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain25_ss25_seed42.yaml) | `results/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain25_ss25_seed42/`（待產生） | 待重跑 |
-| `pgin/gain_ss` | 2.5 | 2.5 | [gain2p5_ss2p5_seed42](../configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain2p5_ss2p5_seed42.yaml) | `results/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_ss2p5_seed42/`（待產生） | 待重跑 |
+| `pgin/gain_ss` | 0.05 | 0.05 | [gain005_ss005_seed42](../configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_ss005_seed42.yaml) | [transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss005_seed42](../results/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain005_ss005_seed42/) | checkpoint=有；統計=有 |
+| `pgin/gain_ss` | 2500 | 2500 | [gain2500_ss2500_seed42](../configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain2500_ss2500_seed42.yaml) | [transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2500_ss2500_seed42](../results/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2500_ss2500_seed42/) | checkpoint=有；統計=有 |
+| `pgin/gain_ss` | 250 | 250 | [gain250_ss250_seed42](../configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain250_ss250_seed42.yaml) | [transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain250_ss250_seed42](../results/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain250_ss250_seed42/) | checkpoint=有；統計=有 |
+| `pgin/gain_ss` | 25 | 25 | [gain25_ss25_seed42](../configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain25_ss25_seed42.yaml) | [transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain25_ss25_seed42](../results/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain25_ss25_seed42/) | checkpoint=有；統計=有 |
+| `pgin/gain_ss` | 2.5 | 2.5 | [gain2p5_ss2p5_seed42](../configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain2p5_ss2p5_seed42.yaml) | [transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_ss2p5_seed42](../results/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_ss2p5_seed42/) | checkpoint=有；統計=有 |
 | `pgin/no_gain` | 0 | 0 | [no_gain_seed42](../configs/pgin/no_gain/transformer_layerwise_63var_decoder_input_sp_pgin_no_gain_seed42.yaml) | [transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_no_gain_seed42](../results/pgin/no_gain/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_no_gain_seed42/) | checkpoint=有；統計=有 |
 | `pgin/ss_only` | 0 | 0.05 | [ss005_only_seed42](../configs/pgin/ss_only/transformer_layerwise_63var_decoder_input_sp_pgin_ss005_only_seed42.yaml) | [transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_ss005_only_seed42](../results/pgin/ss_only/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_ss005_only_seed42/) | checkpoint=有；統計=有 |
 | `pgin/ss_only` | 0 | 2500.0 | [ss2500_only_seed42](../configs/pgin/ss_only/transformer_layerwise_63var_decoder_input_sp_pgin_ss2500_only_seed42.yaml) | [transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_ss2500_only_seed42](../results/pgin/ss_only/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_ss2500_only_seed42/) | checkpoint=有；統計=有 |
@@ -33,7 +33,7 @@
 
 ## Gain+SS
 
-五組 `(Gain, SS)` 為 `(0.05, 0.05)`、`(2.5, 2.5)`、`(25, 25)`、`(250, 250)`、`(2500, 2500)`；SS 目標仍為全部 48 個輸出。舊專用 checkpoint、訓練結果及 KCI 批次已刪除，待依 [重跑指令](../configs/pgin/gain_ss/README.md) 重新訓練。
+五組 `(Gain, SS)` 為 `(0.05, 0.05)`、`(2.5, 2.5)`、`(25, 25)`、`(250, 250)`、`(2500, 2500)`；SS 目標仍為全部 48 個輸出。舊專用實驗已清除；2026-11-05 已完成新五組訓練。評估入口為 `scripts/prediction/validate_gain_ss_hyperparameters.py`，產物見 [Gain+SS validation](../results/visualization/gain_ss_all_weights_casewise_region50_validation_seed42/README.md)。
 
 ## 評估與圖表
 

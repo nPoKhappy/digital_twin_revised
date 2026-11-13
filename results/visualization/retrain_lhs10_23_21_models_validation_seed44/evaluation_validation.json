@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "seed": 44,
+  "model_count": 21,
+  "per_region_points": 21,
+  "source_hashes_unchanged": true,
+  "independent_rmse_and_numpy_kci_recounts": true,
+  "optimizer_updates": 0
+}

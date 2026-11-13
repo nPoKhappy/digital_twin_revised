@@ -1,0 +1,14 @@
+{
+  "source_sha256": {
+    "results\\steady_state\\Tabular_MLP_New\\parity_plot_B35_H2S.png": "4850f5b60b4caf050fd39454e75232341944fb83d8886cd0cf0858d74d7ab43b",
+    "results\\steady_state\\Tabular_MLP_New\\parity_plot_B35_SO2.png": "2f134dc1d8589349b06ec2593903be93922bd00006d0bbc6663eedcf034677fc",
+    "results\\steady_state\\Tabular_MLP_New\\tabular_metrics.csv": "dc24c68c17342bd16bc2eed69da04651b5883923a5f3cb736748465de692aa8b",
+    "results\\steady_state\\Tabular_MLP_New\\tabular_predictions.csv": "fd00ee1fd14bfacc1a1b4d24b63164ada68aaeb8d109fde3320ed8a43557178e",
+    "results\\steady_state\\Tabular_MLP_New\\tabular_test_dataset.csv": "14d4001081446906ac32c5a7180d9b0b2ea64cd10819559db81ade7740e46f4a",
+    "results\\steady_state\\Tabular_MLP_New\\training_curve.png": "5333537f3f987fdbd713bfee96b2d81a833b641bf0f2fb412e03e01435a1cf95",
+    "results\\steady_state\\Tabular_MLP_New\\zscore_mean.csv": "80ee9c2a77c6c1407108bc97f963996aad3b4bd2b0fccf893cca7b0c8c4f2ee4",
+    "results\\steady_state\\Tabular_MLP_New\\zscore_std.csv": "23954d26a069cc1592722c154f7cb72dc3d0a3e77120e9060bf0e859b9022ea6",
+    "saved_models\\Tabular_MLP_5in_2out_QV.pth": "421b2f19ce37e58b9185b94ed9529e9167024d93e10fdf59ee9a565f16eb0155"
+  },
+  "copies_verified": 9
+}

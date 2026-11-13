@@ -1,0 +1,342 @@
+{
+  "input_files": [
+    "data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_10.xlsx",
+    "data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_11.xlsx",
+    "data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_15.xlsx",
+    "data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_16.xlsx",
+    "data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_17.xlsx",
+    "data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_18.xlsx",
+    "data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_19.xlsx",
+    "data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_20.xlsx",
+    "data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_21.xlsx",
+    "data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_22.xlsx",
+    "data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_23.xlsx"
+  ],
+  "file_counts": {
+    "lhs_generated_dynamic_ss_data_10.xlsx": {
+      "rows": 5000,
+      "completed": 4589,
+      "usable": 4589,
+      "components_all_rows": 480,
+      "components_with_usable_rows": 462,
+      "max_component_raw_rows": 11,
+      "component_size_histogram": {
+        "7": 2,
+        "8": 3,
+        "9": 53,
+        "10": 157,
+        "11": 265
+      },
+      "four_input_key_matches_by_varied_input": {
+        "air2_SP": 901,
+        "HEATER2_output_T_SP": 894,
+        "acidgas_Fm": 914,
+        "acidgas_P": 903,
+        "acidgas_T": 908
+      },
+      "grouping": "4-of-5 input connectivity, all statuses"
+    },
+    "lhs_generated_dynamic_ss_data_11.xlsx": {
+      "rows": 5000,
+      "completed": 4495,
+      "usable": 4495,
+      "components_all_rows": 923,
+      "components_with_usable_rows": 843,
+      "max_component_raw_rows": 320,
+      "component_size_histogram": {
+        "5": 921,
+        "75": 1,
+        "320": 1
+      },
+      "four_input_key_matches_by_varied_input": {
+        "air2_SP": 2048,
+        "HEATER2_output_T_SP": 2029,
+        "acidgas_Fm": 0,
+        "acidgas_P": 0,
+        "acidgas_T": 0
+      },
+      "grouping": "4-of-5 input connectivity, all statuses"
+    },
+    "lhs_generated_dynamic_ss_data_15.xlsx": {
+      "rows": 5000,
+      "completed": 4346,
+      "usable": 4346,
+      "components_all_rows": 1000,
+      "components_with_usable_rows": 899,
+      "max_component_raw_rows": 7,
+      "component_size_histogram": {
+        "1": 3,
+        "2": 17,
+        "3": 90,
+        "4": 206,
+        "5": 318,
+        "6": 283,
+        "7": 83
+      },
+      "four_input_key_matches_by_varied_input": {
+        "air2_SP": 1341,
+        "HEATER2_output_T_SP": 1328,
+        "acidgas_Fm": 1331,
+        "acidgas_P": 0,
+        "acidgas_T": 0
+      },
+      "grouping": "4-of-5 input connectivity, all statuses"
+    },
+    "lhs_generated_dynamic_ss_data_16.xlsx": {
+      "rows": 5000,
+      "completed": 4427,
+      "usable": 4427,
+      "components_all_rows": 1000,
+      "components_with_usable_rows": 912,
+      "max_component_raw_rows": 9,
+      "component_size_histogram": {
+        "1": 9,
+        "2": 28,
+        "3": 120,
+        "4": 211,
+        "5": 257,
+        "6": 225,
+        "7": 109,
+        "8": 36,
+        "9": 5
+      },
+      "four_input_key_matches_by_varied_input": {
+        "air2_SP": 1031,
+        "HEATER2_output_T_SP": 968,
+        "acidgas_Fm": 992,
+        "acidgas_P": 0,
+        "acidgas_T": 1009
+      },
+      "grouping": "4-of-5 input connectivity, all statuses"
+    },
+    "lhs_generated_dynamic_ss_data_17.xlsx": {
+      "rows": 5000,
+      "completed": 4454,
+      "usable": 4454,
+      "components_all_rows": 500,
+      "components_with_usable_rows": 473,
+      "max_component_raw_rows": 11,
+      "component_size_histogram": {
+        "7": 6,
+        "8": 31,
+        "9": 89,
+        "10": 205,
+        "11": 169
+      },
+      "four_input_key_matches_by_varied_input": {
+        "air2_SP": 907,
+        "HEATER2_output_T_SP": 893,
+        "acidgas_Fm": 892,
+        "acidgas_P": 906,
+        "acidgas_T": 902
+      },
+      "grouping": "4-of-5 input connectivity, all statuses"
+    },
+    "lhs_generated_dynamic_ss_data_18.xlsx": {
+      "rows": 5000,
+      "completed": 4515,
+      "usable": 4515,
+      "components_all_rows": 500,
+      "components_with_usable_rows": 477,
+      "max_component_raw_rows": 11,
+      "component_size_histogram": {
+        "7": 6,
+        "8": 20,
+        "9": 113,
+        "10": 190,
+        "11": 171
+      },
+      "four_input_key_matches_by_varied_input": {
+        "air2_SP": 887,
+        "HEATER2_output_T_SP": 911,
+        "acidgas_Fm": 892,
+        "acidgas_P": 916,
+        "acidgas_T": 894
+      },
+      "grouping": "4-of-5 input connectivity, all statuses"
+    },
+    "lhs_generated_dynamic_ss_data_19.xlsx": {
+      "rows": 5000,
+      "completed": 3405,
+      "usable": 3405,
+      "components_all_rows": 500,
+      "components_with_usable_rows": 415,
+      "max_component_raw_rows": 11,
+      "component_size_histogram": {
+        "6": 1,
+        "7": 3,
+        "8": 28,
+        "9": 95,
+        "10": 209,
+        "11": 164
+      },
+      "four_input_key_matches_by_varied_input": {
+        "air2_SP": 903,
+        "HEATER2_output_T_SP": 900,
+        "acidgas_Fm": 908,
+        "acidgas_P": 888,
+        "acidgas_T": 901
+      },
+      "grouping": "4-of-5 input connectivity, all statuses"
+    },
+    "lhs_generated_dynamic_ss_data_20.xlsx": {
+      "rows": 5000,
+      "completed": 2667,
+      "usable": 2667,
+      "components_all_rows": 500,
+      "components_with_usable_rows": 346,
+      "max_component_raw_rows": 11,
+      "component_size_histogram": {
+        "6": 2,
+        "7": 5,
+        "8": 21,
+        "9": 102,
+        "10": 203,
+        "11": 167
+      },
+      "four_input_key_matches_by_varied_input": {
+        "air2_SP": 908,
+        "HEATER2_output_T_SP": 906,
+        "acidgas_Fm": 900,
+        "acidgas_P": 888,
+        "acidgas_T": 898
+      },
+      "grouping": "4-of-5 input connectivity, all statuses"
+    },
+    "lhs_generated_dynamic_ss_data_21.xlsx": {
+      "rows": 5000,
+      "completed": 3254,
+      "usable": 3254,
+      "components_all_rows": 500,
+      "components_with_usable_rows": 396,
+      "max_component_raw_rows": 11,
+      "component_size_histogram": {
+        "7": 4,
+        "8": 34,
+        "9": 97,
+        "10": 188,
+        "11": 177
+      },
+      "four_input_key_matches_by_varied_input": {
+        "air2_SP": 902,
+        "HEATER2_output_T_SP": 902,
+        "acidgas_Fm": 890,
+        "acidgas_P": 897,
+        "acidgas_T": 909
+      },
+      "grouping": "4-of-5 input connectivity, all statuses"
+    },
+    "lhs_generated_dynamic_ss_data_22.xlsx": {
+      "rows": 5000,
+      "completed": 3229,
+      "usable": 3229,
+      "components_all_rows": 500,
+      "components_with_usable_rows": 395,
+      "max_component_raw_rows": 11,
+      "component_size_histogram": {
+        "6": 1,
+        "7": 4,
+        "8": 30,
+        "9": 103,
+        "10": 183,
+        "11": 179
+      },
+      "four_input_key_matches_by_varied_input": {
+        "air2_SP": 897,
+        "HEATER2_output_T_SP": 900,
+        "acidgas_Fm": 895,
+        "acidgas_P": 902,
+        "acidgas_T": 906
+      },
+      "grouping": "4-of-5 input connectivity, all statuses"
+    },
+    "lhs_generated_dynamic_ss_data_23.xlsx": {
+      "rows": 5000,
+      "completed": 2920,
+      "usable": 2920,
+      "components_all_rows": 2500,
+      "components_with_usable_rows": 1509,
+      "max_component_raw_rows": 2,
+      "component_size_histogram": {
+        "2": 2500
+      },
+      "four_input_key_matches_by_varied_input": {
+        "air2_SP": 1250,
+        "HEATER2_output_T_SP": 1250,
+        "acidgas_Fm": 0,
+        "acidgas_P": 0,
+        "acidgas_T": 0
+      },
+      "grouping": "verified original base_id; independently checked against 4-of-5 connectivity"
+    }
+  },
+  "split_rule": "80/10/10 of connected input groups; sources 10-22 use all-row 4-of-5 connectivity; source 23 uses verified base/step pair IDs",
+  "group_audit": {
+    "input_rounding_decimals": 8,
+    "cross_source_four_input_matching_keys": {
+      "air2_SP": 0,
+      "HEATER2_output_T_SP": 0,
+      "acidgas_Fm": 0,
+      "acidgas_P": 0,
+      "acidgas_T": 0
+    },
+    "largest_usable_component_size": 298,
+    "largest_usable_component_share": 0.007044750715113118,
+    "max_usable_component_share_allowed": 0.01,
+    "note": "File 11 contains large but exact 4-of-5 connected components caused by clipped boundary chains; each is conservatively kept in one split. Connectivity does not prove a unique physical originating base."
+  },
+  "split_seed": 42,
+  "training_seed": 42,
+  "split_rows": {
+    "train": 33611,
+    "valid": 4393,
+    "test": 4297
+  },
+  "split_group_counts": {
+    "test": 713,
+    "train": 5701,
+    "valid": 713
+  },
+  "input_columns": [
+    "air2_SP",
+    "HEATER2_output_T_SP",
+    "acidgas_Fm",
+    "acidgas_P",
+    "acidgas_T"
+  ],
+  "target_columns": [
+    "B35_H2S",
+    "B35_SO2"
+  ],
+  "source_sha256": {
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_10.xlsx": "38624b86f577754784fb982c94bbdfae828acf2cdca72f8a6423c82f78111ea2",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_11.xlsx": "fca4e5c739d9a4d30c96c6fa021b0ebf518e312a60c66a1579326106013b2f25",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_15.xlsx": "9aa0f1c8a8625e39f6dedb350f0934dbe794f4ce3ce70d7a2a9dee444f6b66ef",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_16.xlsx": "3ae4e0334fd9b8b5f1d009062018569e1491e128401c7a99414a4e71ec9e8d21",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_17.xlsx": "17b1f82f6aa22813d24779c2b2180d031498c05da397915f721b1068b62bff23",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_18.xlsx": "b9e5541b395b7ee15eb0ddd6b1c149e816a7b0fff8fcddf70ef946c919cc839b",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_19.xlsx": "e0ca3392d09fa88c86142556826bccc7e194960627f1181d009309819825c54b",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_20.xlsx": "9c6cd9187dc527d94b3a1e79e184a4168dd631efc9b7d5918eb2a81d15549f9a",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_21.xlsx": "6233155a4ab008eb78571edbe3b60ebdc83f48df4f407ad0ff3401dd392b79fd",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_22.xlsx": "bc8a55ff7bd74dc44ab83d8a5feeb804ca6241946aead6891077a6ee3e43f879",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_23.xlsx": "5b53494e8a787b3b3581758528cb4e5da5152c9d966a721eb4eae707b0ac2b1c",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\sampling\\ann_gain_validation_5000_20261108_025507_315943_UTC\\aspen_inputs.csv": "b421933e219c873ddb0b00c3232ad7724846c6d9eb8f6d2faddc1b6c49b2f159",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\sampling\\ann_gain_validation_5000_20261108_025507_315943_UTC\\row_manifest.csv": "db6398534a62646a7a7412250ca67ed16e1bb261ebf6b5fe3d9e7b5354936994",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\sampling\\ann_gain_validation_5000_20261108_025507_315943_UTC\\generation_report.json": "4406e5cecd54975dc76e01b0e8ea129219b21a765cf0df1f099e956355c19971",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\scripts\\training\\train_ann_lhs10_23_retrain.py": "d0ed7c3d4e2bdf535277ba81538dc47a3760d821a75d9562f69b9fb7d4df2185",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\scripts\\training\\train_tabular_v2.py": "f827b8dc0d638d7cbf65c9cbbbba0ab8dd9f8f7626b334f3635a0e14d3d2ea24"
+  },
+  "architecture": "SimpleTabularMLP from train_tabular_v2: 5-64-32-2, BatchNorm, GELU, dropout=0.1",
+  "batch_size": 32,
+  "optimizer": "Adam",
+  "learning_rate": 0.001,
+  "weight_decay": 0.001,
+  "epochs_max": 1000,
+  "early_stopping_patience": 50,
+  "device": "cuda",
+  "epoch_mse_aggregation": "Arithmetic mean of per-batch mean MSE, matching legacy trainer; the smaller last validation batch has equal batch weight in early stopping.",
+  "drop_last_if_training_remainder_one": false,
+  "torch_version": "2.6.0+cu126",
+  "held_out_reference": "Source 23 was previously used for ±2.5 ANN/Aspen gain evaluation; it is now training data, not an independent new-teacher validation dataset.",
+  "MAPE_definition": "mean(abs(pred-true)/max(abs(true),1e-10))*100; unstable when concentration is close to zero"
+}

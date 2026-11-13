@@ -1,0 +1,484 @@
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><title>Test RMSE 表格</title>
+<style>body{font-family:"Times New Roman","Microsoft JhengHei",serif;margin:32px}table{border-collapse:collapse;width:100%;margin:20px 0 45px;border-top:1px solid;border-bottom:1px solid}th{border-bottom:1px solid}th,td{text-align:center;padding:4px 12px}td[rowspan]{vertical-align:middle}.up{color:red}.down{color:green}.best{font-weight:bold}</style>
+<body><p>Δ = 100 × (模型 RMSE / No-Gain RMSE − 1)；綠色：改善；紅色：惡化；粗體：每列最低RMSE。</p>
+<h2>核心 H₂S</h2><table><thead><tr><th>案例</th><th>時域</th><th>No-Gain RMSE<br>(10<sup>−3</sup> kmol/kmol)</th>
+<th>Gain=250<br>Δ (%)</th>
+<th>SS-only=2.5<br>Δ (%)</th>
+<th>Gain+SS=2.5/2.5<br>Δ (%)</th>
+</tr></thead><tbody>
+<tr>
+<td rowspan="3">R5</td>
+<td>H1</td><td class="best">0.3140</td>
+<td class="up ">+12.2</td>
+<td class="up ">+28.4</td>
+<td class="up ">+32.1</td>
+</tr>
+<tr>
+<td>H18</td><td class="">0.4917</td>
+<td class="up ">+13.8</td>
+<td class="down best">-1.5</td>
+<td class="up ">+2.4</td>
+</tr>
+<tr>
+<td>TS</td><td class="">0.4880</td>
+<td class="up ">+14.5</td>
+<td class="down best">-6.2</td>
+<td class="down ">-1.0</td>
+</tr>
+<tr>
+<td rowspan="3">R5-1</td>
+<td>H1</td><td class="best">0.6908</td>
+<td class="up ">+9.0</td>
+<td class="up ">+22.0</td>
+<td class="up ">+36.2</td>
+</tr>
+<tr>
+<td>H18</td><td class="">0.8751</td>
+<td class="down best">-1.6</td>
+<td class="up ">+10.9</td>
+<td class="up ">+28.0</td>
+</tr>
+<tr>
+<td>TS</td><td class="">0.9670</td>
+<td class="down best">-0.5</td>
+<td class="up ">+9.1</td>
+<td class="up ">+22.8</td>
+</tr>
+<tr>
+<td rowspan="3">R5-2</td>
+<td>H1</td><td class="">0.4675</td>
+<td class="up ">+13.7</td>
+<td class="down best">-5.1</td>
+<td class="down ">-0.1</td>
+</tr>
+<tr>
+<td>H18</td><td class="">0.6584</td>
+<td class="up ">+10.4</td>
+<td class="down best">-17.6</td>
+<td class="down ">-4.5</td>
+</tr>
+<tr>
+<td>TS</td><td class="">0.8105</td>
+<td class="down ">-1.5</td>
+<td class="down best">-35.5</td>
+<td class="down ">-24.0</td>
+</tr>
+<tr>
+<td rowspan="3">R5-6</td>
+<td>H1</td><td class="best">0.4841</td>
+<td class="up ">+12.4</td>
+<td class="up ">+29.0</td>
+<td class="up ">+33.8</td>
+</tr>
+<tr>
+<td>H18</td><td class="best">0.6895</td>
+<td class="up ">+9.2</td>
+<td class="up ">+1.1</td>
+<td class="up ">+4.1</td>
+</tr>
+<tr>
+<td>TS</td><td class="best">0.6105</td>
+<td class="up ">+15.7</td>
+<td class="up ">+19.3</td>
+<td class="up ">+23.0</td>
+</tr>
+</tbody></table>
+<h2>核心 SO₂</h2><table><thead><tr><th>案例</th><th>時域</th><th>No-Gain RMSE<br>(10<sup>−3</sup> kmol/kmol)</th>
+<th>Gain=250<br>Δ (%)</th>
+<th>SS-only=2.5<br>Δ (%)</th>
+<th>Gain+SS=2.5/2.5<br>Δ (%)</th>
+</tr></thead><tbody>
+<tr>
+<td rowspan="3">R5</td>
+<td>H1</td><td class="best">0.1698</td>
+<td class="up ">+32.7</td>
+<td class="up ">+15.5</td>
+<td class="up ">+31.2</td>
+</tr>
+<tr>
+<td>H18</td><td class="">0.2854</td>
+<td class="up ">+32.6</td>
+<td class="down best">-15.9</td>
+<td class="down ">-11.9</td>
+</tr>
+<tr>
+<td>TS</td><td class="">0.2517</td>
+<td class="up ">+35.7</td>
+<td class="down best">-3.4</td>
+<td class="up ">+8.3</td>
+</tr>
+<tr>
+<td rowspan="3">R5-1</td>
+<td>H1</td><td class="">0.1598</td>
+<td class="up ">+13.4</td>
+<td class="down best">-10.0</td>
+<td class="down ">-4.9</td>
+</tr>
+<tr>
+<td>H18</td><td class="">0.2711</td>
+<td class="down ">-1.4</td>
+<td class="down best">-51.7</td>
+<td class="down ">-46.8</td>
+</tr>
+<tr>
+<td>TS</td><td class="">0.3297</td>
+<td class="down ">-11.7</td>
+<td class="down best">-58.8</td>
+<td class="down ">-53.4</td>
+</tr>
+<tr>
+<td rowspan="3">R5-2</td>
+<td>H1</td><td class="best">0.1911</td>
+<td class="up ">+13.1</td>
+<td class="up ">+10.9</td>
+<td class="up ">+28.4</td>
+</tr>
+<tr>
+<td>H18</td><td class="">0.3900</td>
+<td class="up ">+1.6</td>
+<td class="down best">-30.0</td>
+<td class="down ">-26.9</td>
+</tr>
+<tr>
+<td>TS</td><td class="">0.2997</td>
+<td class="up ">+5.7</td>
+<td class="down best">-11.0</td>
+<td class="down ">-3.2</td>
+</tr>
+<tr>
+<td rowspan="3">R5-6</td>
+<td>H1</td><td class="">0.2519</td>
+<td class="down ">-11.5</td>
+<td class="down best">-11.5</td>
+<td class="down ">-3.7</td>
+</tr>
+<tr>
+<td>H18</td><td class="">0.2473</td>
+<td class="down ">-8.4</td>
+<td class="down best">-16.6</td>
+<td class="down ">-7.2</td>
+</tr>
+<tr>
+<td>TS</td><td class="">0.2767</td>
+<td class="down ">-9.4</td>
+<td class="down best">-14.4</td>
+<td class="down ">-0.8</td>
+</tr>
+</tbody></table>
+<h2>近外插 SO₂</h2><table><thead><tr><th>案例</th><th>時域</th><th>No-Gain RMSE<br>(10<sup>−3</sup> kmol/kmol)</th>
+<th>Gain=250<br>Δ (%)</th>
+<th>SS-only=2.5<br>Δ (%)</th>
+<th>Gain+SS=2.5/2.5<br>Δ (%)</th>
+</tr></thead><tbody>
+<tr>
+<td rowspan="3">R5-19</td>
+<td>H1</td><td class="best">0.0462</td>
+<td class="up ">+29.7</td>
+<td class="up ">+71.1</td>
+<td class="up ">+81.0</td>
+</tr>
+<tr>
+<td>H18</td><td class="best">0.1151</td>
+<td class="up ">+13.5</td>
+<td class="up ">+12.6</td>
+<td class="up ">+12.0</td>
+</tr>
+<tr>
+<td>TS</td><td class="">0.1087</td>
+<td class="up ">+16.9</td>
+<td class="down ">-11.4</td>
+<td class="down best">-22.4</td>
+</tr>
+<tr>
+<td rowspan="3">R5-20</td>
+<td>H1</td><td class="">1.0493</td>
+<td class="down best">-77.9</td>
+<td class="down ">-50.4</td>
+<td class="up ">+8.8</td>
+</tr>
+<tr>
+<td>H18</td><td class="">2.7956</td>
+<td class="down best">-87.1</td>
+<td class="down ">-26.0</td>
+<td class="up ">+5.4</td>
+</tr>
+<tr>
+<td>TS</td><td class="">2.7788</td>
+<td class="down best">-84.6</td>
+<td class="down ">-38.8</td>
+<td class="down ">-5.4</td>
+</tr>
+<tr>
+<td rowspan="3">R5-21</td>
+<td>H1</td><td class="">1.2075</td>
+<td class="down ">-23.3</td>
+<td class="down best">-23.9</td>
+<td class="down ">-3.5</td>
+</tr>
+<tr>
+<td>H18</td><td class="">1.6782</td>
+<td class="down ">-34.7</td>
+<td class="down best">-38.4</td>
+<td class="down ">-24.9</td>
+</tr>
+<tr>
+<td>TS</td><td class="">1.7036</td>
+<td class="down ">-36.6</td>
+<td class="down best">-57.9</td>
+<td class="down ">-40.7</td>
+</tr>
+<tr>
+<td rowspan="3">R5-22</td>
+<td>H1</td><td class="best">0.2479</td>
+<td class="up ">+41.3</td>
+<td class="up ">+79.5</td>
+<td class="up ">+114.0</td>
+</tr>
+<tr>
+<td>H18</td><td class="">0.5458</td>
+<td class="down ">-14.6</td>
+<td class="down best">-35.4</td>
+<td class="down ">-16.1</td>
+</tr>
+<tr>
+<td>TS</td><td class="">0.4436</td>
+<td class="down best">-12.6</td>
+<td class="up ">+55.2</td>
+<td class="up ">+57.5</td>
+</tr>
+<tr>
+<td rowspan="3">R5-23</td>
+<td>H1</td><td class="best">0.3247</td>
+<td class="up ">+61.7</td>
+<td class="up ">+1.8</td>
+<td class="up ">+35.6</td>
+</tr>
+<tr>
+<td>H18</td><td class="best">0.2191</td>
+<td class="up ">+175.0</td>
+<td class="up ">+14.9</td>
+<td class="up ">+73.3</td>
+</tr>
+<tr>
+<td>TS</td><td class="best">0.0995</td>
+<td class="up ">+398.5</td>
+<td class="up ">+190.0</td>
+<td class="up ">+168.1</td>
+</tr>
+<tr>
+<td rowspan="3">R5-24</td>
+<td>H1</td><td class="">1.5455</td>
+<td class="down ">-44.8</td>
+<td class="down best">-75.8</td>
+<td class="down ">-31.4</td>
+</tr>
+<tr>
+<td>H18</td><td class="">4.4992</td>
+<td class="down best">-60.1</td>
+<td class="down ">-57.4</td>
+<td class="down ">-36.8</td>
+</tr>
+<tr>
+<td>TS</td><td class="">4.3939</td>
+<td class="down ">-57.0</td>
+<td class="down best">-64.5</td>
+<td class="down ">-52.8</td>
+</tr>
+<tr>
+<td rowspan="3">R5-25</td>
+<td>H1</td><td class="">0.2812</td>
+<td class="down best">-28.5</td>
+<td class="up ">+12.4</td>
+<td class="up ">+25.5</td>
+</tr>
+<tr>
+<td>H18</td><td class="">0.3397</td>
+<td class="down best">-23.4</td>
+<td class="down ">-3.0</td>
+<td class="down ">-3.5</td>
+</tr>
+<tr>
+<td>TS</td><td class="">0.3985</td>
+<td class="down best">-21.7</td>
+<td class="down ">-4.5</td>
+<td class="down ">-6.1</td>
+</tr>
+<tr>
+<td rowspan="3">R5-26</td>
+<td>H1</td><td class="">5.3106</td>
+<td class="down ">-4.1</td>
+<td class="down best">-78.0</td>
+<td class="down ">-58.6</td>
+</tr>
+<tr>
+<td>H18</td><td class="">4.4543</td>
+<td class="down best">-12.9</td>
+<td class="down ">-7.1</td>
+<td class="down ">-1.0</td>
+</tr>
+<tr>
+<td>TS</td><td class="">5.2192</td>
+<td class="down ">-18.6</td>
+<td class="down best">-68.4</td>
+<td class="down ">-62.8</td>
+</tr>
+</tbody></table>
+<h2>近外插 H₂S</h2><table><thead><tr><th>案例</th><th>時域</th><th>No-Gain RMSE<br>(10<sup>−3</sup> kmol/kmol)</th>
+<th>Gain=250<br>Δ (%)</th>
+<th>SS-only=2.5<br>Δ (%)</th>
+<th>Gain+SS=2.5/2.5<br>Δ (%)</th>
+</tr></thead><tbody>
+<tr>
+<td rowspan="3">R5-19</td>
+<td>H1</td><td class="">0.3959</td>
+<td class="down best">-37.0</td>
+<td class="up ">+38.4</td>
+<td class="up ">+17.0</td>
+</tr>
+<tr>
+<td>H18</td><td class="">0.6242</td>
+<td class="down best">-11.3</td>
+<td class="up ">+54.0</td>
+<td class="up ">+3.0</td>
+</tr>
+<tr>
+<td>TS</td><td class="">0.5780</td>
+<td class="down ">-30.1</td>
+<td class="up ">+30.5</td>
+<td class="down best">-45.0</td>
+</tr>
+<tr>
+<td rowspan="3">R5-20</td>
+<td>H1</td><td class="">0.2839</td>
+<td class="down best">-31.2</td>
+<td class="up ">+32.6</td>
+<td class="up ">+37.5</td>
+</tr>
+<tr>
+<td>H18</td><td class="">0.7241</td>
+<td class="down best">-67.3</td>
+<td class="down ">-27.2</td>
+<td class="down ">-0.4</td>
+</tr>
+<tr>
+<td>TS</td><td class="">0.6926</td>
+<td class="down best">-63.6</td>
+<td class="down ">-27.6</td>
+<td class="down ">-0.5</td>
+</tr>
+<tr>
+<td rowspan="3">R5-21</td>
+<td>H1</td><td class="">0.7544</td>
+<td class="up ">+8.2</td>
+<td class="down best">-44.2</td>
+<td class="down ">-18.7</td>
+</tr>
+<tr>
+<td>H18</td><td class="">1.1765</td>
+<td class="up ">+3.0</td>
+<td class="down best">-29.9</td>
+<td class="down ">-2.0</td>
+</tr>
+<tr>
+<td>TS</td><td class="">1.5328</td>
+<td class="up ">+2.6</td>
+<td class="down best">-50.3</td>
+<td class="down ">-22.6</td>
+</tr>
+<tr>
+<td rowspan="3">R5-22</td>
+<td>H1</td><td class="">0.7444</td>
+<td class="down ">-13.6</td>
+<td class="down best">-36.4</td>
+<td class="up ">+2.3</td>
+</tr>
+<tr>
+<td>H18</td><td class="">1.0532</td>
+<td class="down ">-26.6</td>
+<td class="down best">-30.4</td>
+<td class="up ">+6.6</td>
+</tr>
+<tr>
+<td>TS</td><td class="">0.9850</td>
+<td class="down ">-27.1</td>
+<td class="down best">-62.2</td>
+<td class="down ">-40.7</td>
+</tr>
+<tr>
+<td rowspan="3">R5-23</td>
+<td>H1</td><td class="">2.4997</td>
+<td class="down ">-47.7</td>
+<td class="down ">-63.2</td>
+<td class="down best">-73.3</td>
+</tr>
+<tr>
+<td>H18</td><td class="">2.9434</td>
+<td class="down ">-52.2</td>
+<td class="down ">-51.0</td>
+<td class="down best">-64.8</td>
+</tr>
+<tr>
+<td>TS</td><td class="">2.8302</td>
+<td class="down ">-47.5</td>
+<td class="down ">-68.4</td>
+<td class="down best">-81.0</td>
+</tr>
+<tr>
+<td rowspan="3">R5-24</td>
+<td>H1</td><td class="">2.9186</td>
+<td class="down ">-35.1</td>
+<td class="down best">-71.3</td>
+<td class="down ">-59.5</td>
+</tr>
+<tr>
+<td>H18</td><td class="">3.9266</td>
+<td class="down ">-37.3</td>
+<td class="down best">-59.2</td>
+<td class="down ">-49.1</td>
+</tr>
+<tr>
+<td>TS</td><td class="">3.7091</td>
+<td class="down ">-37.0</td>
+<td class="down best">-62.6</td>
+<td class="down ">-53.7</td>
+</tr>
+<tr>
+<td rowspan="3">R5-25</td>
+<td>H1</td><td class="">0.8580</td>
+<td class="down best">-30.2</td>
+<td class="up ">+21.7</td>
+<td class="up ">+53.0</td>
+</tr>
+<tr>
+<td>H18</td><td class="">1.0102</td>
+<td class="down best">-49.5</td>
+<td class="up ">+115.0</td>
+<td class="up ">+121.8</td>
+</tr>
+<tr>
+<td>TS</td><td class="">1.2381</td>
+<td class="down best">-64.0</td>
+<td class="up ">+106.9</td>
+<td class="up ">+57.4</td>
+</tr>
+<tr>
+<td rowspan="3">R5-26</td>
+<td>H1</td><td class="">8.6912</td>
+<td class="down ">-11.3</td>
+<td class="down best">-59.6</td>
+<td class="down ">-53.0</td>
+</tr>
+<tr>
+<td>H18</td><td class="">9.4129</td>
+<td class="down ">-14.6</td>
+<td class="down best">-58.2</td>
+<td class="down ">-52.2</td>
+</tr>
+<tr>
+<td>TS</td><td class="">9.7139</td>
+<td class="down ">-12.7</td>
+<td class="down best">-52.4</td>
+<td class="down ">-44.4</td>
+</tr>
+</tbody></table>
+</body></html>

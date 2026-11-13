@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "models": [
+    "No-Gain",
+    "Gain=250",
+    "SS-only=2.5",
+    "Gain+SS=2.5/2.5"
+  ],
+  "official_distribution_pair_counts_checked": 32,
+  "teacher_landscape_rows": 28308,
+  "valid_probe_pair_clusters_per_model": [
+    23841,
+    23841,
+    23841,
+    23841
+  ],
+  "conditional_magnitude_rows": 128,
+  "conditional_sign_rows": 64,
+  "shared_teacher_and_probe_arrays_verified": true,
+  "partitions_reconstruct_official_counts": true,
+  "bootstrap_resamples": 2000,
+  "bootstrap_unit": "Operating point, 36 comparisons per cluster",
+  "protected_inputs_unchanged": true,
+  "retained_test_outputs_unchanged": true,
+  "visual_review": "passed: reviewed all three figures in the contact sheet; legends, Q1-Q4/sign panels, error bars and missing-sign groups display correctly",
+  "output_sha256": {
+    "gain_pair_difficulty_contact_sheet.png": "33422c29129ee025c22e7957d6cb8e8642429258a20f5653ac89785a830aafea",
+    "gain_pair_probe_accuracy.csv": "6f9bf1a62ba8f32db0baa937647d98dee8ae68b6897fb7944350a6cd286e4e45",
+    "teacher_gain_landscape.png": "e94d1db3d6045b2322a15c8bdbf7050f0f4e3c1655a8f5e7a65d069d5815057e",
+    "teacher_gain_landscape.csv": "4b5c744742d467d9fae10b057680db1c8efa7fcae884a70007377b8a988c0b1e",
+    "rebuild_gain_pair_difficulty.py": "51bf9c794a23fe02ab1c72b1ada285e14bbcf4f3bee1aa9cc6784f1361a1a781",
+    "gain_pair_difficulty_README.md": "73c783e034e08c5299bc1f9fdb4eb3c91a3eb12c8b7fa46decfc3d1aa0136313",
+    "conditional_kci_by_gain_magnitude.pdf": "4563d9ca6dfc02f9492069fefc254fc47ae266f07f220a740a437aae0071faf1",
+    "conditional_kci_by_gain_magnitude.csv": "459cfe01f9487badc353cace1cbb74663ee0db42a76518c6be55b109718bf423",
+    "gain_pair_difficulty_protocol.json": "858bb0b4389a0ed2b01cb6742123706d316bf3164e25951ba670e3834524e7e3",
+    "gain_pair_difficulty_contact_sheet_grayscale.png": "9ad9a96c50e471b91da146235b073578f1e1690e4b53d1ce24693ab4491326a6",
+    "conditional_kci_by_gain_magnitude_grayscale.png": "5036a4003d77956703bd559b2f597f5bc9d76baee5d6fb3f7801371a7ea14df2",
+    "conditional_kci_by_teacher_sign_grayscale.png": "3396551ef1da4069dc5d75b28ec19ec0790b87f79657e946687a328ebe5b0db0",
+    "gain_magnitude_quartile_edges.csv": "dbfb474d48ecf0598581627edacb5c12fb7e34b0e7fd96078389beef9b7cb80e",
+    "conditional_kci_by_gain_magnitude.png": "23a26c694576595c3704e5b7624149512e74b1d1cbd88123a75b68e6da3dca7c",
+    "conditional_kci_by_teacher_sign.csv": "fe616e1da69580b6d31a85294a217a578a26c16b7a1cb6af85624ea9360fa1fa",
+    "conditional_kci_by_teacher_sign.pdf": "129ded81f41153889630321b67b277c16803b734a32e03af9d73ee33ddf70b96",
+    "teacher_gain_landscape.pdf": "4f50c9df3ab44a319d13915aa1da8a3ff1dca5f2e5b2bb1d8b707e7bf59a6ab9",
+    "teacher_gain_summary.csv": "8f41727848a82a359c71bd7a042bff51575cf65f609ba03c35fec3be3064a0cb",
+    "teacher_gain_landscape_grayscale.png": "8cb4fd97ac26eaf12bfe61a624e86a91ee3418dab2ea224ae2c385c70c3ba971",
+    "conditional_kci_by_teacher_sign.png": "5106421d03e9460437eaf2556742a95e5baa5aabd31dac490ac89de7c2572dfe"
+  },
+  "unit_tests_passed": 11,
+  "existing_test_figures_and_grouped_tables_preserved": true
+}

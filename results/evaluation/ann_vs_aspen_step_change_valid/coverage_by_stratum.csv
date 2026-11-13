@@ -1,0 +1,10 @@
+region,stratum,total_pairs,completed_pairs,completion_percent
+core,core,1250,923,73.840000000000003
+soft_ood,joint_air2_high_t2_high,63,10,15.873015873015873
+soft_ood,joint_air2_high_t2_low,62,1,1.6129032258064515
+soft_ood,joint_air2_low_t2_high,62,10,16.129032258064516
+soft_ood,joint_air2_low_t2_low,63,13,20.634920634920636
+soft_ood,single_air2_high,250,201,80.400000000000006
+soft_ood,single_air2_low,250,185,74
+soft_ood,single_t2_high,250,30,12
+soft_ood,single_t2_low,250,38,15.199999999999999

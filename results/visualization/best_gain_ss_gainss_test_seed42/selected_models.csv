@@ -1,0 +1,5 @@
+family,alias,gain_weight,ss_weight,validation_AvgRelRMSE,label,config,checkpoint
+no_gain,no_gain,0.0,0.0,1.0,No-Gain,configs/pgin/no_gain/transformer_layerwise_63var_decoder_input_sp_pgin_no_gain_seed42.yaml,saved_models/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_no_gain_seed42.pth
+gain,gain250,250.0,0.0,0.9537548000943898,Gain (250),configs/pgin/gain/transformer_layerwise_63var_decoder_input_sp_pgin_gain250_seed42.yaml,saved_models/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain250_seed42.pth
+ss_only,ss2p5_only,0.0,2.5,0.7586544489910301,SS-only (2.5),configs/pgin/ss_only/transformer_layerwise_63var_decoder_input_sp_pgin_ss2p5_only_seed42.yaml,saved_models/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_ss2p5_only_seed42.pth
+gain_ss,gain2p5_ss2p5,2.5,2.5,0.8481172371414643,Gain+SS (2.5/2.5),configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain2p5_ss2p5_seed42.yaml,saved_models/transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_gain2p5_ss2p5_seed42.pth

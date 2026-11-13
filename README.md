@@ -116,7 +116,7 @@ Difficult-GradNorm 命令列入口固定載入八份訓練穩態來源，編號�
 | --- | --- | --- | --- |
 | `configs/pgin/no_gain/` | 0 | 0 | 動態預測基準 |
 | `configs/pgin/gain/` | 0.05 / 2.5 / 25 / 250 / 2500 | 0 | Gain 引導 |
-| `configs/pgin/gain_ss/` | 0.05 / 2.5 / 25 / 250 / 2500 | 與 Gain 相同 | 兩個權重同步變動，需重跑；[指令](configs/pgin/gain_ss/README.md) |
+| `configs/pgin/gain_ss/` | 0.05 / 2.5 / 25 / 250 / 2500 | 與 Gain 相同 | 兩個權重同步變動；五組已訓練，[指令與驗證分析](configs/pgin/gain_ss/README.md) |
 | `configs/pgin/ss_only/` | 0 | 0.05 / 2.5 / 25 / 250 / 2500 | 僅 SS value loss 比較 |
 | `configs/pgin/difficult_gradnorm/` | 0.05 | 0 | 指定配對與 teacher 符號群組的梯度縮放 |
 
@@ -264,9 +264,11 @@ python -m scripts.preprocessing.split_dataset_partitions --config $gainConfig
 
 - [五個 Gain validation](results/visualization/gain005_gain2p5_gain25_gain250_gain2500_casewise_region50_validation_seed42/README.md)
 - [五個 SS-only validation](results/visualization/ss_only_all_weights_casewise_region50_validation_seed42/README.md)
+- [五個 Gain+SS validation](results/visualization/gain_ss_all_weights_casewise_region50_validation_seed42/README.md)
 - [No-Gain、Gain=250、SS-only=2.5 的 test 比較](results/visualization/three_model_no_gain_gain250_ss2p5_test_seed42/README.md)
+- [三家族最佳模型與 No-Gain：test KCI、誤差表及內外插圖](results/visualization/best_gain_ss_gainss_test_seed42/README.md)
 
-兩者權重均為 0.05、2.5、25、250、2500；逐案例比值採內外區域各 50%。各資料夾提供獨立重畫腳本；11/3 以前的 visualization 結果保留。
+三組超參數比較的權重均為 0.05、2.5、25、250、2500；逐案例比值採內外區域各 50%。各資料夾提供獨立重畫腳本；11/3 以前的 visualization 結果保留。
 
 ## 輸出與重現實驗
 

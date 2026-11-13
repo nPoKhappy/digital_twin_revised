@@ -206,6 +206,33 @@ def step_wise_rolling_loss_and_predictions(model, batch, criterion, device):
 
     return total_loss / n_steps, torch.cat(predictions, dim=1), all_future_targets
 
+
+def dynamic_split_points(length, cfg_data):
+    """Return the existing chronological validation/test and training boundaries."""
+    split_point1 = int(length * (1 - cfg_data['test_data_split']))
+    split_point2 = int(split_point1 * (1 - cfg_data['valid_data_split']))
+    return split_point1, split_point2
+
+
+def calculate_dynamic_stats(all_dfs_log, cfg_data, scaler_fit_scope, min_train_rows=0):
+    """Fit on train partitions when requested; retain the historical default."""
+    if scaler_fit_scope == 'legacy':
+        fit_frames = all_dfs_log
+    elif scaler_fit_scope == 'train_only':
+        fit_frames = []
+        for df in all_dfs_log:
+            _, train_end = dynamic_split_points(len(df), cfg_data)
+            # Match the dataset guard below: a short segment that produces no
+            # training windows must not influence the training-only scaler.
+            if train_end > min_train_rows:
+                fit_frames.append(df.iloc[:train_end])
+    else:
+        raise ValueError("scaler_fit_scope must be 'legacy' or 'train_only'.")
+    if not fit_frames:
+        raise ValueError("No dynamic data available for the requested scaler fit scope.")
+    return data_utils.calculate_zscore_stats(pd.concat(fit_frames, ignore_index=True))
+
+
 def main(config_path: str):
     # Load the experiment config first; every tensor shape below is derived from it.
     with open(config_path, 'r', encoding='utf-8') as f:
@@ -283,6 +310,12 @@ def main(config_path: str):
     from torch.utils.data import DataLoader, ConcatDataset
     interval = config['window']['sampling_interval_min']
     use_median = config['window'].get('use_median_downsampling', True)
+    W = int(config['window']['train_window_mins'] / interval)
+    H_out = config['window']['prediction_length']
+    regression_steps = int(config['training'].get('stepwise_regression_steps', 36))
+    if regression_steps < 1:
+        raise ValueError("stepwise_regression_steps must be >= 1.")
+    dataset_H = regression_steps
 
     all_dfs_log = []
     if 'training_files' in cfg_data and cfg_data['training_files']:
@@ -306,8 +339,11 @@ def main(config_path: str):
     if len(all_dfs_log) == 0:
         raise ValueError("No training data found to calculate Z-score stats.")
 
-    df_all_log = pd.concat(all_dfs_log, ignore_index=True)
-    mean_all, std_all = data_utils.calculate_zscore_stats(df_all_log)
+    scaler_fit_scope = config['training'].get('scaler_fit_scope', 'legacy')
+    mean_all, std_all = calculate_dynamic_stats(
+        all_dfs_log, cfg_data, scaler_fit_scope, min_train_rows=W + dataset_H
+    )
+    print(f"  [Info] Dynamic scaler fit scope: {scaler_fit_scope}")
 
     # Save the z-score statistics used by this PGIN training run.
     zscore_dir = str(experiment_results_dir(config))
@@ -345,17 +381,10 @@ def main(config_path: str):
     # Regression horizon is intentionally independent from the gain rollout horizon.
     train_datasets = []
     valid_datasets = []
-    W = int(config['window']['train_window_mins'] / config['window']['sampling_interval_min'])
-    H_out = config['window']['prediction_length']
-    regression_steps = int(config['training'].get('stepwise_regression_steps', 36))
-    if regression_steps < 1:
-        raise ValueError("stepwise_regression_steps must be >= 1.")
-    dataset_H = regression_steps
     print(f"[Info] Step-wise regression training length: {dataset_H} steps")
 
     for df_z in all_dfs_z:
-        split_point1 = int(len(df_z) * (1 - cfg_data['test_data_split']))
-        split_point2 = int(split_point1 * (1 - cfg_data['valid_data_split']))
+        split_point1, split_point2 = dynamic_split_points(len(df_z), cfg_data)
 
         train_df = df_z.iloc[:split_point2]
         if len(train_df) > W + dataset_H:

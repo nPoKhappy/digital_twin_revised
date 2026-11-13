@@ -1,0 +1,197 @@
+﻿{
+    "status":  "complete",
+    "seed":  43,
+    "started_utc":  "2026-11-10T06:38:47.1790247Z",
+    "teacher_and_source_sha256":  {
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\Tabular_MLP_5in_2out_QV.pth":  "5CCEF7ED9F66EFEDE64EDFB6EA4CE6FEA5E482245B6F714F2B32F181EE177E52",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\steady_state\\Tabular_MLP_New\\zscore_mean.csv":  "28C84EB6B3D3CDC9C3847B2E730AD1E312CC3F320C2A158E8C3C518885E04E41",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\steady_state\\Tabular_MLP_New\\zscore_std.csv":  "61CA90E99DEB091FF1C559DCFE3DC880F4740FF7CADC0F9C396BE17C643AC7C0",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_dynamic\\Test_dataform_change_air2_R=5_train_split.csv":  "41AA48F3926F1FECF5A1A4732532D17599FCE2B984B04226B593FDD981E20202",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_dynamic\\Test_dataform_change_air2_R=5-1_train_split.csv":  "02844B2DFCAD526C32ECE3F9B3939E49B1AC6412774A052C9B76119090D24C86",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_dynamic\\Test_dataform_change_air2_R=5-2_train_split.csv":  "68F4A890BC265794BE9253919E9B085EF93EFAD2D8F29037889E3D123DC8B4AA",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_dynamic\\Test_dataform_change_air2_R=5-6_train_split.csv":  "D8BA0C3A9B45942F9EF6B160C271025DCDEA7B3F862FA41BF0751A78A1B70257",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_10.xlsx":  "38624B86F577754784FB982C94BBDFAE828ACF2CDCA72F8A6423C82F78111EA2",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_11.xlsx":  "FCA4E5C739D9A4D30C96C6FA021B0EBF518E312A60C66A1579326106013B2F25",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_15.xlsx":  "9AA0F1C8A8625E39F6DEDB350F0934DBE794F4CE3CE70D7A2A9DEE444F6B66EF",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_16.xlsx":  "3AE4E0334FD9B8B5F1D009062018569E1491E128401C7A99414A4E71EC9E8D21",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_17.xlsx":  "17B1F82F6AA22813D24779C2B2180D031498C05DA397915F721B1068B62BFF23",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_18.xlsx":  "B9E5541B395B7EE15EB0DDD6B1C149E816A7B0FFF8FCDDF70EF946C919CC839B",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_19.xlsx":  "E0CA3392D09FA88C86142556826BCCC7E194960627F1181D009309819825C54B",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_20.xlsx":  "9C6CD9187DC527D94B3A1E79E184A4168DD631EFC9B7D5918EB2A81D15549F9A",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_21.xlsx":  "6233155A4AB008EB78571EDBE3B60EBDC83F48DF4F407AD0FF3401DD392B79FD",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_22.xlsx":  "BC8A55FF7BD74DC44AB83D8A5FEEB804CA6241946AEAD6891077A6EE3E43F879",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_23.xlsx":  "5B53494E8A787B3B3581758528CB4E5DA5152C9D966A721EB4EAE707B0AC2B1C",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\__init__.py":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\dataset.py":  "426BDB11B37F517B05F12F9B22E0D912E4244874E223D8792FB70E22991A645D",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\dataset_tabular.py":  "917C04560D66C10E0A62C997108F65264E12297BD0C9963D9448F52AC57291A1",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\engine.py":  "4D3B062211D7D9FE722F66FA7A8D5658CD9DC1ADB510A630CC108631AC762241",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\experiment_paths.py":  "36734C03070F921057E54AA361AE9905719475DCC762CAFB63E840FF2F1D19EF",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\models\\__init__.py":  "2857CAC41209A4F5FA23F329E779CF59E8AA71F2C7272CBD35481C5E69D402C6",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\models\\tabular_mlp.py":  "BC10AFD5642EB9B0B60AED31B655D32389250CB85CEDA3AC7AC950D927DF48B5",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\models\\transformer_model.py":  "6436661442DFB9A2B7F687C1AD55A0D9547E58B5DADEAEE526983DDAF1E1F4C2",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\models\\user_defined_transformer.py":  "7156B5CC2724EEF1D5522ED59927C59FFA480DE644FD13BBE824B9451A19D5BD",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\utils.py":  "5098CF34BF540B2D0FE1E5FB661A7FDB1C5B8C2A20C30F97F7BD86FA4B74EC81",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\variable_selection.py":  "E23652B7DA584ED4A9F517F977439E76D05EB6EC328B0B8370CF6F872E7540D8",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\steady_state\\Tabular_MLP_New\\training_result.json":  "FD3AC86DE43A1F561E3D12EB5FD8514A7727D8987DAC229DE7F992E9573F6744",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\steady_state\\Tabular_MLP_New\\training_protocol.json":  "3D7108DCDA2584B658A6A974DD0FD5515653B9494ED8D9F3F3BFF3E44663E74A",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\scripts\\training\\run_retrain_lhs10_23.ps1":  "362D9EA19765C40F6D895126669F4366EEA2C618A5C1912E7E429656248249D8",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\pyproject.toml":  "5C7D0FD97B7645C94984D8E23E9E89C56771101617D7267E7967656D856662E5",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\uv.lock":  "A0ED6CAB3F4F0E7166F8B5CAB940C7BFA6E02189E0AC07049A5C0EBE1B459441",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\scripts\\training\\train_pgin_stepwise_gain.py":  "8E51D74934BF27EC6AE9F40E0D11FD0BFF9BC591EA14039FFDDA15CBE3AF0A04",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\scripts\\training\\train_pgin_stepwise_gain_ss_loss.py":  "6E611FD52735ED19F449AD5391FC45CEB200B433D064B0ACDE7BEB0909F778E8",
+                                      "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\scripts\\training\\train_pgin_stepwise_gain_difficult_group_gradnorm.py":  "A1A2DE4D7EACCE4E3B65BDFC48B0833A489F345730D818BC6D899D209E990172"
+                                  },
+    "config_manifest_sha256":  "0ABDB3D21C9F6B028403213F9AA0530672F1F363099CB54BDF5CD9BDDF8DD3E2",
+    "completed":  [
+                      {
+                          "exp_name":  "lhs10_23_no_gain_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_no_gain_seed43.pth",
+                          "checkpoint_sha256":  "5E7D8FBBC79FBFAD41DDE0B2FCF591E33FFA40837E25ACCAC07EE869D2C53D56",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_gain005_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_gain005_seed43.pth",
+                          "checkpoint_sha256":  "F6DF0F6635B1F8A9561078C3AB122C2349181752803963A792403D56F4AA7340",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_gain2500_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_gain2500_seed43.pth",
+                          "checkpoint_sha256":  "768EE05051112286177C8C479FFD22AF40CAD255A9B6B5281DB1293312E40233",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_gain250_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_gain250_seed43.pth",
+                          "checkpoint_sha256":  "AC975D1988CB5A42E422E0211AFDC6B15D0CBE33E483FD899DE17E3F9CD272DC",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_gain25_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_gain25_seed43.pth",
+                          "checkpoint_sha256":  "21E7E70BDB6291C6DBEA85F5D2F6D105FD78130D4DAFB989343E402D101D952B",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_gain2p5_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_gain2p5_seed43.pth",
+                          "checkpoint_sha256":  "941320C5564854FF4C1226544454D4BE565109C24AF8D7EEE0E4654382B4D634",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_ss005_only_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_ss005_only_seed43.pth",
+                          "checkpoint_sha256":  "C6633B458335723ADA9703D949D2E9991129750C4058241D2FEE483524FB70A3",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_ss2500_only_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_ss2500_only_seed43.pth",
+                          "checkpoint_sha256":  "FCD40968802F16E17DFD8B0627D1C3A06DE5C5158B9EBA8D679F6E08A8CCD432",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_ss250_only_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_ss250_only_seed43.pth",
+                          "checkpoint_sha256":  "85470E99257E93B2DC7CBFFE4696074076E89201C99FEDE9AD8DD1703BCC82B6",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_ss25_only_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_ss25_only_seed43.pth",
+                          "checkpoint_sha256":  "EF721FDDC31D81133D524D52DB13F413F6BFD17FE219AE88E3DDE1D31A51E2B4",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_ss2p5_only_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_ss2p5_only_seed43.pth",
+                          "checkpoint_sha256":  "E504F6BB28393EB8E9BC07CF6B1A26075E8FC4B5FC6B69375D17E36B72E13D1F",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_gain005_ss005_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_gain005_ss005_seed43.pth",
+                          "checkpoint_sha256":  "AEC2D5DAC95A30E532301AA4CE9043803C1055E65EB7AA9FE8967CF28CF6C43A",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_gain2500_ss2500_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_gain2500_ss2500_seed43.pth",
+                          "checkpoint_sha256":  "45BE19537691B903378AE282E947DCC9317373EC6475721672F805959F7C3F6A",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_gain250_ss250_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_gain250_ss250_seed43.pth",
+                          "checkpoint_sha256":  "0A5EBA621B01E2E826AD7A0F8B29F5342F415DEFFD5C8B3B7362A5987AD6A0D5",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_gain25_ss25_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_gain25_ss25_seed43.pth",
+                          "checkpoint_sha256":  "3B65D6C221EFA40EE0E0287F9F540D40C0D46C146C3615D7A9DC29FE9D09ABC2",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_gain2p5_ss2p5_seed43",
+                          "checkpoint":  "saved_models/lhs10_23_gain2p5_ss2p5_seed43.pth",
+                          "checkpoint_sha256":  "E2CB3A29A9A582E7F9D5F8E39D3AC52FE943E6FE4E2CCA5F19216E8478DFD787",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_dg_ratio0p005_seed43_difficult_group_gradnorm_no_ss",
+                          "checkpoint":  "saved_models/lhs10_23_dg_ratio0p005_seed43_difficult_group_gradnorm_no_ss.pth",
+                          "checkpoint_sha256":  "A2C811577D40351400190E99962565A152EEFF02450D4E6E58667172FD1E1CB5",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_dg_ratio0p01_seed43_difficult_group_gradnorm_no_ss",
+                          "checkpoint":  "saved_models/lhs10_23_dg_ratio0p01_seed43_difficult_group_gradnorm_no_ss.pth",
+                          "checkpoint_sha256":  "F5982FEFAE934E66FA2FFFE102A600DE5BD3EDDCF0FC35F200654A1AB2B51FF2",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_dg_ratio0p015_seed43_difficult_group_gradnorm_no_ss",
+                          "checkpoint":  "saved_models/lhs10_23_dg_ratio0p015_seed43_difficult_group_gradnorm_no_ss.pth",
+                          "checkpoint_sha256":  "AF68CE3FFEF310AADB9148014896331C8306CA12A3C672476996A29221777539",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_dg_ratio0p02_seed43_difficult_group_gradnorm_no_ss",
+                          "checkpoint":  "saved_models/lhs10_23_dg_ratio0p02_seed43_difficult_group_gradnorm_no_ss.pth",
+                          "checkpoint_sha256":  "B1A135CC968809C44A8A90DE1C50C1BA5F67975391485BB93BDDB2B5AACA4CD2",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      },
+                      {
+                          "exp_name":  "lhs10_23_dg_ratio0p0025_seed43_difficult_group_gradnorm_no_ss",
+                          "checkpoint":  "saved_models/lhs10_23_dg_ratio0p0025_seed43_difficult_group_gradnorm_no_ss.pth",
+                          "checkpoint_sha256":  "C9C78EC7ADB69223060D7921322AFC97B398C37D3F854D3352859B1AE7536BD7",
+                          "zscore_mean_sha256":  "DFDEB91D4E9E75555C996326A4626E8BA4033CF8FFB128F7948FCF7E44B64E1C",
+                          "zscore_std_sha256":  "E4307E2E1415CB0408418259C63DBEC2F1DD3A9D1767C5975781707F63DC64FC"
+                      }
+                  ],
+    "active":  null,
+    "description":  "Teacher is shared across dynamic seeds; ANN holdout is not an unseen holdout for the complete dynamic system.",
+    "finished_utc":  "2026-11-11T12:44:47.8265908Z"
+}

@@ -1,0 +1,9 @@
+experiment,training_type,seed,distribution,target,mv,probe_points,possible_comparisons,valid_comparisons,coverage_percent,teacher_positive_percent,dynamic_positive_percent,kci_percent,horizon,gain_definition,tp,tn,fp,fn,zero_gain,model,family
+lhs10_23_gain2p5_seed44,gain,44,in_range,B35_H2S,air2_SP,4404,158544,139500,87.98819255222524,12.103225806451613,6.17347670250896,90.86308243727599,all18,pooled_step_comparisons,6375,120379,2237,10509,0,gain2p5,gain
+lhs10_23_gain2p5_seed44,gain,44,in_range,B35_H2S,HEATER2_output_T_SP,4404,158544,141984,89.55495004541326,59.71095334685598,58.96439035384269,95.49526707234618,all18,pooled_step_comparisons,81052,54536,2668,3728,0,gain2p5,gain
+lhs10_23_gain2p5_seed44,gain,44,in_range,B35_SO2,air2_SP,4404,158544,153180,96.61671207992734,100.0,99.8753100927014,99.8753100927014,all18,pooled_step_comparisons,152989,0,0,191,0,gain2p5,gain
+lhs10_23_gain2p5_seed44,gain,44,in_range,B35_SO2,HEATER2_output_T_SP,4404,158544,122040,76.97547683923706,59.05604719764012,60.57849885283514,96.8198951163553,all18,pooled_step_comparisons,71061,47098,2869,1011,1,gain2p5,gain
+lhs10_23_gain2p5_seed44,gain,44,soft_ood,B35_H2S,air2_SP,2585,93060,78264,84.10058027079303,17.47930082796688,12.634161300214657,89.60441582336706,all18,pooled_step_comparisons,7716,62412,2172,5964,0,gain2p5,gain
+lhs10_23_gain2p5_seed44,gain,44,soft_ood,B35_H2S,HEATER2_output_T_SP,2585,93060,79452,85.37717601547389,51.7897598550068,51.774656396314754,95.05361727835674,all18,pooled_step_comparisons,39177,36345,1959,1971,0,gain2p5,gain
+lhs10_23_gain2p5_seed44,gain,44,soft_ood,B35_SO2,air2_SP,2585,93060,83484,89.70986460348162,100.0,99.55320780029706,99.55320780029706,all18,pooled_step_comparisons,83111,0,0,373,0,gain2p5,gain
+lhs10_23_gain2p5_seed44,gain,44,soft_ood,B35_SO2,HEATER2_output_T_SP,2585,93060,68364,73.46228239845261,48.92048446550816,49.19548300274999,98.0633081738927,all18,pooled_step_comparisons,32876,34164,756,568,0,gain2p5,gain

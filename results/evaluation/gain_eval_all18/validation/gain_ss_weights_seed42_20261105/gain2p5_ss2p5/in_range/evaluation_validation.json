@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "probe_points": 4404,
+  "diagnostic_rows": 634176,
+  "numpy_confusion_recount": true,
+  "CSV_confusion_recount": true,
+  "threshold": 1e-05,
+  "output_sha256": {
+    "gain_arrays.npz": "b7f71d9bdace7a02db19c4a21b7e7bf352ae1234968c5aa18e2ae63e18477364",
+    "gain_evaluation_detail.csv": "52032addb097d2c98fc0a6db11341b2ec01c8e840c8d17cd0930d4d97790b0ff",
+    "gain_probe_diagnostics.csv": "137765b8b6912fdf9914f6291dd97d7679a87c1ac92406845d26325cf6988ff1"
+  }
+}

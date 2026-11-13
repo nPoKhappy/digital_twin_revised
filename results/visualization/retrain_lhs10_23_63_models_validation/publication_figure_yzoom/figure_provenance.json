@@ -1,0 +1,33 @@
+{
+  "source": "results\\visualization\\retrain_lhs10_23_63_models_validation\\regional_coordinates_63_models.csv",
+  "source_sha256": "04710ca53042c918b7821c4d7a66203190526540bce002daa83b33c4fa77ebc7",
+  "unique_coordinates": 126,
+  "visual_marks": 144,
+  "jitter": false,
+  "y_axis": {
+    "lower": [
+      0.35,
+      1.35
+    ],
+    "upper": [
+      1.35,
+      2.75
+    ],
+    "scale": "piecewise; lower segment gets 2.6 times the display height of the upper segment",
+    "no_data_interval_omitted": true
+  },
+  "x_axis": [
+    85.8,
+    100.2
+  ],
+  "source_geometry": "all model coordinates are plotted without moving",
+  "no_gain": "Same three reference points are repeated across families.",
+  "outputs": {
+    "regional_63_models_expanded_y_4x2.png": "d6b4a0d72f727858b1e46de9380ac7a9049de5b9dfa7a1b6a9f6f43bf73e4ebf",
+    "regional_63_models_expanded_y_4x2.pdf": "ec984a841fd930c99d3ca0bee406777fdae831b5dba03d3a788095a0e6c56aed",
+    "regional_63_models_expanded_y_part1.png": "f0e9d4f2f2d3d42b9a4389a2910a64b14be1946cbcafbb9f0bf661d8446421df",
+    "regional_63_models_expanded_y_part1.pdf": "8a1b5783da508af86a3b7cbe911fd972fe868c2eaaaf9203bded76b3a5385dcc",
+    "regional_63_models_expanded_y_part2.png": "67d5d67fd3d1c21ea8c0dde5fb838a15b4915c35c2080930aca1c0074b230a34",
+    "regional_63_models_expanded_y_part2.pdf": "a4840bfae13562726ca168866c5e1689c3a3e09b248e3e77ada080210365d84a"
+  }
+}

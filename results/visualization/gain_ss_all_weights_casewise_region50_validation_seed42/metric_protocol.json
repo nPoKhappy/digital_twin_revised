@@ -1,0 +1,45 @@
+{
+  "model_family": "gain_ss",
+  "internal_validation": [
+    "R5-3",
+    "R5-4",
+    "R5-5"
+  ],
+  "external_validation": [
+    "R5-27",
+    "R5-28",
+    "R5-29"
+  ],
+  "weights": [
+    0.05,
+    2.5,
+    25,
+    250,
+    2500
+  ],
+  "seed": 42,
+  "region_weights": [
+    0.5,
+    0.5
+  ],
+  "internal_ratios": 18,
+  "external_ratios": 18,
+  "internal_component_log_weight": 0.027777777777777776,
+  "external_component_log_weight": 0.027777777777777776,
+  "formula": "sqrt(GM_internal(same-case RMSE / NoGain RMSE) * GM_external(same-case RMSE / NoGain RMSE))",
+  "regional_RMSE_arithmetic_preaveraging": false,
+  "SS_target_scope": "all_48_outputs",
+  "preprocessing": "10-row median; H2S/SO2 log; saved training z-score statistics",
+  "KCI": "Fresh ANN-reference all18 strict sign agreement; zero dynamic gain is incorrect; same validation probes, teacher, scaling and threshold as retained Gain/SS-only; overall KCI is pooled micro, not region50",
+  "KCI_sources": [
+    "data/Claus_steady_state/lhs_valid_in_range.xlsx",
+    "data/Claus_steady_state/lhs_valid_soft_ood.xlsx"
+  ],
+  "KCI_probe_points": [
+    4404,
+    2585
+  ],
+  "optimizer_updates": 0,
+  "output_directory": "results/visualization/gain_ss_all_weights_casewise_region50_validation_seed42",
+  "full_rerun_command": ".\\.venv\\Scripts\\python.exe -m scripts.prediction.validate_gain_ss_hyperparameters"
+}

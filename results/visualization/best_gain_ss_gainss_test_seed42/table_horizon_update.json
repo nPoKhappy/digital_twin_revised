@@ -1,0 +1,101 @@
+{
+  "passed": true,
+  "update_scope": "Presentation-only: grouped H1/H18/TS tables 3/4/5, derived CSV/HTML and documentation; no new model inference",
+  "previous_source_sha256": "2d466ad6bba3fe31cfc75ffa99779fb84d54ce77fd389e9a6005a065d75ec7f0",
+  "current_source_sha256": "f00fcb4eeb7b0a859ba7cd2cf92f8c781f05ddb8cebe6387dec6fb6aa9a8781f",
+  "figure_1_2_6_bytes_unchanged": true,
+  "all_preexisting_CSVs_unchanged": 64,
+  "delta_cells_checked": 216,
+  "unchanged_numeric_inputs": 93,
+  "raw_metrics_unchanged": true,
+  "grouped_rows": [
+    24,
+    24,
+    24
+  ],
+  "previous_plot_validation": {
+    "passed": true,
+    "figure_count": 6,
+    "figure_names": [
+      "01_overall_kci",
+      "02_pair_kci",
+      "03_internal_ts_rmse",
+      "04_external_so2_rmse",
+      "05_external_h2s_rmse",
+      "06_regional_kci_vs_avgrelrmse"
+    ],
+    "table_rows": [
+      4,
+      8,
+      8,
+      8,
+      8
+    ],
+    "selection_uses_validation_only": true,
+    "delta_computed_from_unrounded_RMSE": true,
+    "KCI_micro_reconstructed": true,
+    "NoGain_point_in_both_regional_panels": true,
+    "regional_ratio_counts": {
+      "internal": 24,
+      "external": 48
+    },
+    "visual_review": "passed: color and grayscale contact sheets, full-resolution pair table and regional plot reviewed; Chinese glyphs, units, six figures, bold maxima, four model markers and No-Gain reference visible",
+    "shared_source_sha256": "2d466ad6bba3fe31cfc75ffa99779fb84d54ce77fd389e9a6005a065d75ec7f0",
+    "output_sha256": {
+      "01_overall_kci.pdf": "a6c01bc70b0a14e5036e2ffc79beb0c89c4317caf8ebbe69db0b226e18d20127",
+      "01_overall_kci.png": "0b2ee1984242f4d4dbe75c5a1ce19f9678ab0bbe10617389bb15587e6803aed1",
+      "02_pair_kci.pdf": "97f8b260ef14fceb0c67d3b73e504493f0823d4b9bc306e5cdd8ff63eb5cd0c0",
+      "02_pair_kci.png": "e71c2e5953af263b47a695b94d15bcb3857e9eb3909f449c0713917399c85b95",
+      "03_internal_ts_rmse.pdf": "843b5d8f31be7b0e2abecd61bf214adeca69deae792ec3b64a148f947a443edb",
+      "03_internal_ts_rmse.png": "042934280d1cc8df21cc86e4b253931d3592b0762dcbbd40185e8e36879f7e8c",
+      "04_external_so2_rmse.pdf": "4991934362c7fcc1f2187539915e1dbbea68bbe185e948307f793c3bfb937c9e",
+      "04_external_so2_rmse.png": "28518050c83bb9a499fd67e292be2db6d7fe3d6d8585e2c1009d1a774094c70c",
+      "05_external_h2s_rmse.pdf": "f003576910f9af7f6bafe8986eaaecde6781e09b3e6930af965b5bd164275b69",
+      "05_external_h2s_rmse.png": "13ec91deadceb7ff53ec7d94cb5f99d0db1f31d0f6e296f1d00b70ed2957c93d",
+      "06_regional_kci_vs_avgrelrmse.pdf": "87853df05c3526079a293281c05e7065c4470094d00fc323afdcbe693c223add",
+      "06_regional_kci_vs_avgrelrmse.png": "6e5c0591ea09ba3494f5cd3113f2875a5c13c4ad65f50e6ad1b6606e19bbb5ec",
+      "avgrelrmse_by_region.csv": "1f0c005bf52907f7d92f825725f4de3b3b795368afd72d52bf00f96c075fa930",
+      "avgrelrmse_overall.csv": "336de9b781ac0ff28cd2ef78c7d471e6d5cfee0056b82d6f42db87e53b381021",
+      "contact_sheet.png": "09e793f6933b1962d440fd7a4206d7c7bec10ce2777d873b9d7fee348754380d",
+      "contact_sheet_grayscale.png": "2a251f5605dc4f9076dfcc64f07e0cd1b6897b2ae153fe0c414850c47aa6880c",
+      "data_audit.csv": "bbc950c1f062e918298ba94142e0bd78ce99d2bd3ec30ea3246e6f6181d20eec",
+      "external_h2s_rmse_table.csv": "195928a13c5b8dc7ef23878b4f8cbd463057f9379611aa403a1a9a9e08a8f48c",
+      "external_so2_rmse_table.csv": "815a3eddc967fc63a07b14638e16e23e57236e97a9faa3911a2416fb6585cc89",
+      "gain_pair_kci.csv": "f88bbc462deb332e490e99e1a21fcd2f0e246c23b357d7f681bf11417545b00a",
+      "horizon_metrics.csv": "be370936faa28f59082a16bfd7210ddbf7fd068ee3b35849f8a94bd72759c5ff",
+      "internal_ts_rmse_table.csv": "9be37b43d884ff26078953e8f7e04950d5b2963125230e0a3b4fb202bc886f0e",
+      "overall_kci.csv": "9d836c1bd5c664a9fee4d2eaa09f6fdaddde5fdc48f0155628e22e69e7911e05",
+      "overall_kci_table.csv": "90938602b629b138b9087478ade4ada70c4d1d317f1d020ae067b325e5b09634",
+      "paired_case_comparison.csv": "b817876a3105f8551d3d94e58e20860f5991d58902c11e4f1b0bd02d13b7f230",
+      "pair_kci_table.csv": "b5354c557f4ee790e351953203d1e476438e9226d166109490bb2d8ceb9699d5",
+      "README.md": "feb78b3ac8b6c1e0aa315e94b5dc64ee749848386a09079c956ad8f942b32df9",
+      "regional_plot_coordinates.csv": "995b2bb44be9cfdce320f0b4f420ff93c941bb173005cf03f9d3d3c28f757de5",
+      "RMSE_recheck.csv": "91259b2ef32123293d2db06208295913b8aa975f27a0a4eab5173f0169b89f9f",
+      "selected_models.csv": "8bd7b460fb0c5b78e2bc17a6a347cf4ef99098071f953a65aeced0a0cfad2395",
+      "test_metrics.csv": "d4bd9a454298f9ea135662e8599b508ef42aef954b553f2cfa66375aaef9f9f7",
+      "rebuild_figures.py": "85d17548303cc0767ed220cadfa795c68f71a18a5f41a74e12bca24a688ad424"
+    }
+  },
+  "previous_final_checks": {
+    "passed": true,
+    "figure_count": 6,
+    "five_table_row_counts": [
+      4,
+      8,
+      8,
+      8,
+      8
+    ],
+    "delta_values_checked": 120,
+    "unit_conversion_checked": true,
+    "region50_weighted_log_reconstruction": true,
+    "NoGain_test_KCI_reproduced": true,
+    "documentation_links_checked": 32,
+    "large_diagnostic_files_ignored": 8,
+    "unit_tests_passed": 9,
+    "protected_inputs_unchanged": 94,
+    "retained_outputs_unchanged": 429,
+    "visual_review": "passed: color and grayscale contact sheets, full-resolution pair table and regional plot reviewed; Chinese glyphs, units, six figures, bold maxima, four model markers and No-Gain reference visible"
+  },
+  "visual_review": "passed: grouped H1/H18/TS core and external tables reviewed; merged case labels, red/green changes and bold minima visible; figures 1/2/6 preserved"
+}

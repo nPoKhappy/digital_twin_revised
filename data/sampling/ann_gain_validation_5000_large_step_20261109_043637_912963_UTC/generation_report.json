@@ -1,0 +1,1187 @@
+{
+  "randomness": "Fresh system-entropy random generator; no fixed seed",
+  "data_role": "Aspen input conditions; not solved Aspen outputs",
+  "pairs": 2500,
+  "rows": 5000,
+  "step_std_multiplier": 0.5,
+  "step_magnitudes": {
+    "air2_SP": 22.24311225638926,
+    "HEATER2_output_T_SP": 10.70800806361464
+  },
+  "dynamic_scaler_std": "results\\pgin\\no_gain\\transformer_layerwise_63var_decoder_input_sp_PGIN_From_Scratch_no_gain_seed42\\zscore_std.csv",
+  "dynamic_scaler_sha256": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7",
+  "source_csv": "data\\Claus_dynamic\\step_change\\in_training_distribution\\air2_190_t2_155_t2_change_-5.csv",
+  "source_sha256": "12ce273ba47e01ba8aa5811df472f3f6b0bf2a0a510ed78a8b1cceecc8085eb2",
+  "fixed_values": {
+    "ACIDGAS.Fcn.CO2.(\"CO2\")": 40.13637557,
+    "ACIDGAS.Fcn.H2O.(\"H2O\")": 45.40793324,
+    "ACIDGAS.Fcn.H2S.(\"H2S\")": 54.95221027,
+    "B18.SPo.SPo": 599.9999588,
+    "B19.SPo.SPo": 1219.506406,
+    "BURNER_PC.SPo.SPo": 1.622195,
+    "FURANCE_PC.SPo.SPo": 1.571315,
+    "CAT1_PC.SPo.SPo": 1.411445,
+    "CAT2_PC.SPo.SPo": 1.251615,
+    "SEP2_PC.SPo.SPo": 1.361375,
+    "SEP1_PC.SPo.SPo": 1.520795,
+    "SEP3_PC.SPo.SPo": 1.200915
+  },
+  "arm_definition": "one specified MV per base, one signed step; two rows per pair",
+  "sampling": "5-dimensional random LHS separately within stratum and MV-direction arm",
+  "boundary_rule": "base is sampled in the original stratum; endpoint may cross strata or core/soft boundary but remains within air2 110-340 and T2 100-280; direction-specific base bounds avoid clipping",
+  "coverage_note": "Core base acidgas_Fm 120.5-160.5; Soft-OOD base 110.5-160.5; not the full enclosing five-dimensional rectangle. row_region and endpoint_region classify only air2/T2; an endpoint labelled core may have acidgas_Fm below the original core sampler minimum. The 50/50 and stratum weights are design choices, not volume weights. Base bounds near outer edges depend on direction; see arms. KCI rollout itself does not impose these endpoint limits.",
+  "crosses_core_boundary_pairs": 269,
+  "endpoint_outside_base_stratum_pairs": 388,
+  "independence_note": "Fresh random input points; exact or near overlap with teacher training data has not been established by generation alone.",
+  "strata": {
+    "core": {
+      "base_region": "core",
+      "base_bounds": {
+        "B33.SPo.SPo": [
+          140.0,
+          300.0
+        ],
+        "B20.SPo.SPo": [
+          140.0,
+          240.0
+        ],
+        "B34.SPo.SPo": [
+          120.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arms": {
+        "air2_SP_plus": {
+          "count": 313,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              140.0,
+              300.0
+            ],
+            "B20.SPo.SPo": [
+              140.0,
+              240.0
+            ],
+            "B34.SPo.SPo": [
+              120.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "air2_SP_minus": {
+          "count": 312,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              140.0,
+              300.0
+            ],
+            "B20.SPo.SPo": [
+              140.0,
+              240.0
+            ],
+            "B34.SPo.SPo": [
+              120.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_plus": {
+          "count": 313,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              140.0,
+              300.0
+            ],
+            "B20.SPo.SPo": [
+              140.0,
+              240.0
+            ],
+            "B34.SPo.SPo": [
+              120.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_minus": {
+          "count": 312,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              140.0,
+              300.0
+            ],
+            "B20.SPo.SPo": [
+              140.0,
+              240.0
+            ],
+            "B34.SPo.SPo": [
+              120.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        }
+      }
+    },
+    "single_air2_low": {
+      "base_region": "soft_ood",
+      "base_bounds": {
+        "B33.SPo.SPo": [
+          110.0,
+          140.0
+        ],
+        "B20.SPo.SPo": [
+          142.5,
+          237.5
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arms": {
+        "air2_SP_plus": {
+          "count": 62,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              110.0,
+              140.0
+            ],
+            "B20.SPo.SPo": [
+              142.5,
+              237.5
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "air2_SP_minus": {
+          "count": 63,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              132.24311225638925,
+              140.0
+            ],
+            "B20.SPo.SPo": [
+              142.5,
+              237.5
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_plus": {
+          "count": 62,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              110.0,
+              140.0
+            ],
+            "B20.SPo.SPo": [
+              142.5,
+              237.5
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_minus": {
+          "count": 63,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              110.0,
+              140.0
+            ],
+            "B20.SPo.SPo": [
+              142.5,
+              237.5
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        }
+      }
+    },
+    "single_air2_high": {
+      "base_region": "soft_ood",
+      "base_bounds": {
+        "B33.SPo.SPo": [
+          300.0,
+          340.0
+        ],
+        "B20.SPo.SPo": [
+          142.5,
+          237.5
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arms": {
+        "air2_SP_plus": {
+          "count": 63,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              300.0,
+              317.7568877436107
+            ],
+            "B20.SPo.SPo": [
+              142.5,
+              237.5
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "air2_SP_minus": {
+          "count": 63,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              300.0,
+              340.0
+            ],
+            "B20.SPo.SPo": [
+              142.5,
+              237.5
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_plus": {
+          "count": 62,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              300.0,
+              340.0
+            ],
+            "B20.SPo.SPo": [
+              142.5,
+              237.5
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_minus": {
+          "count": 62,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              300.0,
+              340.0
+            ],
+            "B20.SPo.SPo": [
+              142.5,
+              237.5
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        }
+      }
+    },
+    "single_t2_low": {
+      "base_region": "soft_ood",
+      "base_bounds": {
+        "B33.SPo.SPo": [
+          142.5,
+          297.5
+        ],
+        "B20.SPo.SPo": [
+          100.0,
+          140.0
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arms": {
+        "air2_SP_plus": {
+          "count": 62,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              142.5,
+              297.5
+            ],
+            "B20.SPo.SPo": [
+              100.0,
+              140.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "air2_SP_minus": {
+          "count": 62,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              142.5,
+              297.5
+            ],
+            "B20.SPo.SPo": [
+              100.0,
+              140.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_plus": {
+          "count": 63,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              142.5,
+              297.5
+            ],
+            "B20.SPo.SPo": [
+              100.0,
+              140.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_minus": {
+          "count": 63,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              142.5,
+              297.5
+            ],
+            "B20.SPo.SPo": [
+              110.70800806361464,
+              140.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        }
+      }
+    },
+    "single_t2_high": {
+      "base_region": "soft_ood",
+      "base_bounds": {
+        "B33.SPo.SPo": [
+          142.5,
+          297.5
+        ],
+        "B20.SPo.SPo": [
+          240.0,
+          280.0
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arms": {
+        "air2_SP_plus": {
+          "count": 63,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              142.5,
+              297.5
+            ],
+            "B20.SPo.SPo": [
+              240.0,
+              280.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "air2_SP_minus": {
+          "count": 62,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              142.5,
+              297.5
+            ],
+            "B20.SPo.SPo": [
+              240.0,
+              280.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_plus": {
+          "count": 63,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              142.5,
+              297.5
+            ],
+            "B20.SPo.SPo": [
+              240.0,
+              269.2919919363854
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_minus": {
+          "count": 62,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              142.5,
+              297.5
+            ],
+            "B20.SPo.SPo": [
+              240.0,
+              280.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        }
+      }
+    },
+    "joint_air2_low_t2_low": {
+      "base_region": "soft_ood",
+      "base_bounds": {
+        "B33.SPo.SPo": [
+          110.0,
+          140.0
+        ],
+        "B20.SPo.SPo": [
+          100.0,
+          140.0
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arms": {
+        "air2_SP_plus": {
+          "count": 15,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              110.0,
+              140.0
+            ],
+            "B20.SPo.SPo": [
+              100.0,
+              140.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "air2_SP_minus": {
+          "count": 16,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              132.24311225638925,
+              140.0
+            ],
+            "B20.SPo.SPo": [
+              100.0,
+              140.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_plus": {
+          "count": 16,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              110.0,
+              140.0
+            ],
+            "B20.SPo.SPo": [
+              100.0,
+              140.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_minus": {
+          "count": 16,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              110.0,
+              140.0
+            ],
+            "B20.SPo.SPo": [
+              110.70800806361464,
+              140.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        }
+      }
+    },
+    "joint_air2_low_t2_high": {
+      "base_region": "soft_ood",
+      "base_bounds": {
+        "B33.SPo.SPo": [
+          110.0,
+          140.0
+        ],
+        "B20.SPo.SPo": [
+          240.0,
+          280.0
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arms": {
+        "air2_SP_plus": {
+          "count": 15,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              110.0,
+              140.0
+            ],
+            "B20.SPo.SPo": [
+              240.0,
+              280.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "air2_SP_minus": {
+          "count": 16,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              132.24311225638925,
+              140.0
+            ],
+            "B20.SPo.SPo": [
+              240.0,
+              280.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_plus": {
+          "count": 15,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              110.0,
+              140.0
+            ],
+            "B20.SPo.SPo": [
+              240.0,
+              269.2919919363854
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_minus": {
+          "count": 16,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              110.0,
+              140.0
+            ],
+            "B20.SPo.SPo": [
+              240.0,
+              280.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        }
+      }
+    },
+    "joint_air2_high_t2_low": {
+      "base_region": "soft_ood",
+      "base_bounds": {
+        "B33.SPo.SPo": [
+          300.0,
+          340.0
+        ],
+        "B20.SPo.SPo": [
+          100.0,
+          140.0
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arms": {
+        "air2_SP_plus": {
+          "count": 16,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              300.0,
+              317.7568877436107
+            ],
+            "B20.SPo.SPo": [
+              100.0,
+              140.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "air2_SP_minus": {
+          "count": 15,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              300.0,
+              340.0
+            ],
+            "B20.SPo.SPo": [
+              100.0,
+              140.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_plus": {
+          "count": 15,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              300.0,
+              340.0
+            ],
+            "B20.SPo.SPo": [
+              100.0,
+              140.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_minus": {
+          "count": 16,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              300.0,
+              340.0
+            ],
+            "B20.SPo.SPo": [
+              110.70800806361464,
+              140.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        }
+      }
+    },
+    "joint_air2_high_t2_high": {
+      "base_region": "soft_ood",
+      "base_bounds": {
+        "B33.SPo.SPo": [
+          300.0,
+          340.0
+        ],
+        "B20.SPo.SPo": [
+          240.0,
+          280.0
+        ],
+        "B34.SPo.SPo": [
+          110.5,
+          160.5
+        ],
+        "ACIDGAS.T.T": [
+          82.6,
+          84.6
+        ],
+        "ACIDGAS.P.P": [
+          1.66,
+          1.69
+        ]
+      },
+      "arms": {
+        "air2_SP_plus": {
+          "count": 16,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              300.0,
+              317.7568877436107
+            ],
+            "B20.SPo.SPo": [
+              240.0,
+              280.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "air2_SP_minus": {
+          "count": 16,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              300.0,
+              340.0
+            ],
+            "B20.SPo.SPo": [
+              240.0,
+              280.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_plus": {
+          "count": 16,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              300.0,
+              340.0
+            ],
+            "B20.SPo.SPo": [
+              240.0,
+              269.2919919363854
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        },
+        "HEATER2_output_T_SP_minus": {
+          "count": 15,
+          "effective_base_bounds": {
+            "B33.SPo.SPo": [
+              300.0,
+              340.0
+            ],
+            "B20.SPo.SPo": [
+              240.0,
+              280.0
+            ],
+            "B34.SPo.SPo": [
+              110.5,
+              160.5
+            ],
+            "ACIDGAS.T.T": [
+              82.6,
+              84.6
+            ],
+            "ACIDGAS.P.P": [
+              1.66,
+              1.69
+            ]
+          }
+        }
+      }
+    }
+  },
+  "verification": "passed: saved files reloaded; pair, arm, stratum, range, and signed step checks",
+  "output_sha256": {
+    "aspen_inputs.csv": "0594d78f1b907c32b821e94701ad97d6e55216c5b566b128f11367d5d4dd14b9",
+    "row_manifest.csv": "8fde4e77c81d0e3babc6529f0679abf40f9a6d360e166dd40be5adce82d4db2a"
+  },
+  "core_endpoints_below_original_core_acidgas_flow_min": 18
+}

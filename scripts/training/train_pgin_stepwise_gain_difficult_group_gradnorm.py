@@ -60,6 +60,29 @@ DIFFICULT_PAIRS = [
     ("B35_SO2", "HEATER2_output_T_SP"),
 ]
 
+def dynamic_split_points(length, cfg_data):
+    """Return the chronological test and training boundaries."""
+    split_point1 = int(length * (1 - cfg_data['test_data_split']))
+    split_point2 = int(split_point1 * (1 - cfg_data['valid_data_split']))
+    return split_point1, split_point2
+
+
+def calculate_dynamic_stats(all_dfs_log, cfg_data, scaler_fit_scope, min_train_rows=0):
+    """Fit dynamic statistics on training windows, or preserve legacy behavior."""
+    if scaler_fit_scope == 'legacy':
+        fit_frames = all_dfs_log
+    elif scaler_fit_scope == 'train_only':
+        fit_frames = []
+        for df in all_dfs_log:
+            _, train_end = dynamic_split_points(len(df), cfg_data)
+            if train_end > min_train_rows:
+                fit_frames.append(df.iloc[:train_end])
+    else:
+        raise ValueError("scaler_fit_scope must be 'legacy' or 'train_only'.")
+    if not fit_frames:
+        raise ValueError('No dynamic data available for the requested scaler fit scope.')
+    return data_utils.calculate_zscore_stats(pd.concat(fit_frames, ignore_index=True))
+
 # =====================================================================
 # 1. Variable name mapping
 #    HYSYS/raw tag names -> Python-friendly column names
@@ -488,10 +511,19 @@ def main(
     if len(all_dfs_log) == 0:
         raise ValueError("No training data found to calculate Z-score stats.")
 
-    # 這裡以 training_files 載入的全部資料估計 mean/std；時間切分在後面才進行。
-    # 每份原檔仍另存於 all_dfs_log，合併表僅用來計算共用的標準化統計值。
-    df_all_log = pd.concat(all_dfs_log, ignore_index=True)
-    mean_all, std_all = data_utils.calculate_zscore_stats(df_all_log)
+    # The default preserves full-data statistics; train_only uses training
+    # partitions from files that can produce regression windows.
+    W = int(config['window']['train_window_mins'] / config['window']['sampling_interval_min'])
+    H_out = config['window']['prediction_length']
+    regression_steps = int(config['training'].get('stepwise_regression_steps', 36))
+    if regression_steps < 1:
+        raise ValueError("stepwise_regression_steps must be >= 1.")
+    dataset_H = regression_steps
+    scaler_fit_scope = config['training'].get('scaler_fit_scope', 'legacy')
+    mean_all, std_all = calculate_dynamic_stats(
+        all_dfs_log, cfg_data, scaler_fit_scope, min_train_rows=W + dataset_H
+    )
+    print(f"[Info] Dynamic scaler fit scope: {scaler_fit_scope}")
 
     # 一般訓練會存下 Transformer 的 mean/std 供推論使用；診斷模式跳過這份輸出。
     # Save z-score statistics during training, but keep diagnostics read-only.
@@ -536,18 +568,11 @@ def main(
     # Regression horizon is intentionally independent from the gain rollout horizon.
     train_datasets = []
     valid_datasets = []
-    W = int(config['window']['train_window_mins'] / config['window']['sampling_interval_min'])
-    H_out = config['window']['prediction_length']
-    regression_steps = int(config['training'].get('stepwise_regression_steps', 36))
-    if regression_steps < 1:
-        raise ValueError("stepwise_regression_steps must be >= 1.")
-    dataset_H = regression_steps
     print(f"[Info] Step-wise regression training length: {dataset_H} steps")
 
     for df_z in all_dfs_z:
         # 每份檔案按時間先留末段 test，再從前段留出 valid；本程式不建立 test_loader。
-        split_point1 = int(len(df_z) * (1 - cfg_data['test_data_split']))
-        split_point2 = int(split_point1 * (1 - cfg_data['valid_data_split']))
+        split_point1, split_point2 = dynamic_split_points(len(df_z), cfg_data)
 
         train_df = df_z.iloc[:split_point2]
         if len(train_df) > W + dataset_H:
@@ -1739,6 +1764,10 @@ if __name__ == '__main__':
     parser.add_argument('--target-ratio', type=float, default=0.015)
     parser.add_argument('--max-scale', type=float, default=50.0)
     parser.add_argument('--experiment-suffix', type=str, default=None)
+    parser.add_argument(
+        '--use-config-steady-state-source', action='store_true',
+        help='Use training.steady_state_source_path from YAML instead of the legacy eight-file override.',
+    )
     # 診斷選項：checkpoint 指定權重，batches 限制量測批數，output-dir 指定 CSV 位置。
     parser.add_argument(
         '--gradient-diagnostics-only',
@@ -1770,7 +1799,8 @@ if __name__ == '__main__':
                 if args.no_ss
                 else '_difficult_group_gradnorm'
             )
-    # CLI 固定啟用 DIFFICULT_PAIRS 的群組縮放並使用八份 baseline 穩態訓練來源。
+    # CLI enables DIFFICULT_PAIRS and defaults to the historical eight LHS sources.
+    # The explicit flag opts into the configured steady-state source instead.
     # 因此此入口不只是讀 YAML；還會把命令列倍率、來源與可選的 SS=0 override 傳給 main。
     main(
         args.config,
@@ -1781,7 +1811,9 @@ if __name__ == '__main__':
         experiment_suffix=experiment_suffix,
         h2s_group_target_ratio=args.target_ratio,
         h2s_group_max_scale=args.max_scale,
-        steady_state_source_override=BASELINE_STEADY_STATE_SOURCES,
+        steady_state_source_override=(
+            None if args.use_config_steady_state_source else BASELINE_STEADY_STATE_SOURCES
+        ),
         gain_group_gradnorm_pairs=DIFFICULT_PAIRS,
         ss_loss_weight_override=0.0 if args.no_ss else None,
     )

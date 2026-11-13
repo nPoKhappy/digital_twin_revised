@@ -8,3 +8,5 @@ test,Difficult-GradNorm rho=0.005,test/difficult_gradnorm/rho0p005_seed42,diffic
 test,Difficult-GradNorm rho=0.01,test/difficult_gradnorm/rho0p01_seed42,difficult_gradnorm_ratio0p01_no_ss_seed42,4385,2692,9,295.74
 test,Difficult-GradNorm rho=0.015,test/difficult_gradnorm/rho0p015_seed42,transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42_difficult_group_gradnorm_no_ss,4385,2692,4,342.35
 test,Difficult-GradNorm rho=0.02,test/difficult_gradnorm/rho0p02_seed42,difficult_gradnorm_ratio0p02_no_ss_seed42,4385,2692,7,295.7
+validation,"Gain=SS=0.05,2.5,25,250,2500",validation/gain_ss_weights_seed42_20261105,generated_20261105,4404,2585,44,1709.38
+test,No-Gain / Gain250 / SS-only2.5 / Gain+SS2.5,test/best_family_models_seed42_20261106,generated_20261106,4385,2692,36,1309.1
