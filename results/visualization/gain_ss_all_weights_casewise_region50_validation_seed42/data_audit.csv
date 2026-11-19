@@ -1,7 +1,0 @@
-case,partition,source,raw_rows,processed_rows,TS_points,horizon_windows,core_percent,air2_min,air2_max,T2_min,T2_max
-R5-3,internal,data\Claus_dynamic\Test_dataform_change_air2_R=5-3.xlsx,1440,144,126,109,100.0,167.7466931,286.1117583,160.5265065,193.0339794
-R5-4,internal,data\Claus_dynamic\Test_dataform_change_air2_R=5-4.xlsx,1440,144,126,109,100.0,176.0460837,259.0919255,191.5,229.3589762
-R5-5,internal,data\Claus_dynamic\Test_dataform_change_air2_R=5-5.xlsx,1440,144,126,109,66.80555555555556,129.800027,241.2552674,130.197679,198.816681
-R5-27,external,data\Claus_dynamic\Test_dataform_change_air2_R=5-27.csv,1440,144,126,109,0.0,311.5871290775912,329.5606247377468,109.97000444105991,128.31547065245238
-R5-28,external,data\Claus_dynamic\Test_dataform_change_air2_R=5-28.csv,1440,144,126,109,0.0,165.8294052672982,281.81969201075566,110.52046831525584,132.33858752256737
-R5-29,external,data\Claus_dynamic\Test_dataform_change_air2_R=5-29.csv,1440,144,126,109,0.0,118.8440100819792,131.73271258005568,159.36197169294462,215.3835850904221

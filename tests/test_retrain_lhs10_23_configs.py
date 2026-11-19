@@ -11,6 +11,8 @@ from src.experiment_paths import experiment_results_dir
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / 'configs/pgin/retrain_lhs10_23/config_manifest.json'
+EXPANDED_MANIFEST = ROOT / 'configs/pgin/retrain_lhs10_23/config_manifest_dg_expanded.json'
+RETIRED_DG = {'dg_ratio0p0025', 'dg_ratio0p005', 'dg_ratio0p01', 'dg_ratio0p02'}
 
 
 def sha256(path):
@@ -37,6 +39,12 @@ class RetrainConfigTests(unittest.TestCase):
                 source = ROOT / row['source_config']
                 path = ROOT / row['config']
                 self.assertEqual(sha256(source), row['source_sha256'])
+                # The historical manifest is hash-bound to completed batches.
+                # Four old DG ratios were intentionally retired for each seed;
+                # their manifest entries remain as historical provenance.
+                if row['family'] == 'difficult_gradnorm' and row['alias'] in RETIRED_DG:
+                    self.assertFalse(path.exists(), f'Retired config unexpectedly exists: {path}')
+                    continue
                 self.assertEqual(sha256(path), row['config_sha256'])
                 original = yaml.safe_load(source.read_text(encoding='utf-8-sig'))
                 current = yaml.safe_load(path.read_text(encoding='utf8'))
@@ -72,6 +80,38 @@ class RetrainConfigTests(unittest.TestCase):
                 self.assertEqual(row['cli_args'], ['--no-ss', '--target-ratio', expected[row['alias']],
                                                    '--max-scale', '50', '--use-config-steady-state-source'])
                 self.assertTrue(row['exp_name'].endswith('_difficult_group_gradnorm_no_ss'))
+
+    def test_expanded_difficult_gradnorm_configs_and_cli(self):
+        jobs = json.loads(EXPANDED_MANIFEST.read_text(encoding='utf8'))
+        ratios = {'0.15', '1.5', '15', '150'}
+        self.assertEqual(len(jobs), 12)
+        self.assertEqual({(row['seed'], row['target_ratio']) for row in jobs},
+                         {(seed, ratio) for seed in (42, 43, 44) for ratio in ratios})
+        self.assertEqual(len({row['exp_name'] for row in jobs}), 12)
+        self.assertEqual(len({row['checkpoint'] for row in jobs}), 12)
+        self.assertEqual(len({row['results'] for row in jobs}), 12)
+        for row in jobs:
+            with self.subTest(config=row['config']):
+                path = ROOT / row['config']
+                template = ROOT / row['template_config']
+                self.assertEqual(sha256(path), row['config_sha256'])
+                self.assertEqual(sha256(template), row['template_sha256'])
+                config = yaml.safe_load(path.read_text(encoding='utf8'))
+                original = yaml.safe_load(template.read_text(encoding='utf8'))
+                self.assertEqual(config['exp_name'], row['exp_name'])
+                self.assertEqual(config['training']['seed'], row['seed'])
+                self.assertEqual(config['training']['scaler_fit_scope'], 'train_only')
+                self.assertEqual(config['training']['ss_loss_weight'], 0)
+                self.assertEqual(row['family'], 'difficult_gradnorm')
+                self.assertEqual(row['module'], 'scripts.training.train_pgin_stepwise_gain_difficult_group_gradnorm')
+                self.assertEqual(row['max_scale'], '10000000')
+                self.assertEqual(row['cli_args'], ['--no-ss', '--target-ratio', row['target_ratio'],
+                                                   '--max-scale', row['max_scale'],
+                                                   '--use-config-steady-state-source'])
+                self.assertEqual(experiment_results_dir(config), ROOT / row['results'])
+                self.assertEqual(row['checkpoint'], f"saved_models/{row['exp_name']}.pth")
+                config['exp_name'] = original['exp_name']
+                self.assertEqual(config, original)
 
 
 if __name__ == '__main__':

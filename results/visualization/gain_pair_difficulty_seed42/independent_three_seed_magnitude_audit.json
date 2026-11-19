@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "models": 15,
+  "per_seed_groups": 480,
+  "summary_groups": 160,
+  "quartile_edge_groups": 8,
+  "official_pair_counts_checked": 120,
+  "common_teacher_arrays_verified": true,
+  "half_open_quartile_recount": true,
+  "mean_sample_sd_recalculated_from_npz": true,
+  "max_kci_difference_percentage_points": 4.263256414560601e-14,
+  "max_sd_difference_percentage_points": 7.105427357601002e-15,
+  "per_seed_csv_sha256": "369e6a8498402390e90b7b5186cb8cbfa7d0778cab930cd3af9d88688ed688a1",
+  "mean_sd_csv_sha256": "d837d4ac7b9140e95d91c97cfbd403eb451af4d84facab4cfcf3447eabffaf15",
+  "quartile_edges_sha256": "34b5d6d751155ace5d0208edc408d50c7135ac52d5e3dd176e8ccd38944931e5",
+  "audit_script_sha256": "d6ac771a53619ff879377c81de5faa16eedd5e388547bd8b8485b71b2e281e27"
+}

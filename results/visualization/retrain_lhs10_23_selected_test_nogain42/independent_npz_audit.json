@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "models": 15,
+  "regional_points": 30,
+  "rmse_rows": 1080,
+  "horizon_rows": 6480,
+  "kci_components": 120,
+  "max_rmse_abs_diff": 1.9992688060632702e-16,
+  "max_horizon_abs_diff": 1.9992688060632702e-16,
+  "max_relative_abs_diff": 1.5472068071176182e-12,
+  "max_kci_percentage_point_abs_diff": 2.842170943040401e-14,
+  "source_sha256": {
+    "run_protocol.json": "1d16600d39c327905d5680219678d7abc79ab222926638722ffa13c276536d15",
+    "selected_models.json": "2fde8ca7245d0e121ad5dac292e0e8eadf9f0cc80fa96e0bb513f37f5a3dd8be",
+    "validation_selection_plan.json": "30382d60f5e186c19eb16e8465d2700cff12538276cc1843d260d1217336f88f",
+    "test_metrics.csv": "4e2b68e03a3cc09b704d420e6c53fd9b70a048f5792c378eb7fbb558b6fa6809",
+    "horizon_metrics.csv": "be959154b0a18f3cf7c4f1e3d0f6bbd35e348dec1259113a23a90abd9d076cbe",
+    "kci_components.csv": "67d4986598a6cc44132486102d01276a7e00902f5311f431c8248e5a6b8bcfe1",
+    "regional_coordinates.csv": "f238ab477d9812e67ef2d82ce8ec8f8c13428499da591718ae5ffe6459217c7d",
+    "relative_rmse_components.csv": "8777f60ad4863c0d7ec6335abf2b67f7d002ddd7a688278fe85b583af38605df",
+    "scores_by_model_seed.csv": "2d6bfa52dd9f329db67fa99d3093da26d79b5430e9a26e8a540b211330d99034"
+  },
+  "audit_script_sha256": "66a26d1be92c12be2c2fd89a7c70e3248faf298b4484ad24cf1829b729962fd6"
+}

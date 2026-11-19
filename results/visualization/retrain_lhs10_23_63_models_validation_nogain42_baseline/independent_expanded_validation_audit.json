@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "expanded_models": 12,
+  "reused_models": 51,
+  "incremental_rmse": 432,
+  "incremental_kci_components": 96,
+  "combined_components": 2268,
+  "regional_points": 126,
+  "historic_source_hashes_checked": 711,
+  "max_rmse_abs_diff": 1.9992688060632702e-16,
+  "max_kci_percentage_point_abs_diff": 2.842170943040401e-14,
+  "incremental_protocol_sha256": "c6557ed72c84da30c4341f0988979d6681a2ec48b5299cc6bb4b425bde27ab39",
+  "audit_script_sha256": "3b16ae3cd382e01b6b662b2d1e724d38fbc1f5c3cad2468470be3a38bd2157d1"
+}

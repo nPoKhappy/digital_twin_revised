@@ -1,0 +1,37 @@
+{
+  "purpose": "JTICE-oriented provisional figures; verify journal guide before submission",
+  "source_files_sha256": {
+    "results\\visualization\\gain_pair_difficulty_seed42\\conditional_kci_by_teacher_sign.csv": "80fd83f887a1925f3c24cf8cc132cdd52f778e06b3149e4d22c1212c7c995480",
+    "results\\visualization\\gain_pair_difficulty_seed42\\conditional_kci_by_teacher_sign_per_seed.csv": "057a70ccfa3e9f5f377cdea162791bbe0e683f8f3fba55b105922f712104a983",
+    "results\\visualization\\gain_pair_difficulty_seed42\\conditional_kci_by_gain_magnitude.csv": "d837d4ac7b9140e95d91c97cfbd403eb451af4d84facab4cfcf3447eabffaf15",
+    "results\\visualization\\gain_pair_difficulty_seed42\\conditional_kci_by_gain_magnitude_per_seed.csv": "369e6a8498402390e90b7b5186cb8cbfa7d0778cab930cd3af9d88688ed688a1"
+  },
+  "script_sha256": "d3e723f4f3da7df2bd15dda8e62af7ab5971d8f4333b7cec107eec15b9a36a50",
+  "output_files_sha256": {
+    "kci_teacher_gain_magnitude.pdf": "24f2be1f2a9f4e11c2f160418a0affd281b1ecadea3a4cee88b0c0059924d313",
+    "kci_teacher_gain_magnitude.png": "c5152132d391e880b423b347c97c474286c3077d5a315aafe6f4a90b69f168dd",
+    "kci_teacher_gain_magnitude_caption.txt": "c6dd3af65e760932971833865d02a86d338da74a1ae1114812743f431badac5e",
+    "kci_teacher_gain_magnitude_grayscale.png": "fffb86ce00b548f1bb4f0648d0d2c808893fa02204a758fcc948f7503c61e8df",
+    "kci_teacher_gain_sign.pdf": "6258b7050d98c116e76a5d1cefe94cdc16cfa94c0faac0c8e83803988ecc02bf",
+    "kci_teacher_gain_sign.png": "500b4627e98a0ff212870e5945b4b7d21eddc8467b1323ff4a517e56f4fcf7a2",
+    "kci_teacher_gain_sign_caption.txt": "a7334b5460fbd131032768a67830210c28f32ce5de018d6e6d4af532cac54b3c",
+    "kci_teacher_gain_sign_grayscale.png": "1f0c4b2fee031d43c8144cdb741434e04ce374a53abe4faa97dcedf00d7ec47d",
+    "figure_notes.md": "05249a1ec780e630cca14e1123db09b27689fe1f92e178027d4af4968fc0ab7c"
+  },
+  "models": {
+    "no_gain": "no_gain",
+    "gain": "gain25",
+    "ss_only": "ss2p5_only",
+    "gain_ss": "gain25_ss25",
+    "difficult_gradnorm": "dg_ratio1p5"
+  },
+  "statistics": "Mean of training seeds 42/43/44 +/- 1 sample SD; all valid test probes; seeds share one ANN and operating points",
+  "scope": "ANN-reference directional agreement; test probes were previously used and are not a fresh blind test",
+  "sign_empty_groups": "Air2 to SO2, negative ANN gain: n=0 in both regions",
+  "dimensions_mm": [
+    190,
+    133
+  ],
+  "pdf_fonttype": 42,
+  "png_preview_dpi": 600
+}

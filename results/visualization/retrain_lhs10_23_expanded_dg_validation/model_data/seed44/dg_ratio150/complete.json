@@ -1,0 +1,15 @@
+{
+  "run_protocol_sha256": "c6557ed72c84da30c4341f0988979d6681a2ec48b5299cc6bb4b425bde27ab39",
+  "outputs": {
+    "gain_in_range.npz": "a7a595e9058143369f76589f46e3e8bdef276292c74019cfa91138ba52e8d85c",
+    "gain_soft_ood.npz": "e4acaf022df1a77fbcd2db776e23981dddb0e04e19f8aa4fd403a188ef7c2f8c",
+    "kci_components.csv": "34d0dd418302440a28c10c2ebc761465f640c6b79303414e16b13fa4b25ad96f",
+    "R5-27_prediction.npz": "642daecf13cbbdf790e9103acc3d6511b01beb2d7a0681181f096d599ea9a041",
+    "R5-28_prediction.npz": "3f4d926b6c55a442f22715a200a370efcf1f42e434f465d4f4bb340a014c5c6a",
+    "R5-29_prediction.npz": "2cfc3b0fb16234f3a5a4e744b44a274fcdf2f9f884de6260caa58cd7ec73faa3",
+    "R5-3_prediction.npz": "d1fb14b9d4e3e8b9ce2459b34765bff44ab2f2dd584d1b1b15a1ac67978ea3ab",
+    "R5-4_prediction.npz": "a74aa36e380ea0d582a1387c263ad7603a606a38295bce18da46292a90be7215",
+    "R5-5_prediction.npz": "49b0115df87b22d02e9549247fd9605c558478008e018a87dd82093df7d833f9",
+    "validation_metrics.csv": "18437b6fc060ffa431bfb23446b35f3a84e5f28a69f7229a1e51c105bfbdde75"
+  }
+}

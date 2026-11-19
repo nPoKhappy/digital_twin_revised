@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "model_count": 15,
+  "cases": 12,
+  "dynamic_metrics": 1080,
+  "horizon_metrics": 6480,
+  "kci_components": 120,
+  "test_probes": [
+    4385,
+    2692
+  ],
+  "independent_rmse_kci_recounts": true,
+  "protected_sources_unchanged": true,
+  "optimizer_updates": 0
+}

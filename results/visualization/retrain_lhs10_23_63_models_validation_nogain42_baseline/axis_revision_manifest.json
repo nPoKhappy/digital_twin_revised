@@ -1,0 +1,59 @@
+{
+  "purpose": "Replot existing validation results to label KCI 100 percent; HTML x axis ends at 100.",
+  "no_inference_or_data_change": true,
+  "historical_provenance_preserved": true,
+  "original_chart_output_hashes_in_historical_provenance_superseded": {
+    "regional_validation_nogain42_by_seed.html": "6617f59943400aa53f347c392ac630a4bb252a3c5113ef996ab93c2419834ec5",
+    "figures\\nogain42_4x2_expanded_y.pdf": "cffec5a1f54cd4da96a4e7a3bf018dabb92bb3ac20d0f0fcb013f948f07da21b",
+    "figures\\nogain42_4x2_expanded_y.png": "49e06bec0a18e9724774457e5024de8f17c282661f37e0e2dc3c0e1312e7f3c7",
+    "figures\\nogain42_4x2_linear.pdf": "8fe1f2d294c17a09fbb3ec0febb5c447524195795a0a745a47d911b632d2b361",
+    "figures\\nogain42_4x2_linear.png": "82646cee92f3201eb0f6041c527d2640d16b73d7f5d20e5d9ecc4f78f56e48d0",
+    "figures\\nogain42_part1_expanded_y.pdf": "2c1a15410123b9c9b9eb1f36bbf0d10a2d172a687f25bd0dbf679ff5ef5e761b",
+    "figures\\nogain42_part1_expanded_y.png": "858fc68a6c405a78f4c6b1b041b295c8e2bed13866ce136ed3857c797b2f91e6",
+    "figures\\nogain42_part1_linear.pdf": "4f650616a3cc1a4912def88c0d7711f0a1ed53473a7c4e91533c09a2141ca00c",
+    "figures\\nogain42_part1_linear.png": "50cde955b46ecd288d02c143813a0bd61766a9abfe8f3ed68c557364843e2162",
+    "figures\\nogain42_part2_expanded_y.pdf": "5f3e246391c42634d6712de42d143490dacc392108d0e773de88dc7536e3b2c8",
+    "figures\\nogain42_part2_expanded_y.png": "cb94d69ab0d39e91943105a70746ec6e0116975bdaf12372699bc55dcf57e5d5",
+    "figures\\nogain42_part2_linear.pdf": "a3053c3fa1d894ffeaf0c3e0fa09cda46d23a8ac5e31bcaedd1c15aa287b6496",
+    "figures\\nogain42_part2_linear.png": "0cf990bdc7f019f9e11101c06863fcb004c948394ffcf74464ee9c649c8d3d88"
+  },
+  "current_chart_output_sha256": {
+    "figures\\nogain42_4x2_expanded_y.pdf": "0cd939db29b0fdb47493bff1d29d4ec34f89d9cbf06b92eec1e3410dfa0d0afb",
+    "figures\\nogain42_4x2_expanded_y.png": "e6fb373a1f8f3001f93ac3b089d869f72b374bc2875bef8d46fd336884c8b43a",
+    "figures\\nogain42_4x2_linear.pdf": "ca87cca39aefc1f51fb3378cda36b66a9bf12f3de508f270f3c45809aa67f0b4",
+    "figures\\nogain42_4x2_linear.png": "70b0981c555a8341d1b9cf4b1805afc130daeb49540c2aaeb973dc155c93b456",
+    "figures\\nogain42_part1_expanded_y.pdf": "2f8344062b657efaf29860cf895ba8a5526c073cf08acda3b2472aa581c478a3",
+    "figures\\nogain42_part1_expanded_y.png": "0f18ba536439fc37b536c34fda7ec7dda22f433e95edf4e01c9ca670b1125b0b",
+    "figures\\nogain42_part1_linear.pdf": "5161bce6e3ad0bffdaaf837bdb26be67d50223a27fc8a232a716230f78dd4634",
+    "figures\\nogain42_part1_linear.png": "3941387d62866d4bcca8066ff397f02321ea42558d11a6c8f506014afee3425b",
+    "figures\\nogain42_part2_expanded_y.pdf": "48ea9bafcf45cb329a5b0f5c1b298862c280cc6b76a84972f39984427ec06bb8",
+    "figures\\nogain42_part2_expanded_y.png": "73881974ccc791e2b9c1510255c167f38b7ce4cafa3b0a38badf971d334c35fb",
+    "figures\\nogain42_part2_linear.pdf": "ca34566ad229e0805a6f9a01b6a2faa27526217c4c8b26d7e5c9379b7b8441cd",
+    "figures\\nogain42_part2_linear.png": "5d2c2f4607008ceeb5d491b53001effcb1d42bd02b61fa2dfaad9fddcb02e4b3",
+    "regional_validation_nogain42_by_seed.html": "e842e0091a0003210501368aef40cd4b53c16bbe5f60df194cc3158b196065ad"
+  },
+  "source_sha256": {
+    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline\\regional_coordinates_63_models.csv": "853f7d2fd881bd651026d74ab0c96028f70c2e291677d7eea6864b425d193d27",
+    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline\\model_parameter_metadata.csv": "90cc37710b9ae19935708bef107d73869eaf137125905c61318dcc138cd7a506",
+    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline\\provenance.json": "3f0a48c99910d40c1aae88054ae78638d04611e5025ddb7d1893618ae12eadc5",
+    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline\\regional_validation_nogain42_by_seed.html": "6617f59943400aa53f347c392ac630a4bb252a3c5113ef996ab93c2419834ec5"
+  },
+  "revision_script_sha256": "9d9e7a4bb112c46e8e6565106af81f97153ced609158ad1596a4dcdc2461e157",
+  "static_kci_ticks": [
+    86,
+    90,
+    94,
+    98,
+    100
+  ],
+  "plot_bounds_unchanged": {
+    "x": [
+      85,
+      100.2
+    ],
+    "y": [
+      0.35,
+      3.7
+    ]
+  }
+}

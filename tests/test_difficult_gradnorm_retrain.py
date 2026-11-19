@@ -37,7 +37,8 @@ class DifficultGradnormRetrainTests(unittest.TestCase):
         block = next(node for node in tree.body if isinstance(node, ast.If)
                      and ast.unparse(node.test) == "__name__ == '__main__'")
         code = compile(ast.fix_missing_locations(ast.Module(body=block.body, type_ignores=[])), dg.__file__, 'exec')
-        config = 'configs/pgin/retrain_lhs10_23/seed42/dg_ratio0p01.yaml'
+        # The earlier 0.01 config was retired; 0.015 is the retained historical run.
+        config = 'configs/pgin/retrain_lhs10_23/seed42/dg_ratio0p015.yaml'
         def run(extra):
             captured = {}
             def fake_main(*args, **kwargs):

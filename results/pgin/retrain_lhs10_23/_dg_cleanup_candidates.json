@@ -1,0 +1,338 @@
+{
+  "root": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised",
+  "source_manifest": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23\\config_manifest.json",
+  "source_manifest_sha256": "0abdb3d21c9f6b028403213f9aa0530672f1f363099cb54bdf5cd9bddf8dd3e2",
+  "selected_aliases": [
+    "dg_ratio0p0025",
+    "dg_ratio0p005",
+    "dg_ratio0p01",
+    "dg_ratio0p02"
+  ],
+  "preserved_alias": "dg_ratio0p015",
+  "targets": [
+    {
+      "seed": 42,
+      "alias": "dg_ratio0p0025",
+      "kind": "config",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23\\seed42\\dg_ratio0p0025.yaml",
+      "files": 1,
+      "bytes": 4092,
+      "sha256": "c96f027a864bf90250dd702a9db88fea76ff98362a95aaf2a5427c7c8dedccb0"
+    },
+    {
+      "seed": 42,
+      "alias": "dg_ratio0p0025",
+      "kind": "checkpoint",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\lhs10_23_dg_ratio0p0025_seed42_difficult_group_gradnorm_no_ss.pth",
+      "files": 1,
+      "bytes": 2275821,
+      "sha256": "20d3b7d8108e1c65ddf8a9228d78a5222488287addcb64fb34fabc05c4c0d07f"
+    },
+    {
+      "seed": 42,
+      "alias": "dg_ratio0p0025",
+      "kind": "results",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\pgin\\retrain_lhs10_23\\seed42\\lhs10_23_dg_ratio0p0025_seed42_difficult_group_gradnorm_no_ss",
+      "files": 10,
+      "bytes": 1913656,
+      "sha256": null
+    },
+    {
+      "seed": 42,
+      "alias": "dg_ratio0p005",
+      "kind": "config",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23\\seed42\\dg_ratio0p005.yaml",
+      "files": 1,
+      "bytes": 4091,
+      "sha256": "a378d0086dbd187de7b8f9363b870402c4f577964e0786bb1d0c637ecbb134bb"
+    },
+    {
+      "seed": 42,
+      "alias": "dg_ratio0p005",
+      "kind": "checkpoint",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\lhs10_23_dg_ratio0p005_seed42_difficult_group_gradnorm_no_ss.pth",
+      "files": 1,
+      "bytes": 2275748,
+      "sha256": "c9e8084cf1edd8b33b795f3ec67648dadf2a48a2dd76cab0d1a2a2cceca982eb"
+    },
+    {
+      "seed": 42,
+      "alias": "dg_ratio0p005",
+      "kind": "results",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\pgin\\retrain_lhs10_23\\seed42\\lhs10_23_dg_ratio0p005_seed42_difficult_group_gradnorm_no_ss",
+      "files": 10,
+      "bytes": 1889260,
+      "sha256": null
+    },
+    {
+      "seed": 42,
+      "alias": "dg_ratio0p01",
+      "kind": "config",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23\\seed42\\dg_ratio0p01.yaml",
+      "files": 1,
+      "bytes": 4090,
+      "sha256": "96ccc3078020f68a5616585541da63246c7c2ee221a244524e9a693e666937a7"
+    },
+    {
+      "seed": 42,
+      "alias": "dg_ratio0p01",
+      "kind": "checkpoint",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\lhs10_23_dg_ratio0p01_seed42_difficult_group_gradnorm_no_ss.pth",
+      "files": 1,
+      "bytes": 2275675,
+      "sha256": "684a2efe4525e869407d0d807861f505c4bad4a64e39343784032515c4a73ccc"
+    },
+    {
+      "seed": 42,
+      "alias": "dg_ratio0p01",
+      "kind": "results",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\pgin\\retrain_lhs10_23\\seed42\\lhs10_23_dg_ratio0p01_seed42_difficult_group_gradnorm_no_ss",
+      "files": 10,
+      "bytes": 2015985,
+      "sha256": null
+    },
+    {
+      "seed": 42,
+      "alias": "dg_ratio0p02",
+      "kind": "config",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23\\seed42\\dg_ratio0p02.yaml",
+      "files": 1,
+      "bytes": 4090,
+      "sha256": "abf4bda15dee3ece88f82b0d0bf19cc1d20b396fef10cb04c3cdd032076e78b6"
+    },
+    {
+      "seed": 42,
+      "alias": "dg_ratio0p02",
+      "kind": "checkpoint",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\lhs10_23_dg_ratio0p02_seed42_difficult_group_gradnorm_no_ss.pth",
+      "files": 1,
+      "bytes": 2275675,
+      "sha256": "a8e25b48c3eb88e43faab366584b3baefb01b457c93a2241b4008fce447f235e"
+    },
+    {
+      "seed": 42,
+      "alias": "dg_ratio0p02",
+      "kind": "results",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\pgin\\retrain_lhs10_23\\seed42\\lhs10_23_dg_ratio0p02_seed42_difficult_group_gradnorm_no_ss",
+      "files": 10,
+      "bytes": 1693117,
+      "sha256": null
+    },
+    {
+      "seed": 43,
+      "alias": "dg_ratio0p0025",
+      "kind": "config",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23\\seed43\\dg_ratio0p0025.yaml",
+      "files": 1,
+      "bytes": 4092,
+      "sha256": "a9375638f4ca669a3b07e192f7d7e35f0c5ab619c1f247138aa4a5afe9f67fab"
+    },
+    {
+      "seed": 43,
+      "alias": "dg_ratio0p0025",
+      "kind": "checkpoint",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\lhs10_23_dg_ratio0p0025_seed43_difficult_group_gradnorm_no_ss.pth",
+      "files": 1,
+      "bytes": 2275821,
+      "sha256": "c9c78ec7adb69223060d7921322afc97b398c37d3f854d3352859b1ae7536bd7"
+    },
+    {
+      "seed": 43,
+      "alias": "dg_ratio0p0025",
+      "kind": "results",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\pgin\\retrain_lhs10_23\\seed43\\lhs10_23_dg_ratio0p0025_seed43_difficult_group_gradnorm_no_ss",
+      "files": 10,
+      "bytes": 1472941,
+      "sha256": null
+    },
+    {
+      "seed": 43,
+      "alias": "dg_ratio0p005",
+      "kind": "config",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23\\seed43\\dg_ratio0p005.yaml",
+      "files": 1,
+      "bytes": 4091,
+      "sha256": "fa4434137993509646df3a269704b442df3cebda0f3ab6fadad6426892e1c69f"
+    },
+    {
+      "seed": 43,
+      "alias": "dg_ratio0p005",
+      "kind": "checkpoint",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\lhs10_23_dg_ratio0p005_seed43_difficult_group_gradnorm_no_ss.pth",
+      "files": 1,
+      "bytes": 2275748,
+      "sha256": "a2c811577d40351400190e99962565a152eeff02450d4e6e58667172fd1e1cb5"
+    },
+    {
+      "seed": 43,
+      "alias": "dg_ratio0p005",
+      "kind": "results",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\pgin\\retrain_lhs10_23\\seed43\\lhs10_23_dg_ratio0p005_seed43_difficult_group_gradnorm_no_ss",
+      "files": 10,
+      "bytes": 1449714,
+      "sha256": null
+    },
+    {
+      "seed": 43,
+      "alias": "dg_ratio0p01",
+      "kind": "config",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23\\seed43\\dg_ratio0p01.yaml",
+      "files": 1,
+      "bytes": 4090,
+      "sha256": "64b9be7ae148c825c9f243e00ebeec1320c91e1bc19a520de00d8d19e574b543"
+    },
+    {
+      "seed": 43,
+      "alias": "dg_ratio0p01",
+      "kind": "checkpoint",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\lhs10_23_dg_ratio0p01_seed43_difficult_group_gradnorm_no_ss.pth",
+      "files": 1,
+      "bytes": 2275675,
+      "sha256": "f5982fefae934e66fa2fffe102a600de5bd3eddcf0fc35f200654a1ab2b51ff2"
+    },
+    {
+      "seed": 43,
+      "alias": "dg_ratio0p01",
+      "kind": "results",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\pgin\\retrain_lhs10_23\\seed43\\lhs10_23_dg_ratio0p01_seed43_difficult_group_gradnorm_no_ss",
+      "files": 10,
+      "bytes": 1391020,
+      "sha256": null
+    },
+    {
+      "seed": 43,
+      "alias": "dg_ratio0p02",
+      "kind": "config",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23\\seed43\\dg_ratio0p02.yaml",
+      "files": 1,
+      "bytes": 4090,
+      "sha256": "eeea981087d6c14a57dd5dd545a8c7ce4f1dc9bbeb2bd309d5e02e86b228a638"
+    },
+    {
+      "seed": 43,
+      "alias": "dg_ratio0p02",
+      "kind": "checkpoint",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\lhs10_23_dg_ratio0p02_seed43_difficult_group_gradnorm_no_ss.pth",
+      "files": 1,
+      "bytes": 2275675,
+      "sha256": "b1a135cc968809c44a8a90de1c50c1ba5f67975391485bb93bddb2b5aaca4cd2"
+    },
+    {
+      "seed": 43,
+      "alias": "dg_ratio0p02",
+      "kind": "results",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\pgin\\retrain_lhs10_23\\seed43\\lhs10_23_dg_ratio0p02_seed43_difficult_group_gradnorm_no_ss",
+      "files": 10,
+      "bytes": 1368530,
+      "sha256": null
+    },
+    {
+      "seed": 44,
+      "alias": "dg_ratio0p0025",
+      "kind": "config",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23\\seed44\\dg_ratio0p0025.yaml",
+      "files": 1,
+      "bytes": 4092,
+      "sha256": "35039815804cfac534bb6f97fd9372ad746d8b232f87e03fc5c5e5359e7fd33d"
+    },
+    {
+      "seed": 44,
+      "alias": "dg_ratio0p0025",
+      "kind": "checkpoint",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\lhs10_23_dg_ratio0p0025_seed44_difficult_group_gradnorm_no_ss.pth",
+      "files": 1,
+      "bytes": 2275821,
+      "sha256": "d7d14586960d63e7c083805eb849aeba730c577265708a569c1a824db1dd03d4"
+    },
+    {
+      "seed": 44,
+      "alias": "dg_ratio0p0025",
+      "kind": "results",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\pgin\\retrain_lhs10_23\\seed44\\lhs10_23_dg_ratio0p0025_seed44_difficult_group_gradnorm_no_ss",
+      "files": 10,
+      "bytes": 1504569,
+      "sha256": null
+    },
+    {
+      "seed": 44,
+      "alias": "dg_ratio0p005",
+      "kind": "config",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23\\seed44\\dg_ratio0p005.yaml",
+      "files": 1,
+      "bytes": 4091,
+      "sha256": "7e7520c7888dde44dca16036087ecb93ba9957ba1b5484ebffdae24a2821b496"
+    },
+    {
+      "seed": 44,
+      "alias": "dg_ratio0p005",
+      "kind": "checkpoint",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\lhs10_23_dg_ratio0p005_seed44_difficult_group_gradnorm_no_ss.pth",
+      "files": 1,
+      "bytes": 2275748,
+      "sha256": "63651789409eeab82848025f19978ee1378297649cf751e77da6b96a66e000c5"
+    },
+    {
+      "seed": 44,
+      "alias": "dg_ratio0p005",
+      "kind": "results",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\pgin\\retrain_lhs10_23\\seed44\\lhs10_23_dg_ratio0p005_seed44_difficult_group_gradnorm_no_ss",
+      "files": 10,
+      "bytes": 1505535,
+      "sha256": null
+    },
+    {
+      "seed": 44,
+      "alias": "dg_ratio0p01",
+      "kind": "config",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23\\seed44\\dg_ratio0p01.yaml",
+      "files": 1,
+      "bytes": 4090,
+      "sha256": "b393140a3debfc56da3b4130e2ce41d10d1a261849504391a1543e1304286473"
+    },
+    {
+      "seed": 44,
+      "alias": "dg_ratio0p01",
+      "kind": "checkpoint",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\lhs10_23_dg_ratio0p01_seed44_difficult_group_gradnorm_no_ss.pth",
+      "files": 1,
+      "bytes": 2275675,
+      "sha256": "df5c5eba509d4a2d5acb2a120bb097edfb29e0bc9fb4364aee48ea56aaf40335"
+    },
+    {
+      "seed": 44,
+      "alias": "dg_ratio0p01",
+      "kind": "results",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\pgin\\retrain_lhs10_23\\seed44\\lhs10_23_dg_ratio0p01_seed44_difficult_group_gradnorm_no_ss",
+      "files": 10,
+      "bytes": 1479996,
+      "sha256": null
+    },
+    {
+      "seed": 44,
+      "alias": "dg_ratio0p02",
+      "kind": "config",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23\\seed44\\dg_ratio0p02.yaml",
+      "files": 1,
+      "bytes": 4090,
+      "sha256": "59a7f611ad1ebdc48b1d61d9c8ca80f2e92d6438c019c76218cda30c2c7ab875"
+    },
+    {
+      "seed": 44,
+      "alias": "dg_ratio0p02",
+      "kind": "checkpoint",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\lhs10_23_dg_ratio0p02_seed44_difficult_group_gradnorm_no_ss.pth",
+      "files": 1,
+      "bytes": 2275675,
+      "sha256": "90447eb26a0e4b374f9ec1301ee9ee9710ab1f58fc38a908938646e40119251c"
+    },
+    {
+      "seed": 44,
+      "alias": "dg_ratio0p02",
+      "kind": "results",
+      "path": "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\pgin\\retrain_lhs10_23\\seed44\\lhs10_23_dg_ratio0p02_seed44_difficult_group_gradnorm_no_ss",
+      "files": 10,
+      "bytes": 1443323,
+      "sha256": null
+    }
+  ]
+}

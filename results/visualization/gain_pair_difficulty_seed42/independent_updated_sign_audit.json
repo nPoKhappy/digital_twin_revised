@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "updated_test_source": "results\\visualization\\retrain_lhs10_23_selected_test_nogain42\\updated_validation_best",
+  "independent_npz_audit_script": "scripts\\analysis\\audit_three_seed_sign_kci.py",
+  "independent_npz_audit_script_sha256": "da6c13d13665955e9419b0b0e09e4a64068a32461d319a2818d767176f82c87b",
+  "reused_models": 12,
+  "reused_model_conditional_groups_matched": 192,
+  "updated_provenance_inputs_outputs_checked": true,
+  "audit_script_sha256": "06a9f1d22f02b507dddb929ceea9c4794eac5198c50023edabe202d9dddb625d"
+}

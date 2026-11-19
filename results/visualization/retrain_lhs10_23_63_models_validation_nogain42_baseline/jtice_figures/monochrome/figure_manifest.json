@@ -1,0 +1,46 @@
+{
+  "sources": {
+    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline\\regional_coordinates_63_models.csv": "853f7d2fd881bd651026d74ab0c96028f70c2e291677d7eea6864b425d193d27",
+    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline\\model_parameter_metadata.csv": "90cc37710b9ae19935708bef107d73869eaf137125905c61318dcc138cd7a506",
+    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline\\provenance.json": "3f0a48c99910d40c1aae88054ae78638d04611e5025ddb7d1893618ae12eadc5"
+  },
+  "script_sha256": "d487633bf234d88b20c7e7b3ef7c8cd8e0d52ab60373a5b5596eca8940f8c643",
+  "family_counts": {
+    "gain": {
+      "drawn_markers": 60,
+      "unique_coordinates": 36
+    },
+    "ss_only": {
+      "drawn_markers": 60,
+      "unique_coordinates": 36
+    },
+    "gain_ss": {
+      "drawn_markers": 60,
+      "unique_coordinates": 36
+    },
+    "difficult_gradnorm": {
+      "drawn_markers": 60,
+      "unique_coordinates": 36
+    }
+  },
+  "encoding": "parameter identified by panel title; seed by marker shape; No-Gain is hollow",
+  "output_sha256": {
+    "validation_gain_mono.png": "19ae1b7fda7af49f9633ff73f1a5d7188eda9375e9ff23d8b49c524a66ac0a49",
+    "validation_gain_mono.pdf": "8b721fa2d9937a3309f8298e01c9d37a829433c7259a525eba29ef7eb6aaef9b",
+    "validation_ss_only_mono.png": "2553069104d32028b81f87493709cfcf9670e2e4d7cb8a2fc5bc4787e1019ab5",
+    "validation_ss_only_mono.pdf": "4ad52d04da2de2e00dd0e9f4fd89155ad81754ff184f11486bd64fca449320aa",
+    "validation_gain_ss_mono.png": "78a79087c703ae7f3cab9508929b08ae433ba2a5474e231e9580a9dc6fe2afc0",
+    "validation_gain_ss_mono.pdf": "5a40b810b33ac6b5fddefcce4650fa42df176aee2b8e02f03e32045a4832e74f",
+    "validation_difficult_gradnorm_mono.png": "3c9d77684bd09fe93affbd12f8bbc2df8b01d4396d5102a3eb316e3d3fb35534",
+    "validation_difficult_gradnorm_mono.pdf": "c7eff5fef28d257012a2ab3d1ebf1f9b59ce88c38ceef892fac561a85afd2301",
+    "validation_gain_mono_caption.txt": "68f77c412af9e95fe9ba99fc0b19221a52a5e823912915d026ce209cb4da7dc5",
+    "validation_ss_only_mono_caption.txt": "ecb195529e6bec276e18427acf01837463963c9e808e0e1dfbec05a4a9f41db1",
+    "validation_gain_ss_mono_caption.txt": "78edf7a68c34b1d64f8c9f9c3d7dd3860889b120d5a962bdead5e06e3ad6bfe2",
+    "validation_difficult_gradnorm_mono_caption.txt": "98b5a44673c579eeaa5e49f4f48ebd08e4f7ed33492e6ba0963e97094c6c7339"
+  },
+  "print_dimensions_mm": [
+    190,
+    210
+  ],
+  "status": "JTICE user-provided guide snapshot; verify current instructions"
+}

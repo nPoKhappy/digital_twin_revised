@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "models": 15,
+  "conditional_seed_groups": 240,
+  "mean_sd_groups": 80,
+  "official_pair_counts_checked": 120,
+  "old_seed42_sign_groups_checked": 0,
+  "old_seed42_reference_available": false,
+  "mean_and_sample_sd_recalculated_from_raw_npz": true,
+  "missing_groups": 10,
+  "max_absolute_percentage_point_difference": 2.842170943040401e-14,
+  "per_seed_csv_sha256": "057a70ccfa3e9f5f377cdea162791bbe0e683f8f3fba55b105922f712104a983",
+  "mean_sd_csv_sha256": "80fd83f887a1925f3c24cf8cc132cdd52f778e06b3149e4d22c1212c7c995480",
+  "audit_script_sha256": "da6c13d13665955e9419b0b0e09e4a64068a32461d319a2818d767176f82c87b"
+}
