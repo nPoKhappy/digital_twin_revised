@@ -42,11 +42,9 @@ def main() -> None:
         if not path.is_file() or sha(path).lower() != expected.lower():
             raise ValueError(f'Protected test source differs: {relative}')
     plan = json.loads(plan_path.read_text(encoding='utf8'))
-    expected = {'gain':'gain25', 'ss_only':'ss2p5_only', 'gain_ss':'gain25_ss25',
-                'difficult_gradnorm':'dg_ratio1p5'}
-    if plan['aliases'] != expected:
-        raise ValueError('Unexpected current validation-selected model settings')
     selection = json.loads(selection_path.read_text(encoding='utf8'))['selected_models']
+    if set(plan['aliases']) != set(FAMILIES) - {'no_gain'}:
+        raise ValueError('Unexpected validation family coverage')
     official = pd.read_csv(SOURCE/'kci_components.csv').set_index(
         ['model', 'distribution', 'target', 'mv'], verify_integrity=True)
     models = []
@@ -54,6 +52,8 @@ def main() -> None:
         selected = [r for r in selection if r['family'] == family]
         if len(selected) != 3 or {r['seed'] for r in selected} != set(SEEDS) or len({r['alias'] for r in selected}) != 1:
             raise ValueError(f'Expected one configuration with all three seeds: {family}')
+        if family != 'no_gain' and selected[0]['alias'] != plan['aliases'][family]:
+            raise ValueError(f'Selection differs from validation plan: {family}')
         models.extend(sorted(selected, key=lambda row: row['seed']))
     protocol_sha = sha(SOURCE/'run_protocol.json')
     inputs = [Path(__file__), ROOT/'scripts/analysis/plot_retrained_teacher_sign_seed42.py',
@@ -159,8 +159,6 @@ def main() -> None:
                 ax.set_xlabel('ANN gain sign')
     handles, labels = axes[0, 0].get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(.5, .94), ncol=5, frameon=False, fontsize=9)
-    fig.suptitle('All18 KCI conditioned on ANN gain sign · seeds 42, 43, 44', fontsize=14, fontweight='bold', y=.985)
-    fig.text(.5, .018, 'Points: three-seed mean. Bars: ±1 sample SD across model training seeds (n = 3).', ha='center', fontsize=9)
     fig.subplots_adjust(left=.067, right=.985, top=.84, bottom=.105, wspace=.18, hspace=.32)
     for suffix in ('png', 'pdf'):
         fig.savefig(OUT/f'conditional_kci_by_teacher_sign.{suffix}', dpi=300)
@@ -169,7 +167,7 @@ def main() -> None:
         im.convert('L').save(OUT/'conditional_kci_by_teacher_sign_grayscale.png')
     (OUT/'conditional_kci_by_teacher_sign_README.md').write_text(
         '# Three-seed ANN gain sign KCI\n\n'
-        'Models: No-Gain, Gain 25, SS-only 2.5, Gain+SS 25/25, DG rho=1.5. '
+        f'Models: No-Gain and validation-selected settings {plan["aliases"]}. '
         'Points are the mean KCI across training seeds 42, 43, 44; bars are one sample SD (ddof=1), not bootstrap intervals. '
         'The three seeds share the ANN and validation/test operating points.\n\n'
         'Each valid point has absolute ANN gain at least 1e-5 and contributes 36 comparisons (two step directions by 18 prediction steps). '
@@ -178,13 +176,12 @@ def main() -> None:
         'The test probes have been used previously; they are not a fresh blind holdout.\n\n'
         'This figure uses the updated validation selection. Some historical validation source files were deleted, '
         'so the full historical provenance is unavailable; current test NPZ files and their remaining source hashes have been verified. '
-        'The folder name includes seed42 but this figure uses three seeds. '
-        'Existing teacher landscape and legacy seed42-only data in the target folder are from earlier analysis.\n\n'
+        'The folder name includes seed42 but this figure uses three seeds.\n\n'
         'Rebuild: python -m scripts.analysis.plot_updated_test_teacher_sign_three_seeds\n', encoding='utf8')
     if any(sha(ROOT/path) != digest for path, digest in input_hashes.items()):
         raise ValueError('An input changed while computing')
     record = dict(passed=True, models=[r['model'] for r in models], seeds=list(SEEDS),
-                  selection='Current validation-selected families including DG rho=1.5; no training or new inference',
+                  selection=f'Current validation-selected settings {plan["aliases"]}; no training or new inference',
                   full_historical_provenance_available=bool(validation.get('full_historical_provenance_available')),
                   uncertainty='arithmetic mean ± 1 sample SD across 3 model seeds, ddof=1; not bootstrap CI',
                   threshold=THRESHOLD, group_count=len(stats), per_seed_rows=len(data),

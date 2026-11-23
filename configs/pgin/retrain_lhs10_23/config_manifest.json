@@ -672,7 +672,7 @@
     "source_config": "configs/pgin/difficult_gradnorm/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42_difficult_group_gradnorm_no_ss.yaml",
     "source_sha256": "dc21c0af5fa81a0e644770f9b470874c7fc08d3b42e5278ade11b01033f46228",
     "config": "configs/pgin/retrain_lhs10_23/seed42/dg_ratio0p015.yaml",
-    "config_sha256": "9e3eed6f81f4f5ca90b2b57c9b6a372bcbf4d4a469879a632345fe521cd52a99",
+    "config_sha256": "b5236e36fc4a116527e8c32a33ebd7d81d7b29b17bdab0207c8b17e132320258",
     "exp_name": "lhs10_23_dg_ratio0p015_seed42_difficult_group_gradnorm_no_ss",
     "results": "results/pgin/retrain_lhs10_23/seed42/lhs10_23_dg_ratio0p015_seed42_difficult_group_gradnorm_no_ss",
     "checkpoint": "saved_models/lhs10_23_dg_ratio0p015_seed42_difficult_group_gradnorm_no_ss.pth",
@@ -682,7 +682,7 @@
       "--target-ratio",
       "0.015",
       "--max-scale",
-      "50",
+      "1000",
       "--use-config-steady-state-source"
     ]
   },
@@ -777,7 +777,7 @@
     "source_config": "configs/pgin/difficult_gradnorm/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42_difficult_group_gradnorm_no_ss.yaml",
     "source_sha256": "dc21c0af5fa81a0e644770f9b470874c7fc08d3b42e5278ade11b01033f46228",
     "config": "configs/pgin/retrain_lhs10_23/seed43/dg_ratio0p015.yaml",
-    "config_sha256": "8406d0a6ef8e764d2e5eae213ac5743f460d44dca1e6a9dad2043fc7b1abd2c0",
+    "config_sha256": "133234f3b261fa91cc063f884f2dfdc67888aaa6caef3d6cae1c99efec7bb4c6",
     "exp_name": "lhs10_23_dg_ratio0p015_seed43_difficult_group_gradnorm_no_ss",
     "results": "results/pgin/retrain_lhs10_23/seed43/lhs10_23_dg_ratio0p015_seed43_difficult_group_gradnorm_no_ss",
     "checkpoint": "saved_models/lhs10_23_dg_ratio0p015_seed43_difficult_group_gradnorm_no_ss.pth",
@@ -787,7 +787,7 @@
       "--target-ratio",
       "0.015",
       "--max-scale",
-      "50",
+      "1000",
       "--use-config-steady-state-source"
     ]
   },
@@ -882,7 +882,7 @@
     "source_config": "configs/pgin/difficult_gradnorm/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42_difficult_group_gradnorm_no_ss.yaml",
     "source_sha256": "dc21c0af5fa81a0e644770f9b470874c7fc08d3b42e5278ade11b01033f46228",
     "config": "configs/pgin/retrain_lhs10_23/seed44/dg_ratio0p015.yaml",
-    "config_sha256": "ac3d2baabb4878a0dd5580ac1a25b204d6b461efd968e5edca0a82549917eaa9",
+    "config_sha256": "7724599a95010fb36b4c3a8239e00a85fe11da14f51f9e26d4203c59a8244463",
     "exp_name": "lhs10_23_dg_ratio0p015_seed44_difficult_group_gradnorm_no_ss",
     "results": "results/pgin/retrain_lhs10_23/seed44/lhs10_23_dg_ratio0p015_seed44_difficult_group_gradnorm_no_ss",
     "checkpoint": "saved_models/lhs10_23_dg_ratio0p015_seed44_difficult_group_gradnorm_no_ss.pth",
@@ -892,7 +892,7 @@
       "--target-ratio",
       "0.015",
       "--max-scale",
-      "50",
+      "1000",
       "--use-config-steady-state-source"
     ]
   },

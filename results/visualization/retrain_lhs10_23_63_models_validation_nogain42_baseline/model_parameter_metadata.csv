@@ -15,8 +15,8 @@ gain2p5_ss2p5,gain_ss,2.5,GS 2.5,Gain+SS · Gain = 2.5，SS = 2.5,,13
 gain25_ss25,gain_ss,25,GS 25,Gain+SS · Gain = 25，SS = 25,,14
 gain250_ss250,gain_ss,250,GS 250,Gain+SS · Gain = 250，SS = 250,,15
 gain2500_ss2500,gain_ss,2500,GS 2500,Gain+SS · Gain = 2500，SS = 2500,,16
-dg_ratio0p015,difficult_gradnorm,0.014999999999999999,D ρ=0.015,Difficult-GradNorm · ρ = 0.015（Gain = 0.05，SS = 0）,50,17
-dg_ratio0p15,difficult_gradnorm,0.14999999999999999,D ρ=0.15,Difficult-GradNorm · ρ = 0.15（Gain = 0.05，SS = 0）,10000000,18
-dg_ratio1p5,difficult_gradnorm,1.5,D ρ=1.5,Difficult-GradNorm · ρ = 1.5（Gain = 0.05，SS = 0）,10000000,19
+dg_ratio0p015,difficult_gradnorm,0.014999999999999901,D ρ=0.015,Difficult-GradNorm · ρ = 0.015（Gain = 0.05，SS = 0）,1000,17
+dg_ratio0p15,difficult_gradnorm,0.14999999999999991,D ρ=0.15,Difficult-GradNorm · ρ = 0.15（Gain = 0.05，SS = 0）,20000,18
+dg_ratio1p5,difficult_gradnorm,1.5,D ρ=1.5,Difficult-GradNorm · ρ = 1.5（Gain = 0.05，SS = 0）,500000,19
 dg_ratio15,difficult_gradnorm,15,D ρ=15,Difficult-GradNorm · ρ = 15（Gain = 0.05，SS = 0）,10000000,20
-dg_ratio150,difficult_gradnorm,150,D ρ=150,Difficult-GradNorm · ρ = 150（Gain = 0.05，SS = 0）,10000000,21
+dg_ratio150,difficult_gradnorm,150,D ρ=150,Difficult-GradNorm · ρ = 150（Gain = 0.05，SS = 0）,500000000,21

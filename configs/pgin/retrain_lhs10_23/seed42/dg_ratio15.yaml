@@ -92,6 +92,8 @@ model:
   dropout: 0.1
   ffn_expansion: 4
 training:
+  dg_target_ratio: '15'
+  dg_max_scale: 10000000
   device: cuda
   seed: 42
   batch_size: 64

@@ -1,0 +1,13 @@
+partition,case,family,mean_output_improvement_percent,outputs,rank_in_region,selected,selection_reason,selection_driver_family,selection_driver_score_percent
+external,R5-20,dg_ratio0p15,62.98451738095678,2,1,True,previously_selected_example,dg_ratio0p15,62.98451738095678
+external,R5-23,gain25_ss25,53.25156432402041,2,2,True,previously_selected_example,gain25_ss25,53.25156432402041
+external,R5-26,ss2p5_only,51.93729663878008,2,3,False,,ss2p5_only,51.93729663878008
+external,R5-24,dg_ratio0p15,44.835175924031574,2,4,False,,dg_ratio0p15,44.835175924031574
+external,R5-21,ss2p5_only,41.91454278877454,2,5,False,,ss2p5_only,41.91454278877454
+external,R5-25,gain25_ss25,19.422190838310378,2,6,False,,gain25_ss25,19.422190838310378
+external,R5-22,gain25,17.834473840317404,2,7,False,,gain25,17.834473840317404
+external,R5-19,gain25,3.4558415206979607,2,8,False,,gain25,3.4558415206979607
+internal,R5-2,ss2p5_only,21.415914411958717,2,1,True,previously_selected_example,ss2p5_only,21.415914411958717
+internal,R5-1,ss2p5_only,12.980718678607673,2,2,True,previously_selected_example,ss2p5_only,12.980718678607673
+internal,R5,ss2p5_only,12.211453171456677,2,3,False,,ss2p5_only,12.211453171456677
+internal,R5-6,dg_ratio0p15,0.73713778325325,2,4,True,previously_selected_deterioration_example,gain25_ss25,-31.574142799802306

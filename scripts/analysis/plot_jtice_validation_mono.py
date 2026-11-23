@@ -52,8 +52,12 @@ def main():
             for col, region in enumerate(('internal','external')):
                 ax=axes[row,col]; ax.set_xlim(*prov['plot_bounds']['x']); ax.set_ylim(lower,upper)
                 ax.set_yscale('function', functions=(fwd,inv)); ax.set_ylim(lower,upper)
-                ax.set_xticks([86,90,94,98,100]); ax.set_yticks([.4,.8,1.,1.35,2.1,3.7])
-                ax.set_yticklabels(['0.4','0.8','1','1.35','2.1','3.7'])
+                xlo,xhi=prov['plot_bounds']['x']
+                xticks=sorted(set([v for v in (60,70,80,86,90,94,98,100) if xlo<=v<=xhi]))
+                yticks=[v for v in (.4,.8,1.,1.35,2.1,3.7) if lower<=v<=upper]
+                ax.set_xticks(xticks); ax.set_yticks(yticks)
+                ax.set_yticklabels([f'{v:g}' for v in yticks])
+                ax.set_xlim(xlo,xhi); ax.set_ylim(lower,upper)
                 ax.spines[['top','right']].set_visible(False)
                 ax.tick_params(labelsize=6.5, width=.55, length=2, pad=1.5)
                 ax.axhline(1, color='.55', ls='--', lw=.6, zorder=1)

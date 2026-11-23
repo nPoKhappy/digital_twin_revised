@@ -41,14 +41,22 @@ def main() -> None:
         raise ValueError("Evaluation validation has not passed")
     df = pd.read_csv(coordinates)
     selected = json.loads(selection.read_text(encoding="utf-8"))["selected_models"]
+    aliases = {family: next(m["alias"] for m in selected if m["family"] == family) for family in FAMILIES}
+    labels = {
+        "no_gain": "No-Gain",
+        "gain": "Gain = " + aliases["gain"].removeprefix("gain").replace("p", "."),
+        "ss_only": "SS-only = " + aliases["ss_only"].removeprefix("ss").removesuffix("_only").replace("p", "."),
+        "gain_ss": "Gain + SS = " + aliases["gain_ss"].removeprefix("gain").replace("_ss", " / ").replace("p", "."),
+        "difficult_gradnorm": r"Difficult-GradNorm, $\rho$ = " + aliases["difficult_gradnorm"].removeprefix("dg_ratio").replace("p", "."),
+    }
+    families = {family: (code, labels[family], color) for family, (code, _, color) in FAMILIES.items()}
     expected = {(m["family"], m["alias"], int(m["seed"])) for m in selected}
     found = set(zip(df.family, df.alias, df.seed.astype(int)))
     if len(df) != 30 or len(selected) != 15 or len(expected) != 15 or found != expected:
         raise ValueError("Expected 15 selected models and 30 regional records")
     if set(df.family) != set(FAMILIES) or not np.isfinite(df[["KCI_percent", "AvgRelRMSE"]]).all().all():
         raise ValueError("Unexpected families or nonfinite values")
-    expected_aliases = {"no_gain": "no_gain", "gain": "gain25", "ss_only": "ss2p5_only", "gain_ss": "gain25_ss25", "difficult_gradnorm": "dg_ratio1p5"}
-    for family, alias in expected_aliases.items():
+    for family, alias in aliases.items():
         subset = df[df.family == family]
         if set(subset.alias) != {alias} or set(subset.seed.astype(int)) != set(SEEDS):
             raise ValueError(f"Unexpected selection for {family}")
@@ -58,8 +66,10 @@ def main() -> None:
                 raise ValueError(f"Missing regional observation: {family} {seed}")
     if not np.allclose(df[(df.family == "no_gain") & (df.seed == 42)].AvgRelRMSE, 1.0, atol=1e-12, rtol=0):
         raise ValueError("Incorrect fixed seed-42 baseline")
-    if not df.KCI_percent.between(85.7, 100.75).all() or not df.AvgRelRMSE.between(0.53, 1.17).all():
-        raise ValueError("Plot limits would hide a data point")
+    xmin = min(85.7, float(df.KCI_percent.min()) - 0.8)
+    xmax = max(100.75, float(df.KCI_percent.max()) + 0.8)
+    ymin = min(0.53, float(df.AvgRelRMSE.min()) * 0.93)
+    ymax = max(1.17, float(df.AvgRelRMSE.max()) * 1.07)
 
     plt.rcParams.update({"font.family": "sans-serif", "font.sans-serif": ["Arial", "DejaVu Sans"],
                          "font.size": 7, "axes.labelsize": 8, "axes.titlesize": 8,
@@ -69,7 +79,7 @@ def main() -> None:
     fig, axs = plt.subplots(1, 2, figsize=(190 / 25.4, 97 / 25.4), sharex=True, sharey=True)
     fig.subplots_adjust(left=0.08, right=0.99, top=0.92, bottom=0.31, wspace=0.18)
     for ax, (partition, title) in zip(axs, [("internal", "(a) Interpolation"), ("external", "(b) Extrapolation")]):
-        for family, (_, _, color) in FAMILIES.items():
+        for family, (_, _, color) in families.items():
             for seed, marker in SEEDS.items():
                 row = df[(df.partition == partition) & (df.family == family) & (df.seed == seed)].iloc[0]
                 ax.scatter(row.KCI_percent, row.AvgRelRMSE, s=34, color=color, marker=marker,
@@ -77,14 +87,14 @@ def main() -> None:
         ax.axhline(1, color="#777777", linewidth=0.65, linestyle="--", zorder=0)
         ax.set_title(title, loc="left", fontweight="bold")
         ax.set_xlabel("KCI (%)")
-        ax.set_xlim(85.7, 100.75)
-        ax.set_xticks([86, 88, 90, 92, 94, 96, 98, 100])
-        ax.set_ylim(0.53, 1.17)
+        ax.set_xlim(xmin, xmax)
+        ax.set_xticks(np.arange(np.ceil(xmin / 2) * 2, 100.01, 2))
+        ax.set_ylim(ymin, ymax)
         ax.tick_params(width=0.65, length=2.5)
         ax.spines[["top", "right"]].set_visible(False)
     axs[0].set_ylabel("AvgRelRMSE")
     family_handles = [Line2D([], [], color=c, marker="o", linestyle="None", markersize=5,
-                             label=label) for _, label, c in FAMILIES.values()]
+                             label=label) for _, label, c in families.values()]
     seed_handles = [Line2D([], [], color="#333333", marker=marker, linestyle="None", markersize=5,
                            label=f"Seed {seed}") for seed, marker in SEEDS.items()]
     fig.legend(handles=family_handles, loc="lower center", bbox_to_anchor=(0.5, 0.115),

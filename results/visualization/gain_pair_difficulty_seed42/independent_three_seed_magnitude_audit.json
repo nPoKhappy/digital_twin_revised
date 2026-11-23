@@ -10,8 +10,8 @@
   "mean_sample_sd_recalculated_from_npz": true,
   "max_kci_difference_percentage_points": 4.263256414560601e-14,
   "max_sd_difference_percentage_points": 7.105427357601002e-15,
-  "per_seed_csv_sha256": "369e6a8498402390e90b7b5186cb8cbfa7d0778cab930cd3af9d88688ed688a1",
-  "mean_sd_csv_sha256": "d837d4ac7b9140e95d91c97cfbd403eb451af4d84facab4cfcf3447eabffaf15",
+  "per_seed_csv_sha256": "2d356b5209d3a5b97490ed8da2b5caa7d44916f8903f91028af5dc6519cc8213",
+  "mean_sd_csv_sha256": "10f094150c857e38a5949067057724b5364ec40808b037e80820d5789b1c46c8",
   "quartile_edges_sha256": "34b5d6d751155ace5d0208edc408d50c7135ac52d5e3dd176e8ccd38944931e5",
   "audit_script_sha256": "d6ac771a53619ff879377c81de5faa16eedd5e388547bd8b8485b71b2e281e27"
 }

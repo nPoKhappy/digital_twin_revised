@@ -1,5 +1,5 @@
 {
-  "protocol_sha256": "3d432ba4ef77c9db7d2e68235127542978ec043def1dfbd8e5d14850f27c0070",
+  "protocol_sha256": "cb81773f1a95763ad5ceda92d4eb761eaafc795c3aacc5c52d0d82a75d637bc5",
   "outputs": {
     "gain_in_range.npz": "93669aea34b3747ddcd68db425ac2ddee29969652c57de090a6f94f81abe6462",
     "gain_soft_ood.npz": "ec90973e34d5ed3dd857927e077a1e349dce73fc7a2a8096a55b2b5ca3fea7de",
@@ -32,7 +32,6 @@
     "RMSE_recheck.csv": "4767ec0f79c02236c44c9a490c09c418f2a89e60285f1d2f4537a3f3bf7e3b1a",
     "test_metrics.csv": "ba45467602c9c1162b061044d9d9de23e2116e445133172bab6476f6ca7753b4"
   },
-  "reused_from": "results\\visualization\\retrain_lhs10_23_selected_test_nogain42\\model_data\\no_gain_seed44",
-  "old_complete_sha256": "7256405c53091a24cdac8d51600e677ad825214a2af25b90b0d64d783b208e13",
-  "old_protocol_sha256": "1d16600d39c327905d5680219678d7abc79ab222926638722ffa13c276536d15"
+  "reused_from": "results\\visualization\\retrain_lhs10_23_selected_test_nogain42\\updated_validation_best\\model_data\\no_gain_seed44",
+  "prior_protocol_sha256": "3d432ba4ef77c9db7d2e68235127542978ec043def1dfbd8e5d14850f27c0070"
 }

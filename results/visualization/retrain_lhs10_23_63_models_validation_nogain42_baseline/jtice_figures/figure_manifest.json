@@ -1,10 +1,10 @@
 {
   "source_sha256": {
-    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline\\regional_coordinates_63_models.csv": "853f7d2fd881bd651026d74ab0c96028f70c2e291677d7eea6864b425d193d27",
-    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline\\model_parameter_metadata.csv": "90cc37710b9ae19935708bef107d73869eaf137125905c61318dcc138cd7a506",
-    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline\\provenance.json": "3f0a48c99910d40c1aae88054ae78638d04611e5025ddb7d1893618ae12eadc5"
+    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline\\regional_coordinates_63_models.csv": "21a3c1bbc79b3f9ccd99a28f5f0f77d23d08d3e4cdf9b6dbba6efcf85e162328",
+    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline\\model_parameter_metadata.csv": "9aef0ed2bc52a111392c6deaf252af4f9360f0839bc57c8d0cc49525b8267bb1",
+    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline\\provenance.json": "5398984f473732a10c93aa265adf33087fbab864e0d09b1bc390e21d442bd1c3"
   },
-  "script_sha256": "ec1aab6eab6cf3d2d5c24ca2fbfb94eaf231bc1b887a2254a824286f736fc38c",
+  "script_sha256": "18f0c586af00bb6fe704c4cbc88cac31baacf9e2892509e02bfb3f35c9a7595b",
   "model_runs": 63,
   "regions": 2,
   "unique_model_region_coordinates": 126,
@@ -35,18 +35,18 @@
     }
   },
   "output_sha256": {
-    "validation_all_families_expanded_y.pdf": "03a4ff75582daff5220f3de11eeb3c9feab5696916cfeeb27e06cc982a87d4cd",
-    "validation_all_families_expanded_y.png": "127450d4283e6f4b23dbc8b84f1201c429226a074c9fba0cf8f64b81250c28d4",
-    "validation_part1_expanded_y.pdf": "5428d9a74299eaff1c02dac99b62e3ca61d5f770d4bfb5535fc6b5c396259a2c",
-    "validation_part1_expanded_y.png": "4cefd41deba3e1bca4a635c32b770d8b3af518984b8e20043691eb17e8b35c8f",
-    "validation_part2_expanded_y.pdf": "87975bbed9364c77335ed8086d03e837b0549f06d961cb08008dce8ea20637ed",
-    "validation_part2_expanded_y.png": "e1201a40c6b41e288e52a5fc19d9c8946f937a137f81625bbbabfda099672bc8",
-    "validation_all_families_linear.pdf": "8d5365a34e15867f59152b032e905a25611cd116fed04b5a06936c37f93738cd",
-    "validation_all_families_linear.png": "ec901f84b62da67263a3dc268742ff20bdf3d1bbf0e9be3aff64e88d3bbb70ba",
-    "validation_part1_linear.pdf": "1336a38f3d7d214ba610eb194ee3b39ce9eaeabe3b0518ec7fe332b0bb018c5d",
-    "validation_part1_linear.png": "81e2ba6eb181ef0f4562a5203adae5e102a1505ad3bfe2dfdaf18f4d1968edc6",
-    "validation_part2_linear.pdf": "1245634ea4d8061801a632afb3f78f0a822ac6d2f30980f5fa8585fc7f3deb9a",
-    "validation_part2_linear.png": "3557187bf320bbfb6b68d2a6e2648039a1d2ee077152106dfb16c92d1bf40aff",
+    "validation_all_families_expanded_y.pdf": "79ff2508af491a813155fcb058cc0062eba8e65e0df719b85917368a35e0580e",
+    "validation_all_families_expanded_y.png": "4a7da6c8ca7b33549dbb361e0f990042939647ce8c449818624df1166e6e4df9",
+    "validation_part1_expanded_y.pdf": "f2dd5d7f7f0bdf966a6ed91dae47c97a474d8dafa6ff55005706db136820ba22",
+    "validation_part1_expanded_y.png": "ed8a372ebe6e0b397172fb3294fcba17e8658269ea24ffc1eac9c57433490e21",
+    "validation_part2_expanded_y.pdf": "82f321856ba1ef14af597386b63722b99057e0d883309aa9dee5574bc9af97c8",
+    "validation_part2_expanded_y.png": "c5dfd0c60ba7c2f1848f5408e7fdc27cbead0e2f7b2ee7e10452a221de5568e8",
+    "validation_all_families_linear.pdf": "1c8274e7231ca2bccb1bc59bea4478ff8707b7330a0736411933e144a3e67aa3",
+    "validation_all_families_linear.png": "6ca22c66162b16360268ccdd77713fcdd6ce2ae89d4671729a97bc0c28881992",
+    "validation_part1_linear.pdf": "f3a3420779e4cc571e48c44437b68a611f50cf289f0d74a1ea2b1ac7ecba232e",
+    "validation_part1_linear.png": "f7e8708ff40bc259d8833bf2a1f5e92c02ecb8c16265197bad048cea9c0e9233",
+    "validation_part2_linear.pdf": "b3d0dc3f09931194c29f0f43829c631593e29c01c5528aa7d7ef07bd4687744c",
+    "validation_part2_linear.png": "292e1a27eb0228db2b987a3d9f6c329e86103ab3425bbb12fdfe18bd5865613d",
     "validation_all_families_expanded_y_caption.txt": "5e748b3257b7c222e977d076ab85e06afffd303a0ee986f1785e5480d0c09eb3",
     "validation_part1_expanded_y_caption.txt": "b15614af2e5033bcd489524633e044542421adfb7df2fe23d17249f58b3e0fc6",
     "validation_part2_expanded_y_caption.txt": "8dcea1c4301d6971981c9a1c64f0e018ed6022b0fcf2720e988d01dc2b751a7e",
@@ -56,5 +56,7 @@
     "figure_notes.md": "88dd0b63c714eea13e91b8ab757e5b46df5215662f328b4c431d2e36109a1272"
   },
   "style": "190 mm width, PDF vector; PNG 300 dpi preview",
-  "note": "JTICE user-provided guide snapshot; current journal instructions need verification."
+  "note": "JTICE user-provided guide snapshot; current journal instructions need verification.",
+  "layout_override_script_sha256": "429a8b7293642adc0c5d41871624b278233a3ca2674e8093b592a4dc5ea43199",
+  "layout_override": "Raised space above subplot titles to separate the top legend."
 }

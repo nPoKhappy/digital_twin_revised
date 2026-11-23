@@ -11,9 +11,5 @@
   ],
   "independent_rmse_kci_recounts": true,
   "protected_sources_unchanged": true,
-  "optimizer_updates": 0,
-  "reused_previous_test_models": 12,
-  "new_test_models": 3,
-  "full_historical_provenance_available": false,
-  "note": "Five old validation archive files deleted; three former validation references changed. Other checked sources intact."
+  "optimizer_updates": 0
 }

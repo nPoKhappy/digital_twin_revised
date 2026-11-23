@@ -53,7 +53,9 @@ def draw(data, meta, families, stem, expanded, bounds):
             ax = fig.add_subplot(gs[row, col])
             ax.set_xlim(*bounds['x'])
             ax.set_ylim(*bounds['y'])
-            ax.set_xticks([86, 90, 94, 98, 100])
+            ax.set_xticks([v for v in (60, 70, 80, 86, 90, 94, 98, 100)
+                           if bounds['x'][0] <= v <= bounds['x'][1]])
+            ax.set_xlim(*bounds['x'])
             if expanded:
                 ax.set_yscale('function', functions=(fwd, inv))
                 ax.set_ylim(*bounds['y'])

@@ -1,26 +1,33 @@
 {
+  "status": "current_embedded_data_verified",
   "passed": true,
-  "scope": "Executed actual embedded report JavaScript in a Node.js simulated DOM; separately inspected exported PNG and compared HTML dataset against coordinate CSV. This is not a real browser rendering or click test.",
-  "tests": {
-    "seed_button_switches": [
-      "42",
-      "43",
-      "44"
-    ],
-    "model_points_per_region_per_seed": 21,
-    "table_and_parameter_rows_per_seed": 21,
-    "common_axis_ticks_across_seeds_and_regions": true,
-    "dg150_click_selects_model": true,
-    "family_filter_toggle_removes_and_restores_five_points": true,
-    "html_dataset_points_match_csv": 126,
-    "kci_details_per_seed": 168,
-    "expected_dg_aliases_present": true,
-    "no_max_scale_text_in_html": true,
-    "png_visually_inspected": true
-  },
-  "sha256": {
-    "regional_validation_nogain42_by_seed.html": "6617f59943400aa53f347c392ac630a4bb252a3c5113ef996ab93c2419834ec5",
-    "regional_coordinates_63_models.csv": "853f7d2fd881bd651026d74ab0c96028f70c2e291677d7eea6864b425d193d27",
-    "figures/nogain42_4x2_expanded_y.png": "49e06bec0a18e9724774457e5024de8f17c282661f37e0e2dc3c0e1312e7f3c7"
+  "points_checked": 126,
+  "note": "Current embedded coordinates checked against CSV; no browser rendering/click test is claimed.",
+  "html_sha256": "3f2de145c684cce3b10dceaaf3095645aecb5202bf702dcdad013edebff9269f",
+  "historical_record": {
+    "passed": true,
+    "scope": "Executed actual embedded report JavaScript in a Node.js simulated DOM; separately inspected exported PNG and compared HTML dataset against coordinate CSV. This is not a real browser rendering or click test.",
+    "tests": {
+      "seed_button_switches": [
+        "42",
+        "43",
+        "44"
+      ],
+      "model_points_per_region_per_seed": 21,
+      "table_and_parameter_rows_per_seed": 21,
+      "common_axis_ticks_across_seeds_and_regions": true,
+      "dg150_click_selects_model": true,
+      "family_filter_toggle_removes_and_restores_five_points": true,
+      "html_dataset_points_match_csv": 126,
+      "kci_details_per_seed": 168,
+      "expected_dg_aliases_present": true,
+      "no_max_scale_text_in_html": true,
+      "png_visually_inspected": true
+    },
+    "sha256": {
+      "regional_validation_nogain42_by_seed.html": "6617f59943400aa53f347c392ac630a4bb252a3c5113ef996ab93c2419834ec5",
+      "regional_coordinates_63_models.csv": "853f7d2fd881bd651026d74ab0c96028f70c2e291677d7eea6864b425d193d27",
+      "figures/nogain42_4x2_expanded_y.png": "49e06bec0a18e9724774457e5024de8f17c282661f37e0e2dc3c0e1312e7f3c7"
+    }
   }
 }

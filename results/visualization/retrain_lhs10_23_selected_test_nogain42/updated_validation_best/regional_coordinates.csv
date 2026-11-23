@@ -1,10 +1,10 @@
 model,partition,AvgRelRMSE,components,distribution,correct,valid,KCI_percent,family,alias,seed,role
-dg_ratio1p5_seed42,external,0.94986185134002554,48,soft_ood,317062,324288,97.7717337675153,difficult_gradnorm,dg_ratio1p5,42,validation_selected
-dg_ratio1p5_seed42,internal,1.1193062206328712,24,in_range,550495,553644,99.431222951933009,difficult_gradnorm,dg_ratio1p5,42,validation_selected
-dg_ratio1p5_seed43,external,1.126942095792054,48,soft_ood,323351,324288,99.711059305308865,difficult_gradnorm,dg_ratio1p5,43,validation_selected
-dg_ratio1p5_seed43,internal,1.0466568780229297,24,in_range,552559,553644,99.804025691599662,difficult_gradnorm,dg_ratio1p5,43,validation_selected
-dg_ratio1p5_seed44,external,1.1096662492010159,48,soft_ood,320861,324288,98.94322330767713,difficult_gradnorm,dg_ratio1p5,44,validation_selected
-dg_ratio1p5_seed44,internal,0.97672773884105712,24,in_range,551786,553644,99.664405285707062,difficult_gradnorm,dg_ratio1p5,44,validation_selected
+dg_ratio0p15_seed42,external,0.65156013388993939,48,soft_ood,322423,324288,99.424893921452536,difficult_gradnorm,dg_ratio0p15,42,validation_selected
+dg_ratio0p15_seed42,internal,1.1126891498913998,24,in_range,551944,553644,99.692943479925731,difficult_gradnorm,dg_ratio0p15,42,validation_selected
+dg_ratio0p15_seed43,external,0.80944026921315637,48,soft_ood,322216,324288,99.36106177225183,difficult_gradnorm,dg_ratio0p15,43,validation_selected
+dg_ratio0p15_seed43,internal,1.0362713430227077,24,in_range,551738,553644,99.655735454552016,difficult_gradnorm,dg_ratio0p15,43,validation_selected
+dg_ratio0p15_seed44,external,0.94773086139601714,48,soft_ood,318562,324288,98.23428557331755,difficult_gradnorm,dg_ratio0p15,44,validation_selected
+dg_ratio0p15_seed44,internal,0.99235080448168111,24,in_range,549786,553644,99.303162320913799,difficult_gradnorm,dg_ratio0p15,44,validation_selected
 gain25_seed42,external,0.74850021370815489,48,soft_ood,319942,324288,98.659833234655608,gain,gain25,42,validation_selected
 gain25_seed42,internal,1.143352457679518,24,in_range,547382,553644,98.868948277232306,gain,gain25,42,validation_selected
 gain25_seed43,external,0.88313650300342683,48,soft_ood,318242,324288,98.135607854746397,gain,gain25,43,validation_selected

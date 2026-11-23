@@ -16,6 +16,7 @@ from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
 from PIL import Image
+from scripts.analysis.plot_retrained_teacher_sign_seed42 import model_label
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / 'results/visualization/gain_pair_difficulty_seed42'
@@ -32,6 +33,7 @@ PAIRS = [('B35_H2S', 'air2_SP', r'Air2 $\rightarrow$ H$_2$S'),
          ('B35_SO2', 'air2_SP', r'Air2 $\rightarrow$ SO$_2$'),
          ('B35_SO2', 'HEATER2_output_T_SP', r'T2 $\rightarrow$ SO$_2$')]
 REGIONS = [('in_range', 'In-range'), ('soft_ood', 'Soft-OOD')]
+Y_LIMITS = (-6, 106)
 
 
 def sha(path: Path) -> str:
@@ -105,7 +107,7 @@ def make_figure(kind: str, frame: pd.DataFrame) -> None:
                 assert len(n) == len(FAMILIES) and n.nunique() == 1
                 if int(n.iloc[0]) == 0:
                     ax.text(j, 8, 'n = 0', color='#555555', ha='center', va='center', fontsize=6)
-            ax.set_ylim(-6, 106)
+            ax.set_ylim(*Y_LIMITS)
             ax.set_yticks([0, 25, 50, 75, 100])
             ax.set_xticks(range(len(groups)), groups)
             ax.set_xlim(-.35, len(groups)-.65)
@@ -163,9 +165,25 @@ def write_captions() -> list[Path]:
 
 
 def main() -> None:
+    global FAMILIES, Y_LIMITS
+    source_test = ROOT / 'results/visualization/retrain_lhs10_23_selected_test_nogain42/updated_validation_best'
+    selected = json.loads((source_test / 'selected_models.json').read_text(encoding='utf-8'))['selected_models']
+    aliases = {}
+    for family, _, _, _, _, _ in FAMILIES:
+        rows = [row for row in selected if row['family'] == family]
+        if len(rows) != 3 or {int(row['seed']) for row in rows} != {42, 43, 44} or len({row['alias'] for row in rows}) != 1:
+            raise ValueError(f'Invalid selected models for {family}')
+        aliases[family] = rows[0]['alias']
+    FAMILIES = [(family, aliases[family], model_label(family, aliases[family]), color, marker, style)
+                for family, _, _, color, marker, style in FAMILIES]
     OUT.mkdir(parents=True, exist_ok=True)
-    for kind in ('sign', 'magnitude'):
-        make_figure(kind, validated(kind))
+    frames = {kind: validated(kind) for kind in ('sign', 'magnitude')}
+    bounds = pd.concat(list(frames.values()), ignore_index=True)
+    lower = (bounds.mean_kci_percent - bounds.sd_kci_percentage_points).dropna()
+    upper = (bounds.mean_kci_percent + bounds.sd_kci_percentage_points).dropna()
+    Y_LIMITS = (min(-6, float(lower.min()) - 2), max(106, float(upper.max()) + 2))
+    for kind, frame in frames.items():
+        make_figure(kind, frame)
     files = [SOURCE / f'conditional_kci_by_{stem}{suffix}.csv'
              for stem in ('teacher_sign', 'gain_magnitude') for suffix in ('', '_per_seed')]
     captions = write_captions()

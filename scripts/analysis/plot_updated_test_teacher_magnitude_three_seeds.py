@@ -44,6 +44,9 @@ def main() -> None:
     if not audit.get('passed'):
         raise ValueError('Independent NPZ verification has not passed')
     selection = json.loads((SOURCE/'selected_models.json').read_text(encoding='utf8'))['selected_models']
+    plan = json.loads((SOURCE/'validation_selection_plan.json').read_text(encoding='utf8'))
+    if set(plan['aliases']) != set(FAMILIES) - {'no_gain'}:
+        raise ValueError('Unexpected validation family coverage')
     official = pd.read_csv(SOURCE/'kci_components.csv').set_index(
         ['model', 'distribution', 'target', 'mv'], verify_integrity=True)
     scales = pd.read_csv(TEACHER_SCALE, index_col=0).iloc[:, 0]
@@ -54,8 +57,8 @@ def main() -> None:
         selected = [r for r in selection if r['family'] == family]
         if len(selected) != 3 or {r['seed'] for r in selected} != set(SEEDS) or len({r['alias'] for r in selected}) != 1:
             raise ValueError(f'Expected one configuration with all three seeds: {family}')
-        if family == 'difficult_gradnorm' and selected[0]['alias'] != 'dg_ratio1p5':
-            raise ValueError('Expected validation-selected DG rho 1.5')
+        if family != 'no_gain' and selected[0]['alias'] != plan['aliases'][family]:
+            raise ValueError(f'Selection differs from validation plan: {family}')
         models.extend(sorted(selected, key=lambda row: row['seed']))
     protocol_sha = sha(SOURCE/'run_protocol.json')
     inputs = [Path(__file__), ROOT/'scripts/analysis/plot_retrained_teacher_sign_seed42.py',
@@ -165,28 +168,26 @@ def main() -> None:
                 ax.set_xlabel('ANN |gain| quartile')
     handles, labels = axes[0, 0].get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(.5, .94), ncol=5, frameon=False, fontsize=9)
-    fig.suptitle('All18 KCI conditioned on ANN gain magnitude · seeds 42, 43, 44', fontsize=14, fontweight='bold', y=.985)
-    fig.text(.5, .018, 'Points: three-seed mean. Bars: ±1 sample SD across model training seeds (n = 3).', ha='center', fontsize=9)
     fig.subplots_adjust(left=.067, right=.985, top=.84, bottom=.105, wspace=.18, hspace=.32)
     for suffix in ('png', 'pdf'):
         fig.savefig(OUT/f'conditional_kci_by_gain_magnitude.{suffix}', dpi=300)
     plt.close(fig)
     with Image.open(OUT/'conditional_kci_by_gain_magnitude.png') as im:
         im.convert('L').save(OUT/'conditional_kci_by_gain_magnitude_grayscale.png')
-    (OUT/'conditional_kci_by_gain_magnitude_README.md').write_text('''# 三個訓練 seed 的 ANN 增益大小分組 KCI
+    (OUT/'conditional_kci_by_gain_magnitude_README.md').write_text(f'''# 三個訓練 seed 的 ANN 增益大小分組 KCI
 
-圖上各點為 seed 42、43、44 的 KCI 算術平均，誤差棒為三個 seed 的樣本標準差（mean ± 1 SD，n=3，ddof=1），不是 bootstrap 信賴區間。三個動態模型共用相同 ANN 與相同 test 穩態探點；標準差描述動態訓練 seed 的變異。新版 validation 選模使用 Gain 25、SS-only 2.5、Gain+SS 25/25、DG ρ=1.5 及 No-Gain。
+圖上各點為 seed 42、43、44 的 KCI 算術平均，誤差棒為三個 seed 的樣本標準差（mean ± 1 SD，n=3，ddof=1），不是 bootstrap 信賴區間。三個動態模型共用相同 ANN 與相同 test 穩態探點；標準差描述動態訓練 seed 的變異。新版 validation 選模：{plan['aliases']}，另含 No-Gain。
 
 每個區域、輸出與 MV 配對分別先篩選 |ANN 增益| ≥ 1e-5 的有效操作點，再依 |ANN 增益| 的 25%、50%、75% 分位數分為 Q1–Q4。沿用舊圖方法，以已儲存 teacher scaler 的 σ_MV / σ_target 標準化增益絕對值，使用 searchsorted side=right；若與邊界相等，分配至較高分組。界線對所有模型與 seed 相同；原始增益絕對值與正的標準化倍率在同一配對中排序相同。每個操作點合併正、負擾動及各 18 預測步共 36 次比較，動態增益為零計為方向不一致；每 seed 對各組全部有效點計算 KCI。逐 seed 數值見 `conditional_kci_by_gain_magnitude_per_seed.csv`，均值和 SD 見 `conditional_kci_by_gain_magnitude.csv`，分位數及各組點數見 `gain_magnitude_quartile_edges.csv`。
 
-mean ± SD 可延伸至 0% 以下或 100% 以上，但實際 KCI 都在 0–100%。test 穩態探點先前已使用，並非全新盲測。KCI 是對 ANN 參考方向的一致率，不能單憑它驗證 Aspen 真實增益方向。此資料夾舊有 teacher landscape 和 summary 仍為舊模型及舊 ANN，不屬於本次結果。前次 validation 歷史備份五個來源已刪除，選模與 test protocol 記錄此追溯限制；仍存的來源及預測陣列已核對。
+mean ± SD 可延伸至 0% 以下或 100% 以上，但實際 KCI 都在 0–100%。test 穩態探點先前已使用，並非全新盲測。KCI 是對 ANN 參考方向的一致率，不能單憑它驗證 Aspen 真實增益方向。前次 validation 歷史備份五個來源已刪除，選模與 test protocol 記錄此追溯限制；仍存的來源及預測陣列已核對。
 
 重建：`.\\.venv\\Scripts\\python.exe -m scripts.analysis.plot_updated_test_teacher_magnitude_three_seeds`，預設輸出 staging 資料夾供覆核。
 ''', encoding='utf8')
     if any(sha(ROOT/path) != digest for path, digest in input_hashes.items()):
         raise ValueError('An input changed while computing')
     record = dict(passed=True, models=[r['model'] for r in models], seeds=list(SEEDS),
-        selection='Updated validation-selected families including DG rho 1.5; 12 reused test models and 3 newly evaluated DG models; no training or new inference for this plot',
+        selection=f'Updated validation-selected settings {plan["aliases"]}; 12 reused and 3 newly evaluated models; no new inference for this plot',
         source_limit='Prior validation historical backup five files unavailable; see source test selection and protocol for exact scope',
         uncertainty='arithmetic mean ± 1 sample SD across 3 model seeds, ddof=1; not bootstrap CI',
         quartiles='valid |ANN gain| normalized by teacher std[mv]/std[target] within each region and output-MV pair; 25/50/75 percentiles; searchsorted side=right; shared across models and seeds',

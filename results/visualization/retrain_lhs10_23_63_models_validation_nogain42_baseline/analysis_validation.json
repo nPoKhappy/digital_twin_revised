@@ -9,10 +9,10 @@
     43,
     44
   ],
-  "reused_historical_models": 51,
-  "newly_evaluated_dg_models": 12,
+  "reused_historical_models": 48,
+  "newly_evaluated_dg_models": 15,
   "baseline_seed": 42,
-  "retained_coordinates_checked": 102,
+  "retained_coordinates_checked": 96,
   "same_x_y_axes_all_panels": true,
   "no_jitter": true,
   "optimizer_updates": 0

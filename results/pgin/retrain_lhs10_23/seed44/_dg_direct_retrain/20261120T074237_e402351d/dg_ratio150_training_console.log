@@ -1,0 +1,1030 @@
+======================================================================
+Physics-Informed Gain Training (From Scratch) - Session: lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss
+[Info] Random seed: 44
+======================================================================
+[Info] Loading historical R5-X dataset and calculating Z-score Stats...
+[Info] Dynamic scaler fit scope: train_only
+  [Save] Z-score stats saved to C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss
+[Info] Step-wise regression training length: 36 steps
+[Info] Loaded Dynamic Train Loader: 57 batches
+[Info] Loaded Dynamic Valid Loader: 4 batches
+[Info] Preparing LHS steady-state data for SS and Gain losses...
+[Info] Loaded steady-state sources for SS/Gain training: 11 file(s) | 42301 usable rows (0 dropped)
+  - ./data/Claus_steady_state\lhs_generated_dynamic_ss_data_10.xlsx
+  - ./data/Claus_steady_state\lhs_generated_dynamic_ss_data_11.xlsx
+  - ./data/Claus_steady_state\lhs_generated_dynamic_ss_data_15.xlsx
+  - ./data/Claus_steady_state\lhs_generated_dynamic_ss_data_16.xlsx
+  - ./data/Claus_steady_state\lhs_generated_dynamic_ss_data_17.xlsx
+  - ./data/Claus_steady_state\lhs_generated_dynamic_ss_data_18.xlsx
+  - ./data/Claus_steady_state\lhs_generated_dynamic_ss_data_19.xlsx
+  - ./data/Claus_steady_state\lhs_generated_dynamic_ss_data_20.xlsx
+  - ./data/Claus_steady_state\lhs_generated_dynamic_ss_data_21.xlsx
+  - ./data/Claus_steady_state\lhs_generated_dynamic_ss_data_22.xlsx
+  - ./data/Claus_steady_state\lhs_generated_dynamic_ss_data_23.xlsx
+[Info] Initializing Transformer Model...
+  [Info] Pre-trained loading disabled. Training entirely from scratch.
+[Info] Loading Pre-trained TabularMLP Model...
+  [Info] Loss weights | MSE: 1.0, SS: 0.0, Gain: 0.05; SS rollout: 18 steps; SS targets (48): ['air', 'second_air2', 'COG', 'burner_input_T_PV', 'burner_inputP', 'burner_output_T_PV', 'burner_output_P_PV', 'fur_F', 'fur_inputT', 'fur_inputP', 'fur_temp', 'fur_outputT', 'fur_outputP_PV', 'WHB_F', 'WHB_inputT', 'WHB_inputP', 'WHB_outputT', 'WHB_outputP', 'SEP1_F', 'SEP1_P_PV', 'SEP1_T', 'HEATER1_F', 'HEATER1_input_T', 'HEATER1_input_P', 'HEATER1_output_T_PV', 'HEATER1_output_P', 'cat1_F', 'cat1_input_temp', 'cat1_output_temp', 'cat1_input_P', 'cat1_output_P_PV', 'SEP2_F', 'SEP2_P_PV', 'SEP2_T', 'HEATER2_F', 'HEATER2_input_T', 'HEATER2_input_P', 'HEATER2_output_T_PV', 'cat2_F', 'cat2_input_temp', 'cat2_output_temp', 'cat2_input_P', 'cat2_output_P_PV', 'SEP3_F', 'SEP3_P_PV', 'SEP3_T', 'B35_H2S', 'B35_SO2']; Gain loss enabled: True; KCI monitor: True; Gain targets: ['B35_H2S', 'B35_SO2'] x ['air2_SP', 'HEATER2_output_T_SP']; Gain valid delta threshold: 1e-05; Dynamic gain method: finite_difference; Dynamic gain rollout: 53 step-wise steps; Step change starts at step 36; Dynamic gain output: steps 36-53; Gain reduction: per-step sign penalty, then mean; KCI counts step comparisons; FD delta std: 0.5; SS batch: 64; SS coverage: full permutation without replacement; Group GradNorm pairs: [('B35_H2S', 'air2_SP'), ('B35_H2S', 'HEATER2_output_T_SP'), ('B35_SO2', 'HEATER2_output_T_SP')]
+
+Epoch 1/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 1/1000:   0%|          | 0/10 [00:10<?, ?it/s, MSE=1.3866, SS_w=0.00000, Gain_w=39.21807, KCI_n=2599/8064]
+Epoch 1/1000:  10%|█         | 1/10 [00:10<01:30, 10.05s/it, MSE=1.3866, SS_w=0.00000, Gain_w=39.21807, KCI_n=2599/8064]
+Epoch 1/1000:  10%|█         | 1/10 [00:17<01:30, 10.05s/it, MSE=1.4000, SS_w=0.00000, Gain_w=15.35695, KCI_n=7011/15948]
+Epoch 1/1000:  20%|██        | 2/10 [00:17<01:07,  8.44s/it, MSE=1.4000, SS_w=0.00000, Gain_w=15.35695, KCI_n=7011/15948]
+Epoch 1/1000:  20%|██        | 2/10 [00:24<01:07,  8.44s/it, MSE=1.3252, SS_w=0.00000, Gain_w=13.09266, KCI_n=12460/24084]
+Epoch 1/1000:  30%|███       | 3/10 [00:24<00:55,  7.98s/it, MSE=1.3252, SS_w=0.00000, Gain_w=13.09266, KCI_n=12460/24084]
+Epoch 1/1000:  30%|███       | 3/10 [00:32<00:55,  7.98s/it, MSE=1.2321, SS_w=0.00000, Gain_w=10.96012, KCI_n=17588/32112]
+Epoch 1/1000:  40%|████      | 4/10 [00:32<00:46,  7.70s/it, MSE=1.2321, SS_w=0.00000, Gain_w=10.96012, KCI_n=17588/32112]
+Epoch 1/1000:  40%|████      | 4/10 [00:39<00:46,  7.70s/it, MSE=1.2330, SS_w=0.00000, Gain_w=7.59039, KCI_n=23274/40356] 
+Epoch 1/1000:  50%|█████     | 5/10 [00:39<00:37,  7.54s/it, MSE=1.2330, SS_w=0.00000, Gain_w=7.59039, KCI_n=23274/40356]
+Epoch 1/1000:  50%|█████     | 5/10 [00:46<00:37,  7.54s/it, MSE=1.2279, SS_w=0.00000, Gain_w=8.32592, KCI_n=28390/48492]
+Epoch 1/1000:  60%|██████    | 6/10 [00:46<00:29,  7.49s/it, MSE=1.2279, SS_w=0.00000, Gain_w=8.32592, KCI_n=28390/48492]
+Epoch 1/1000:  60%|██████    | 6/10 [00:53<00:29,  7.49s/it, MSE=1.2995, SS_w=0.00000, Gain_w=7.88258, KCI_n=34065/56052]
+Epoch 1/1000:  70%|███████   | 7/10 [00:53<00:22,  7.41s/it, MSE=1.2995, SS_w=0.00000, Gain_w=7.88258, KCI_n=34065/56052]
+Epoch 1/1000:  70%|███████   | 7/10 [01:01<00:22,  7.41s/it, MSE=1.2036, SS_w=0.00000, Gain_w=4.92795, KCI_n=40557/63972]
+Epoch 1/1000:  80%|████████  | 8/10 [01:01<00:14,  7.38s/it, MSE=1.2036, SS_w=0.00000, Gain_w=4.92795, KCI_n=40557/63972]
+Epoch 1/1000:  80%|████████  | 8/10 [01:08<00:14,  7.38s/it, MSE=1.1629, SS_w=0.00000, Gain_w=8.04816, KCI_n=46727/71928]
+Epoch 1/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.38s/it, MSE=1.1629, SS_w=0.00000, Gain_w=8.04816, KCI_n=46727/71928]
+Epoch 1/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.38s/it, MSE=1.1578, SS_w=0.00000, Gain_w=8.17111, KCI_n=52802/79956]
+Epoch 1/1000: 100%|██████████| 10/10 [01:15<00:00,  7.34s/it, MSE=1.1578, SS_w=0.00000, Gain_w=8.17111, KCI_n=52802/79956]
+Epoch 1/1000: 100%|██████████| 10/10 [01:15<00:00,  7.60s/it, MSE=1.1578, SS_w=0.00000, Gain_w=8.17111, KCI_n=52802/79956]
+Epoch [1/1000] | Train Total L: 13.620258 | MSE: 1.262867 | SS: 4.143227 | Gain: 0.00019369 | KCI: 52802/79956 = 66.04%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 15964/20232=78.9% ann_sign_avg=-0.73 dyn_pos=23.1% ; HEATER2_output_T_SP: 13351/20340=65.6% ann_sign_avg=0.18 dyn_pos=50.2%
+    B35_SO2 | air2_SP: 10455/21996=47.5% ann_sign_avg=1.00 dyn_pos=47.5% ; HEATER2_output_T_SP: 13032/17388=74.9% ann_sign_avg=0.16 dyn_pos=48.0%
+  [ANN Gain Teacher] target min: B35_H2S=0.00334331, B35_SO2=-0.000203877 | max: B35_H2S=0.0240982, B35_SO2=0.0124376 | <=1e-6: 0.78%
+  [Valid] MSE Loss: 1.046777
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 1.046777)
+
+Epoch 2/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 2/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=1.1846, SS_w=0.00000, Gain_w=5.07117, KCI_n=6420/7992]
+Epoch 2/1000:  10%|█         | 1/10 [00:09<01:24,  9.35s/it, MSE=1.1846, SS_w=0.00000, Gain_w=5.07117, KCI_n=6420/7992]
+Epoch 2/1000:  10%|█         | 1/10 [00:16<01:24,  9.35s/it, MSE=1.1969, SS_w=0.00000, Gain_w=6.17118, KCI_n=12744/15984]
+Epoch 2/1000:  20%|██        | 2/10 [00:16<01:05,  8.14s/it, MSE=1.1969, SS_w=0.00000, Gain_w=6.17118, KCI_n=12744/15984]
+Epoch 2/1000:  20%|██        | 2/10 [00:24<01:05,  8.14s/it, MSE=1.1358, SS_w=0.00000, Gain_w=9.21000, KCI_n=18635/23616]
+Epoch 2/1000:  30%|███       | 3/10 [00:24<00:54,  7.79s/it, MSE=1.1358, SS_w=0.00000, Gain_w=9.21000, KCI_n=18635/23616]
+Epoch 2/1000:  30%|███       | 3/10 [00:31<00:54,  7.79s/it, MSE=1.1953, SS_w=0.00000, Gain_w=5.31275, KCI_n=25415/31608]
+Epoch 2/1000:  40%|████      | 4/10 [00:31<00:45,  7.62s/it, MSE=1.1953, SS_w=0.00000, Gain_w=5.31275, KCI_n=25415/31608]
+Epoch 2/1000:  40%|████      | 4/10 [00:38<00:45,  7.62s/it, MSE=1.0776, SS_w=0.00000, Gain_w=6.64892, KCI_n=30681/39168]
+Epoch 2/1000:  50%|█████     | 5/10 [00:38<00:37,  7.50s/it, MSE=1.0776, SS_w=0.00000, Gain_w=6.64892, KCI_n=30681/39168]
+Epoch 2/1000:  50%|█████     | 5/10 [00:45<00:37,  7.50s/it, MSE=1.0831, SS_w=0.00000, Gain_w=5.39796, KCI_n=36739/47160]
+Epoch 2/1000:  60%|██████    | 6/10 [00:45<00:29,  7.42s/it, MSE=1.0831, SS_w=0.00000, Gain_w=5.39796, KCI_n=36739/47160]
+Epoch 2/1000:  60%|██████    | 6/10 [00:53<00:29,  7.42s/it, MSE=1.0761, SS_w=0.00000, Gain_w=3.45433, KCI_n=43172/55296]
+Epoch 2/1000:  70%|███████   | 7/10 [00:53<00:22,  7.41s/it, MSE=1.0761, SS_w=0.00000, Gain_w=3.45433, KCI_n=43172/55296]
+Epoch 2/1000:  70%|███████   | 7/10 [01:00<00:22,  7.41s/it, MSE=1.0883, SS_w=0.00000, Gain_w=2.63211, KCI_n=50055/63324]
+Epoch 2/1000:  80%|████████  | 8/10 [01:00<00:14,  7.36s/it, MSE=1.0883, SS_w=0.00000, Gain_w=2.63211, KCI_n=50055/63324]
+Epoch 2/1000:  80%|████████  | 8/10 [01:07<00:14,  7.36s/it, MSE=1.0496, SS_w=0.00000, Gain_w=1.76475, KCI_n=57177/71280]
+Epoch 2/1000:  90%|█████████ | 9/10 [01:07<00:07,  7.33s/it, MSE=1.0496, SS_w=0.00000, Gain_w=1.76475, KCI_n=57177/71280]
+Epoch 2/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.33s/it, MSE=1.0472, SS_w=0.00000, Gain_w=2.94800, KCI_n=64117/79308]
+Epoch 2/1000: 100%|██████████| 10/10 [01:15<00:00,  7.34s/it, MSE=1.0472, SS_w=0.00000, Gain_w=2.94800, KCI_n=64117/79308]
+Epoch 2/1000: 100%|██████████| 10/10 [01:15<00:00,  7.53s/it, MSE=1.0472, SS_w=0.00000, Gain_w=2.94800, KCI_n=64117/79308]
+Epoch [2/1000] | Train Total L: 5.974561 | MSE: 1.113445 | SS: 3.920705 | Gain: 0.00003454 | KCI: 64117/79308 = 80.85%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 16787/20160=83.3% ann_sign_avg=-0.75 dyn_pos=23.6% ; HEATER2_output_T_SP: 17815/20232=88.1% ann_sign_avg=0.18 dyn_pos=64.5%
+    B35_SO2 | air2_SP: 13015/21780=59.8% ann_sign_avg=1.00 dyn_pos=59.8% ; HEATER2_output_T_SP: 16500/17136=96.3% ann_sign_avg=0.17 dyn_pos=60.7%
+  [ANN Gain Teacher] target min: B35_H2S=0.00339733, B35_SO2=-0.000177321 | max: B35_H2S=0.022041, B35_SO2=0.0101021 | <=1e-6: 0.78%
+  [Valid] MSE Loss: 0.941298
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.941298)
+
+Epoch 3/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 3/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=1.0585, SS_w=0.00000, Gain_w=1.83685, KCI_n=6607/7524]
+Epoch 3/1000:  10%|█         | 1/10 [00:09<01:23,  9.24s/it, MSE=1.0585, SS_w=0.00000, Gain_w=1.83685, KCI_n=6607/7524]
+Epoch 3/1000:  10%|█         | 1/10 [00:16<01:23,  9.24s/it, MSE=0.9775, SS_w=0.00000, Gain_w=4.56777, KCI_n=13642/15696]
+Epoch 3/1000:  20%|██        | 2/10 [00:16<01:05,  8.19s/it, MSE=0.9775, SS_w=0.00000, Gain_w=4.56777, KCI_n=13642/15696]
+Epoch 3/1000:  20%|██        | 2/10 [00:24<01:05,  8.19s/it, MSE=1.0209, SS_w=0.00000, Gain_w=3.97808, KCI_n=20539/23652]
+Epoch 3/1000:  30%|███       | 3/10 [00:24<00:54,  7.82s/it, MSE=1.0209, SS_w=0.00000, Gain_w=3.97808, KCI_n=20539/23652]
+Epoch 3/1000:  30%|███       | 3/10 [00:31<00:54,  7.82s/it, MSE=1.0469, SS_w=0.00000, Gain_w=2.16096, KCI_n=27501/31428]
+Epoch 3/1000:  40%|████      | 4/10 [00:31<00:45,  7.61s/it, MSE=1.0469, SS_w=0.00000, Gain_w=2.16096, KCI_n=27501/31428]
+Epoch 3/1000:  40%|████      | 4/10 [00:38<00:45,  7.61s/it, MSE=1.0592, SS_w=0.00000, Gain_w=0.86971, KCI_n=34912/39528]
+Epoch 3/1000:  50%|█████     | 5/10 [00:38<00:37,  7.54s/it, MSE=1.0592, SS_w=0.00000, Gain_w=0.86971, KCI_n=34912/39528]
+Epoch 3/1000:  50%|█████     | 5/10 [00:46<00:37,  7.54s/it, MSE=1.0342, SS_w=0.00000, Gain_w=1.77901, KCI_n=42108/47412]
+Epoch 3/1000:  60%|██████    | 6/10 [00:46<00:29,  7.44s/it, MSE=1.0342, SS_w=0.00000, Gain_w=1.77901, KCI_n=42108/47412]
+Epoch 3/1000:  60%|██████    | 6/10 [00:53<00:29,  7.44s/it, MSE=0.9902, SS_w=0.00000, Gain_w=1.61382, KCI_n=49164/55368]
+Epoch 3/1000:  70%|███████   | 7/10 [00:53<00:22,  7.38s/it, MSE=0.9902, SS_w=0.00000, Gain_w=1.61382, KCI_n=49164/55368]
+Epoch 3/1000:  70%|███████   | 7/10 [01:00<00:22,  7.38s/it, MSE=0.9368, SS_w=0.00000, Gain_w=2.26069, KCI_n=56002/63180]
+Epoch 3/1000:  80%|████████  | 8/10 [01:00<00:14,  7.40s/it, MSE=0.9368, SS_w=0.00000, Gain_w=2.26069, KCI_n=56002/63180]
+Epoch 3/1000:  80%|████████  | 8/10 [01:07<00:14,  7.40s/it, MSE=1.1288, SS_w=0.00000, Gain_w=2.17472, KCI_n=63160/71136]
+Epoch 3/1000:  90%|█████████ | 9/10 [01:07<00:07,  7.34s/it, MSE=1.1288, SS_w=0.00000, Gain_w=2.17472, KCI_n=63160/71136]
+Epoch 3/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.34s/it, MSE=0.9569, SS_w=0.00000, Gain_w=1.23649, KCI_n=70215/79020]
+Epoch 3/1000: 100%|██████████| 10/10 [01:15<00:00,  7.32s/it, MSE=0.9569, SS_w=0.00000, Gain_w=1.23649, KCI_n=70215/79020]
+Epoch 3/1000: 100%|██████████| 10/10 [01:15<00:00,  7.53s/it, MSE=0.9569, SS_w=0.00000, Gain_w=1.23649, KCI_n=70215/79020]
+Epoch [3/1000] | Train Total L: 3.268802 | MSE: 1.020992 | SS: 3.838510 | Gain: 0.00001284 | KCI: 70215/79020 = 88.86%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 18763/20088=93.4% ann_sign_avg=-0.75 dyn_pos=11.7% ; HEATER2_output_T_SP: 18496/19980=92.6% ann_sign_avg=0.20 dyn_pos=59.6%
+    B35_SO2 | air2_SP: 16416/21744=75.5% ann_sign_avg=1.00 dyn_pos=75.5% ; HEATER2_output_T_SP: 16540/17208=96.1% ann_sign_avg=0.22 dyn_pos=61.8%
+  [ANN Gain Teacher] target min: B35_H2S=0.00345743, B35_SO2=-0.000206928 | max: B35_H2S=0.0235057, B35_SO2=0.0124157 | <=1e-6: 0.55%
+  [Valid] MSE Loss: 0.900595
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.900595)
+
+Epoch 4/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 4/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.9914, SS_w=0.00000, Gain_w=1.13013, KCI_n=7385/8316]
+Epoch 4/1000:  10%|█         | 1/10 [00:09<01:24,  9.35s/it, MSE=0.9914, SS_w=0.00000, Gain_w=1.13013, KCI_n=7385/8316]
+Epoch 4/1000:  10%|█         | 1/10 [00:16<01:24,  9.35s/it, MSE=0.9464, SS_w=0.00000, Gain_w=1.25065, KCI_n=14403/16236]
+Epoch 4/1000:  20%|██        | 2/10 [00:16<01:05,  8.14s/it, MSE=0.9464, SS_w=0.00000, Gain_w=1.25065, KCI_n=14403/16236]
+Epoch 4/1000:  20%|██        | 2/10 [00:23<01:05,  8.14s/it, MSE=0.9262, SS_w=0.00000, Gain_w=0.81109, KCI_n=21226/23976]
+Epoch 4/1000:  30%|███       | 3/10 [00:23<00:54,  7.76s/it, MSE=0.9262, SS_w=0.00000, Gain_w=0.81109, KCI_n=21226/23976]
+Epoch 4/1000:  30%|███       | 3/10 [00:31<00:54,  7.76s/it, MSE=0.9636, SS_w=0.00000, Gain_w=2.13722, KCI_n=28295/32076]
+Epoch 4/1000:  40%|████      | 4/10 [00:31<00:45,  7.61s/it, MSE=0.9636, SS_w=0.00000, Gain_w=2.13722, KCI_n=28295/32076]
+Epoch 4/1000:  40%|████      | 4/10 [00:38<00:45,  7.61s/it, MSE=0.9987, SS_w=0.00000, Gain_w=1.65147, KCI_n=35346/40248]
+Epoch 4/1000:  50%|█████     | 5/10 [00:38<00:37,  7.49s/it, MSE=0.9987, SS_w=0.00000, Gain_w=1.65147, KCI_n=35346/40248]
+Epoch 4/1000:  50%|█████     | 5/10 [00:45<00:37,  7.49s/it, MSE=0.9770, SS_w=0.00000, Gain_w=1.24588, KCI_n=42651/48456]
+Epoch 4/1000:  60%|██████    | 6/10 [00:45<00:29,  7.40s/it, MSE=0.9770, SS_w=0.00000, Gain_w=1.24588, KCI_n=42651/48456]
+Epoch 4/1000:  60%|██████    | 6/10 [00:53<00:29,  7.40s/it, MSE=1.0246, SS_w=0.00000, Gain_w=0.67966, KCI_n=49206/55872]
+Epoch 4/1000:  70%|███████   | 7/10 [00:53<00:22,  7.39s/it, MSE=1.0246, SS_w=0.00000, Gain_w=0.67966, KCI_n=49206/55872]
+Epoch 4/1000:  70%|███████   | 7/10 [01:00<00:22,  7.39s/it, MSE=0.9444, SS_w=0.00000, Gain_w=1.20312, KCI_n=56025/63828]
+Epoch 4/1000:  80%|████████  | 8/10 [01:00<00:14,  7.38s/it, MSE=0.9444, SS_w=0.00000, Gain_w=1.20312, KCI_n=56025/63828]
+Epoch 4/1000:  80%|████████  | 8/10 [01:07<00:14,  7.38s/it, MSE=1.0206, SS_w=0.00000, Gain_w=0.82426, KCI_n=63258/72072]
+Epoch 4/1000:  90%|█████████ | 9/10 [01:07<00:07,  7.34s/it, MSE=1.0206, SS_w=0.00000, Gain_w=0.82426, KCI_n=63258/72072]
+Epoch 4/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.34s/it, MSE=1.0708, SS_w=0.00000, Gain_w=0.60569, KCI_n=69778/79740]
+Epoch 4/1000: 100%|██████████| 10/10 [01:15<00:00,  7.34s/it, MSE=1.0708, SS_w=0.00000, Gain_w=0.60569, KCI_n=69778/79740]
+Epoch 4/1000: 100%|██████████| 10/10 [01:15<00:00,  7.52s/it, MSE=1.0708, SS_w=0.00000, Gain_w=0.60569, KCI_n=69778/79740]
+Epoch [4/1000] | Train Total L: 2.140272 | MSE: 0.986356 | SS: 3.569068 | Gain: 0.00001665 | KCI: 69778/79740 = 87.51%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19081/19872=96.0% ann_sign_avg=-0.74 dyn_pos=10.9% ; HEATER2_output_T_SP: 19239/20304=94.8% ann_sign_avg=0.20 dyn_pos=62.3%
+    B35_SO2 | air2_SP: 14527/22068=65.8% ann_sign_avg=1.00 dyn_pos=65.8% ; HEATER2_output_T_SP: 16931/17496=96.8% ann_sign_avg=0.20 dyn_pos=57.6%
+  [ANN Gain Teacher] target min: B35_H2S=0.00325188, B35_SO2=-8.31492e-05 | max: B35_H2S=0.0222996, B35_SO2=0.0121599 | <=1e-6: 0.70%
+  [Valid] MSE Loss: 0.906533
+  [Info] No improvement for 1 epochs.
+
+Epoch 5/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 5/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=1.0069, SS_w=0.00000, Gain_w=1.24078, KCI_n=6627/7740]
+Epoch 5/1000:  10%|█         | 1/10 [00:09<01:23,  9.26s/it, MSE=1.0069, SS_w=0.00000, Gain_w=1.24078, KCI_n=6627/7740]
+Epoch 5/1000:  10%|█         | 1/10 [00:16<01:23,  9.26s/it, MSE=1.0115, SS_w=0.00000, Gain_w=1.67406, KCI_n=13642/15840]
+Epoch 5/1000:  20%|██        | 2/10 [00:16<01:05,  8.20s/it, MSE=1.0115, SS_w=0.00000, Gain_w=1.67406, KCI_n=13642/15840]
+Epoch 5/1000:  20%|██        | 2/10 [00:23<01:05,  8.20s/it, MSE=0.9890, SS_w=0.00000, Gain_w=2.06756, KCI_n=20574/23868]
+Epoch 5/1000:  30%|███       | 3/10 [00:23<00:54,  7.78s/it, MSE=0.9890, SS_w=0.00000, Gain_w=2.06756, KCI_n=20574/23868]
+Epoch 5/1000:  30%|███       | 3/10 [00:31<00:54,  7.78s/it, MSE=1.0057, SS_w=0.00000, Gain_w=1.20628, KCI_n=27449/31896]
+Epoch 5/1000:  40%|████      | 4/10 [00:31<00:45,  7.57s/it, MSE=1.0057, SS_w=0.00000, Gain_w=1.20628, KCI_n=27449/31896]
+Epoch 5/1000:  40%|████      | 4/10 [00:38<00:45,  7.57s/it, MSE=0.9148, SS_w=0.00000, Gain_w=0.55424, KCI_n=34267/39780]
+Epoch 5/1000:  50%|█████     | 5/10 [00:38<00:37,  7.50s/it, MSE=0.9148, SS_w=0.00000, Gain_w=0.55424, KCI_n=34267/39780]
+Epoch 5/1000:  50%|█████     | 5/10 [00:45<00:37,  7.50s/it, MSE=0.9360, SS_w=0.00000, Gain_w=0.80142, KCI_n=40838/47376]
+Epoch 5/1000:  60%|██████    | 6/10 [00:45<00:29,  7.42s/it, MSE=0.9360, SS_w=0.00000, Gain_w=0.80142, KCI_n=40838/47376]
+Epoch 5/1000:  60%|██████    | 6/10 [00:53<00:29,  7.42s/it, MSE=0.8633, SS_w=0.00000, Gain_w=0.53606, KCI_n=47984/55620]
+Epoch 5/1000:  70%|███████   | 7/10 [00:53<00:22,  7.35s/it, MSE=0.8633, SS_w=0.00000, Gain_w=0.53606, KCI_n=47984/55620]
+Epoch 5/1000:  70%|███████   | 7/10 [01:00<00:22,  7.35s/it, MSE=0.9134, SS_w=0.00000, Gain_w=0.67519, KCI_n=54942/63612]
+Epoch 5/1000:  80%|████████  | 8/10 [01:00<00:14,  7.38s/it, MSE=0.9134, SS_w=0.00000, Gain_w=0.67519, KCI_n=54942/63612]
+Epoch 5/1000:  80%|████████  | 8/10 [01:07<00:14,  7.38s/it, MSE=0.9614, SS_w=0.00000, Gain_w=0.77839, KCI_n=61665/71568]
+Epoch 5/1000:  90%|█████████ | 9/10 [01:07<00:07,  7.34s/it, MSE=0.9614, SS_w=0.00000, Gain_w=0.77839, KCI_n=61665/71568]
+Epoch 5/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.34s/it, MSE=0.9140, SS_w=0.00000, Gain_w=1.30035, KCI_n=68257/79308]
+Epoch 5/1000: 100%|██████████| 10/10 [01:15<00:00,  7.32s/it, MSE=0.9140, SS_w=0.00000, Gain_w=1.30035, KCI_n=68257/79308]
+Epoch 5/1000: 100%|██████████| 10/10 [01:15<00:00,  7.51s/it, MSE=0.9140, SS_w=0.00000, Gain_w=1.30035, KCI_n=68257/79308]
+Epoch [5/1000] | Train Total L: 2.035032 | MSE: 0.951599 | SS: 3.777579 | Gain: 0.00002155 | KCI: 68257/79308 = 86.07%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19329/19692=98.2% ann_sign_avg=-0.78 dyn_pos=10.8% ; HEATER2_output_T_SP: 19819/20700=95.7% ann_sign_avg=0.19 dyn_pos=58.5%
+    B35_SO2 | air2_SP: 12382/21888=56.6% ann_sign_avg=1.00 dyn_pos=56.6% ; HEATER2_output_T_SP: 16727/17028=98.2% ann_sign_avg=0.21 dyn_pos=61.3%
+  [ANN Gain Teacher] target min: B35_H2S=0.00351006, B35_SO2=-0.000107727 | max: B35_H2S=0.0247735, B35_SO2=0.0131651 | <=1e-6: 0.55%
+  [Valid] MSE Loss: 0.931110
+  [Info] No improvement for 2 epochs.
+
+Epoch 6/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 6/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=1.0241, SS_w=0.00000, Gain_w=1.19010, KCI_n=6667/7884]
+Epoch 6/1000:  10%|█         | 1/10 [00:09<01:25,  9.46s/it, MSE=1.0241, SS_w=0.00000, Gain_w=1.19010, KCI_n=6667/7884]
+Epoch 6/1000:  10%|█         | 1/10 [00:16<01:25,  9.46s/it, MSE=0.9200, SS_w=0.00000, Gain_w=0.55230, KCI_n=13630/16164]
+Epoch 6/1000:  20%|██        | 2/10 [00:16<01:05,  8.18s/it, MSE=0.9200, SS_w=0.00000, Gain_w=0.55230, KCI_n=13630/16164]
+Epoch 6/1000:  20%|██        | 2/10 [00:24<01:05,  8.18s/it, MSE=0.9362, SS_w=0.00000, Gain_w=1.10227, KCI_n=20475/24264]
+Epoch 6/1000:  30%|███       | 3/10 [00:24<00:54,  7.83s/it, MSE=0.9362, SS_w=0.00000, Gain_w=1.10227, KCI_n=20475/24264]
+Epoch 6/1000:  30%|███       | 3/10 [00:31<00:54,  7.83s/it, MSE=1.0558, SS_w=0.00000, Gain_w=0.81772, KCI_n=27358/32076]
+Epoch 6/1000:  40%|████      | 4/10 [00:31<00:45,  7.60s/it, MSE=1.0558, SS_w=0.00000, Gain_w=0.81772, KCI_n=27358/32076]
+Epoch 6/1000:  40%|████      | 4/10 [00:38<00:45,  7.60s/it, MSE=0.9104, SS_w=0.00000, Gain_w=1.17912, KCI_n=33826/39852]
+Epoch 6/1000:  50%|█████     | 5/10 [00:38<00:37,  7.47s/it, MSE=0.9104, SS_w=0.00000, Gain_w=1.17912, KCI_n=33826/39852]
+Epoch 6/1000:  50%|█████     | 5/10 [00:46<00:37,  7.47s/it, MSE=0.9353, SS_w=0.00000, Gain_w=1.19392, KCI_n=40747/48060]
+Epoch 6/1000:  60%|██████    | 6/10 [00:46<00:29,  7.44s/it, MSE=0.9353, SS_w=0.00000, Gain_w=1.19392, KCI_n=40747/48060]
+Epoch 6/1000:  60%|██████    | 6/10 [00:53<00:29,  7.44s/it, MSE=0.9456, SS_w=0.00000, Gain_w=0.32680, KCI_n=47655/55944]
+Epoch 6/1000:  70%|███████   | 7/10 [00:53<00:22,  7.37s/it, MSE=0.9456, SS_w=0.00000, Gain_w=0.32680, KCI_n=47655/55944]
+Epoch 6/1000:  70%|███████   | 7/10 [01:00<00:22,  7.37s/it, MSE=0.9332, SS_w=0.00000, Gain_w=0.91398, KCI_n=54262/63720]
+Epoch 6/1000:  80%|████████  | 8/10 [01:00<00:14,  7.33s/it, MSE=0.9332, SS_w=0.00000, Gain_w=0.91398, KCI_n=54262/63720]
+Epoch 6/1000:  80%|████████  | 8/10 [01:07<00:14,  7.33s/it, MSE=0.8773, SS_w=0.00000, Gain_w=0.87193, KCI_n=60919/71928]
+Epoch 6/1000:  90%|█████████ | 9/10 [01:07<00:07,  7.35s/it, MSE=0.8773, SS_w=0.00000, Gain_w=0.87193, KCI_n=60919/71928]
+Epoch 6/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.35s/it, MSE=0.9325, SS_w=0.00000, Gain_w=0.78480, KCI_n=67687/80064]
+Epoch 6/1000: 100%|██████████| 10/10 [01:15<00:00,  7.32s/it, MSE=0.9325, SS_w=0.00000, Gain_w=0.78480, KCI_n=67687/80064]
+Epoch 6/1000: 100%|██████████| 10/10 [01:15<00:00,  7.52s/it, MSE=0.9325, SS_w=0.00000, Gain_w=0.78480, KCI_n=67687/80064]
+Epoch [6/1000] | Train Total L: 1.840344 | MSE: 0.947051 | SS: 3.553716 | Gain: 0.00002606 | KCI: 67687/80064 = 84.54%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19467/19728=98.7% ann_sign_avg=-0.72 dyn_pos=13.7% ; HEATER2_output_T_SP: 19744/20700=95.4% ann_sign_avg=0.14 dyn_pos=56.3%
+    B35_SO2 | air2_SP: 11221/21924=51.2% ann_sign_avg=1.00 dyn_pos=51.2% ; HEATER2_output_T_SP: 17255/17712=97.4% ann_sign_avg=0.14 dyn_pos=55.9%
+  [ANN Gain Teacher] target min: B35_H2S=0.00380592, B35_SO2=-0.000118855 | max: B35_H2S=0.0230722, B35_SO2=0.0123734 | <=1e-6: 0.39%
+  [Valid] MSE Loss: 0.890489
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.890489)
+
+Epoch 7/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 7/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.9328, SS_w=0.00000, Gain_w=0.66674, KCI_n=6850/8208]
+Epoch 7/1000:  10%|█         | 1/10 [00:09<01:24,  9.41s/it, MSE=0.9328, SS_w=0.00000, Gain_w=0.66674, KCI_n=6850/8208]
+Epoch 7/1000:  10%|█         | 1/10 [00:16<01:24,  9.41s/it, MSE=0.9199, SS_w=0.00000, Gain_w=0.17931, KCI_n=13815/16308]
+Epoch 7/1000:  20%|██        | 2/10 [00:16<01:05,  8.15s/it, MSE=0.9199, SS_w=0.00000, Gain_w=0.17931, KCI_n=13815/16308]
+Epoch 7/1000:  20%|██        | 2/10 [00:23<01:05,  8.15s/it, MSE=0.8593, SS_w=0.00000, Gain_w=1.00504, KCI_n=20463/24120]
+Epoch 7/1000:  30%|███       | 3/10 [00:23<00:54,  7.77s/it, MSE=0.8593, SS_w=0.00000, Gain_w=1.00504, KCI_n=20463/24120]
+Epoch 7/1000:  30%|███       | 3/10 [00:31<00:54,  7.77s/it, MSE=0.8582, SS_w=0.00000, Gain_w=1.02487, KCI_n=26891/32076]
+Epoch 7/1000:  40%|████      | 4/10 [00:31<00:45,  7.61s/it, MSE=0.8582, SS_w=0.00000, Gain_w=1.02487, KCI_n=26891/32076]
+Epoch 7/1000:  40%|████      | 4/10 [00:38<00:45,  7.61s/it, MSE=0.9831, SS_w=0.00000, Gain_w=1.54719, KCI_n=33309/39816]
+Epoch 7/1000:  50%|█████     | 5/10 [00:38<00:37,  7.49s/it, MSE=0.9831, SS_w=0.00000, Gain_w=1.54719, KCI_n=33309/39816]
+Epoch 7/1000:  50%|█████     | 5/10 [00:45<00:37,  7.49s/it, MSE=0.8461, SS_w=0.00000, Gain_w=0.45061, KCI_n=40082/47916]
+Epoch 7/1000:  60%|██████    | 6/10 [00:45<00:29,  7.40s/it, MSE=0.8461, SS_w=0.00000, Gain_w=0.45061, KCI_n=40082/47916]
+Epoch 7/1000:  60%|██████    | 6/10 [00:53<00:29,  7.40s/it, MSE=0.9238, SS_w=0.00000, Gain_w=0.95664, KCI_n=46726/56088]
+Epoch 7/1000:  70%|███████   | 7/10 [00:53<00:22,  7.41s/it, MSE=0.9238, SS_w=0.00000, Gain_w=0.95664, KCI_n=46726/56088]
+Epoch 7/1000:  70%|███████   | 7/10 [01:00<00:22,  7.41s/it, MSE=0.9700, SS_w=0.00000, Gain_w=1.66555, KCI_n=53331/64152]
+Epoch 7/1000:  80%|████████  | 8/10 [01:00<00:14,  7.35s/it, MSE=0.9700, SS_w=0.00000, Gain_w=1.66555, KCI_n=53331/64152]
+Epoch 7/1000:  80%|████████  | 8/10 [01:07<00:14,  7.35s/it, MSE=0.9494, SS_w=0.00000, Gain_w=1.11096, KCI_n=59395/71928]
+Epoch 7/1000:  90%|█████████ | 9/10 [01:07<00:07,  7.31s/it, MSE=0.9494, SS_w=0.00000, Gain_w=1.11096, KCI_n=59395/71928]
+Epoch 7/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.31s/it, MSE=0.9302, SS_w=0.00000, Gain_w=0.85111, KCI_n=65829/79848]
+Epoch 7/1000: 100%|██████████| 10/10 [01:15<00:00,  7.33s/it, MSE=0.9302, SS_w=0.00000, Gain_w=0.85111, KCI_n=65829/79848]
+Epoch 7/1000: 100%|██████████| 10/10 [01:15<00:00,  7.52s/it, MSE=0.9302, SS_w=0.00000, Gain_w=0.85111, KCI_n=65829/79848]
+Epoch [7/1000] | Train Total L: 1.863087 | MSE: 0.917284 | SS: 3.435983 | Gain: 0.00003483 | KCI: 65829/79848 = 82.44%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19625/20160=97.3% ann_sign_avg=-0.77 dyn_pos=12.0% ; HEATER2_output_T_SP: 19465/20628=94.4% ann_sign_avg=0.18 dyn_pos=56.6%
+    B35_SO2 | air2_SP: 9814/21888=44.8% ann_sign_avg=1.00 dyn_pos=44.8% ; HEATER2_output_T_SP: 16925/17172=98.6% ann_sign_avg=0.21 dyn_pos=60.3%
+  [ANN Gain Teacher] target min: B35_H2S=0.00346228, B35_SO2=-9.204e-05 | max: B35_H2S=0.0242792, B35_SO2=0.0131942 | <=1e-6: 0.55%
+  [Valid] MSE Loss: 0.875085
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.875085)
+
+Epoch 8/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 8/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.8452, SS_w=0.00000, Gain_w=0.37621, KCI_n=6759/7884]
+Epoch 8/1000:  10%|█         | 1/10 [00:09<01:24,  9.36s/it, MSE=0.8452, SS_w=0.00000, Gain_w=0.37621, KCI_n=6759/7884]
+Epoch 8/1000:  10%|█         | 1/10 [00:16<01:24,  9.36s/it, MSE=0.9181, SS_w=0.00000, Gain_w=1.14867, KCI_n=13536/16128]
+Epoch 8/1000:  20%|██        | 2/10 [00:16<01:05,  8.19s/it, MSE=0.9181, SS_w=0.00000, Gain_w=1.14867, KCI_n=13536/16128]
+Epoch 8/1000:  20%|██        | 2/10 [00:24<01:05,  8.19s/it, MSE=0.9347, SS_w=0.00000, Gain_w=0.83160, KCI_n=20357/24444]
+Epoch 8/1000:  30%|███       | 3/10 [00:24<00:54,  7.78s/it, MSE=0.9347, SS_w=0.00000, Gain_w=0.83160, KCI_n=20357/24444]
+Epoch 8/1000:  30%|███       | 3/10 [00:31<00:54,  7.78s/it, MSE=0.8422, SS_w=0.00000, Gain_w=0.45618, KCI_n=26961/32580]
+Epoch 8/1000:  40%|████      | 4/10 [00:31<00:45,  7.55s/it, MSE=0.8422, SS_w=0.00000, Gain_w=0.45618, KCI_n=26961/32580]
+Epoch 8/1000:  40%|████      | 4/10 [00:38<00:45,  7.55s/it, MSE=0.8239, SS_w=0.00000, Gain_w=1.04463, KCI_n=33632/40644]
+Epoch 8/1000:  50%|█████     | 5/10 [00:38<00:37,  7.47s/it, MSE=0.8239, SS_w=0.00000, Gain_w=1.04463, KCI_n=33632/40644]
+Epoch 8/1000:  50%|█████     | 5/10 [00:45<00:37,  7.47s/it, MSE=0.8404, SS_w=0.00000, Gain_w=0.25251, KCI_n=40652/48960]
+Epoch 8/1000:  60%|██████    | 6/10 [00:45<00:29,  7.45s/it, MSE=0.8404, SS_w=0.00000, Gain_w=0.25251, KCI_n=40652/48960]
+Epoch 8/1000:  60%|██████    | 6/10 [00:53<00:29,  7.45s/it, MSE=0.8899, SS_w=0.00000, Gain_w=0.43006, KCI_n=47140/56808]
+Epoch 8/1000:  70%|███████   | 7/10 [00:53<00:22,  7.38s/it, MSE=0.8899, SS_w=0.00000, Gain_w=0.43006, KCI_n=47140/56808]
+Epoch 8/1000:  70%|███████   | 7/10 [01:00<00:22,  7.38s/it, MSE=0.9151, SS_w=0.00000, Gain_w=1.41825, KCI_n=53707/64764]
+Epoch 8/1000:  80%|████████  | 8/10 [01:00<00:14,  7.37s/it, MSE=0.9151, SS_w=0.00000, Gain_w=1.41825, KCI_n=53707/64764]
+Epoch 8/1000:  80%|████████  | 8/10 [01:07<00:14,  7.37s/it, MSE=0.8198, SS_w=0.00000, Gain_w=0.84896, KCI_n=60701/73080]
+Epoch 8/1000:  90%|█████████ | 9/10 [01:07<00:07,  7.40s/it, MSE=0.8198, SS_w=0.00000, Gain_w=0.84896, KCI_n=60701/73080]
+Epoch 8/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.40s/it, MSE=0.8595, SS_w=0.00000, Gain_w=0.68462, KCI_n=67844/81720]
+Epoch 8/1000: 100%|██████████| 10/10 [01:15<00:00,  7.36s/it, MSE=0.8595, SS_w=0.00000, Gain_w=0.68462, KCI_n=67844/81720]
+Epoch 8/1000: 100%|██████████| 10/10 [01:15<00:00,  7.54s/it, MSE=0.8595, SS_w=0.00000, Gain_w=0.68462, KCI_n=67844/81720]
+Epoch [8/1000] | Train Total L: 1.618050 | MSE: 0.868883 | SS: 3.706145 | Gain: 0.00003681 | KCI: 67844/81720 = 83.02%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 20054/20304=98.8% ann_sign_avg=-0.71 dyn_pos=14.0% ; HEATER2_output_T_SP: 20449/21024=97.3% ann_sign_avg=0.16 dyn_pos=58.3%
+    B35_SO2 | air2_SP: 9591/22248=43.1% ann_sign_avg=1.00 dyn_pos=43.1% ; HEATER2_output_T_SP: 17750/18144=97.8% ann_sign_avg=0.14 dyn_pos=57.9%
+  [ANN Gain Teacher] target min: B35_H2S=0.00343769, B35_SO2=-0.000135278 | max: B35_H2S=0.0229214, B35_SO2=0.011893 | <=1e-6: 0.78%
+  [Valid] MSE Loss: 0.867947
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.867947)
+
+Epoch 9/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 9/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.9100, SS_w=0.00000, Gain_w=0.46741, KCI_n=6597/7956]
+Epoch 9/1000:  10%|█         | 1/10 [00:09<01:25,  9.46s/it, MSE=0.9100, SS_w=0.00000, Gain_w=0.46741, KCI_n=6597/7956]
+Epoch 9/1000:  10%|█         | 1/10 [00:16<01:25,  9.46s/it, MSE=0.8624, SS_w=0.00000, Gain_w=0.60493, KCI_n=13019/15804]
+Epoch 9/1000:  20%|██        | 2/10 [00:16<01:05,  8.17s/it, MSE=0.8624, SS_w=0.00000, Gain_w=0.60493, KCI_n=13019/15804]
+Epoch 9/1000:  20%|██        | 2/10 [00:24<01:05,  8.17s/it, MSE=0.8645, SS_w=0.00000, Gain_w=0.97865, KCI_n=19655/24156]
+Epoch 9/1000:  30%|███       | 3/10 [00:24<00:54,  7.78s/it, MSE=0.8645, SS_w=0.00000, Gain_w=0.97865, KCI_n=19655/24156]
+Epoch 9/1000:  30%|███       | 3/10 [00:31<00:54,  7.78s/it, MSE=0.8099, SS_w=0.00000, Gain_w=0.36597, KCI_n=25997/32076]
+Epoch 9/1000:  40%|████      | 4/10 [00:31<00:45,  7.64s/it, MSE=0.8099, SS_w=0.00000, Gain_w=0.36597, KCI_n=25997/32076]
+Epoch 9/1000:  40%|████      | 4/10 [00:38<00:45,  7.64s/it, MSE=0.8311, SS_w=0.00000, Gain_w=0.83213, KCI_n=32531/40248]
+Epoch 9/1000:  50%|█████     | 5/10 [00:38<00:37,  7.53s/it, MSE=0.8311, SS_w=0.00000, Gain_w=0.83213, KCI_n=32531/40248]
+Epoch 9/1000:  50%|█████     | 5/10 [00:46<00:37,  7.53s/it, MSE=0.9017, SS_w=0.00000, Gain_w=0.95158, KCI_n=39230/48492]
+Epoch 9/1000:  60%|██████    | 6/10 [00:46<00:29,  7.45s/it, MSE=0.9017, SS_w=0.00000, Gain_w=0.95158, KCI_n=39230/48492]
+Epoch 9/1000:  60%|██████    | 6/10 [00:53<00:29,  7.45s/it, MSE=0.9220, SS_w=0.00000, Gain_w=0.48977, KCI_n=45746/56736]
+Epoch 9/1000:  70%|███████   | 7/10 [00:53<00:22,  7.48s/it, MSE=0.9220, SS_w=0.00000, Gain_w=0.48977, KCI_n=45746/56736]
+Epoch 9/1000:  70%|███████   | 7/10 [01:00<00:22,  7.48s/it, MSE=0.8827, SS_w=0.00000, Gain_w=1.43322, KCI_n=51826/64476]
+Epoch 9/1000:  80%|████████  | 8/10 [01:00<00:14,  7.43s/it, MSE=0.8827, SS_w=0.00000, Gain_w=1.43322, KCI_n=51826/64476]
+Epoch 9/1000:  80%|████████  | 8/10 [01:08<00:14,  7.43s/it, MSE=0.7992, SS_w=0.00000, Gain_w=1.57800, KCI_n=58159/72252]
+Epoch 9/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.39s/it, MSE=0.7992, SS_w=0.00000, Gain_w=1.57800, KCI_n=58159/72252]
+Epoch 9/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.39s/it, MSE=0.8602, SS_w=0.00000, Gain_w=1.27168, KCI_n=64898/80496]
+Epoch 9/1000: 100%|██████████| 10/10 [01:15<00:00,  7.37s/it, MSE=0.8602, SS_w=0.00000, Gain_w=1.27168, KCI_n=64898/80496]
+Epoch 9/1000: 100%|██████████| 10/10 [01:15<00:00,  7.57s/it, MSE=0.8602, SS_w=0.00000, Gain_w=1.27168, KCI_n=64898/80496]
+Epoch [9/1000] | Train Total L: 1.761705 | MSE: 0.864371 | SS: 3.628360 | Gain: 0.00004891 | KCI: 64898/80496 = 80.62%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19939/20160=98.9% ann_sign_avg=-0.73 dyn_pos=12.9% ; HEATER2_output_T_SP: 20085/20664=97.2% ann_sign_avg=0.22 dyn_pos=60.5%
+    B35_SO2 | air2_SP: 7383/21996=33.6% ann_sign_avg=1.00 dyn_pos=33.6% ; HEATER2_output_T_SP: 17491/17676=99.0% ann_sign_avg=0.21 dyn_pos=61.3%
+  [ANN Gain Teacher] target min: B35_H2S=0.00379216, B35_SO2=-0.000100727 | max: B35_H2S=0.0244696, B35_SO2=0.011733 | <=1e-6: 0.47%
+  [Valid] MSE Loss: 0.838344
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.838344)
+
+Epoch 10/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 10/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.7305, SS_w=0.00000, Gain_w=0.73582, KCI_n=6541/8136]
+Epoch 10/1000:  10%|█         | 1/10 [00:09<01:27,  9.67s/it, MSE=0.7305, SS_w=0.00000, Gain_w=0.73582, KCI_n=6541/8136]
+Epoch 10/1000:  10%|█         | 1/10 [00:16<01:27,  9.67s/it, MSE=0.8402, SS_w=0.00000, Gain_w=1.46723, KCI_n=13010/16344]
+Epoch 10/1000:  20%|██        | 2/10 [00:16<01:06,  8.27s/it, MSE=0.8402, SS_w=0.00000, Gain_w=1.46723, KCI_n=13010/16344]
+Epoch 10/1000:  20%|██        | 2/10 [00:24<01:06,  8.27s/it, MSE=0.9349, SS_w=0.00000, Gain_w=0.87468, KCI_n=19553/24588]
+Epoch 10/1000:  30%|███       | 3/10 [00:24<00:55,  7.91s/it, MSE=0.9349, SS_w=0.00000, Gain_w=0.87468, KCI_n=19553/24588]
+Epoch 10/1000:  30%|███       | 3/10 [00:31<00:55,  7.91s/it, MSE=0.7770, SS_w=0.00000, Gain_w=0.53855, KCI_n=25960/32328]
+Epoch 10/1000:  40%|████      | 4/10 [00:31<00:46,  7.68s/it, MSE=0.7770, SS_w=0.00000, Gain_w=0.53855, KCI_n=25960/32328]
+Epoch 10/1000:  40%|████      | 4/10 [00:39<00:46,  7.68s/it, MSE=0.8730, SS_w=0.00000, Gain_w=1.53122, KCI_n=32074/40140]
+Epoch 10/1000:  50%|█████     | 5/10 [00:39<00:37,  7.56s/it, MSE=0.8730, SS_w=0.00000, Gain_w=1.53122, KCI_n=32074/40140]
+Epoch 10/1000:  50%|█████     | 5/10 [00:46<00:37,  7.56s/it, MSE=0.8375, SS_w=0.00000, Gain_w=0.63278, KCI_n=38276/47844]
+Epoch 10/1000:  60%|██████    | 6/10 [00:46<00:29,  7.49s/it, MSE=0.8375, SS_w=0.00000, Gain_w=0.63278, KCI_n=38276/47844]
+Epoch 10/1000:  60%|██████    | 6/10 [00:53<00:29,  7.49s/it, MSE=0.7948, SS_w=0.00000, Gain_w=0.81271, KCI_n=44494/55764]
+Epoch 10/1000:  70%|███████   | 7/10 [00:53<00:22,  7.42s/it, MSE=0.7948, SS_w=0.00000, Gain_w=0.81271, KCI_n=44494/55764]
+Epoch 10/1000:  70%|███████   | 7/10 [01:01<00:22,  7.42s/it, MSE=0.9046, SS_w=0.00000, Gain_w=0.53246, KCI_n=51060/63972]
+Epoch 10/1000:  80%|████████  | 8/10 [01:01<00:14,  7.37s/it, MSE=0.9046, SS_w=0.00000, Gain_w=0.53246, KCI_n=51060/63972]
+Epoch 10/1000:  80%|████████  | 8/10 [01:08<00:14,  7.37s/it, MSE=0.8005, SS_w=0.00000, Gain_w=0.39178, KCI_n=57588/72216]
+Epoch 10/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.39s/it, MSE=0.8005, SS_w=0.00000, Gain_w=0.39178, KCI_n=57588/72216]
+Epoch 10/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.39s/it, MSE=0.8072, SS_w=0.00000, Gain_w=0.59723, KCI_n=63926/80028]
+Epoch 10/1000: 100%|██████████| 10/10 [01:15<00:00,  7.37s/it, MSE=0.8072, SS_w=0.00000, Gain_w=0.59723, KCI_n=63926/80028]
+Epoch 10/1000: 100%|██████████| 10/10 [01:15<00:00,  7.58s/it, MSE=0.8072, SS_w=0.00000, Gain_w=0.59723, KCI_n=63926/80028]
+Epoch [10/1000] | Train Total L: 1.641462 | MSE: 0.830014 | SS: 3.853116 | Gain: 0.00005073 | KCI: 63926/80028 = 79.88%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19877/20232=98.2% ann_sign_avg=-0.75 dyn_pos=11.6% ; HEATER2_output_T_SP: 19937/20520=97.2% ann_sign_avg=0.16 dyn_pos=59.0%
+    B35_SO2 | air2_SP: 7059/22032=32.0% ann_sign_avg=1.00 dyn_pos=32.0% ; HEATER2_output_T_SP: 17053/17244=98.9% ann_sign_avg=0.16 dyn_pos=58.2%
+  [ANN Gain Teacher] target min: B35_H2S=0.00341335, B35_SO2=-0.00015229 | max: B35_H2S=0.0255048, B35_SO2=0.0118461 | <=1e-6: 0.78%
+  [Valid] MSE Loss: 0.818989
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.818989)
+
+Epoch 11/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 11/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.8791, SS_w=0.00000, Gain_w=0.46865, KCI_n=6389/7704]
+Epoch 11/1000:  10%|█         | 1/10 [00:09<01:24,  9.41s/it, MSE=0.8791, SS_w=0.00000, Gain_w=0.46865, KCI_n=6389/7704]
+Epoch 11/1000:  10%|█         | 1/10 [00:16<01:24,  9.41s/it, MSE=0.7742, SS_w=0.00000, Gain_w=0.77505, KCI_n=12732/15588]
+Epoch 11/1000:  20%|██        | 2/10 [00:16<01:05,  8.19s/it, MSE=0.7742, SS_w=0.00000, Gain_w=0.77505, KCI_n=12732/15588]
+Epoch 11/1000:  20%|██        | 2/10 [00:24<01:05,  8.19s/it, MSE=0.8303, SS_w=0.00000, Gain_w=0.57272, KCI_n=19605/23832]
+Epoch 11/1000:  30%|███       | 3/10 [00:24<00:54,  7.81s/it, MSE=0.8303, SS_w=0.00000, Gain_w=0.57272, KCI_n=19605/23832]
+Epoch 11/1000:  30%|███       | 3/10 [00:31<00:54,  7.81s/it, MSE=0.7901, SS_w=0.00000, Gain_w=0.11723, KCI_n=26038/31752]
+Epoch 11/1000:  40%|████      | 4/10 [00:31<00:45,  7.65s/it, MSE=0.7901, SS_w=0.00000, Gain_w=0.11723, KCI_n=26038/31752]
+Epoch 11/1000:  40%|████      | 4/10 [00:38<00:45,  7.65s/it, MSE=0.8407, SS_w=0.00000, Gain_w=0.72147, KCI_n=32463/39672]
+Epoch 11/1000:  50%|█████     | 5/10 [00:38<00:37,  7.51s/it, MSE=0.8407, SS_w=0.00000, Gain_w=0.72147, KCI_n=32463/39672]
+Epoch 11/1000:  50%|█████     | 5/10 [00:45<00:37,  7.51s/it, MSE=0.8074, SS_w=0.00000, Gain_w=0.87184, KCI_n=38894/47664]
+Epoch 11/1000:  60%|██████    | 6/10 [00:45<00:29,  7.41s/it, MSE=0.8074, SS_w=0.00000, Gain_w=0.87184, KCI_n=38894/47664]
+Epoch 11/1000:  60%|██████    | 6/10 [00:53<00:29,  7.41s/it, MSE=0.8125, SS_w=0.00000, Gain_w=0.78484, KCI_n=45117/55440]
+Epoch 11/1000:  70%|███████   | 7/10 [00:53<00:22,  7.39s/it, MSE=0.8125, SS_w=0.00000, Gain_w=0.78484, KCI_n=45117/55440]
+Epoch 11/1000:  70%|███████   | 7/10 [01:00<00:22,  7.39s/it, MSE=0.7746, SS_w=0.00000, Gain_w=0.35062, KCI_n=51204/63180]
+Epoch 11/1000:  80%|████████  | 8/10 [01:00<00:14,  7.36s/it, MSE=0.7746, SS_w=0.00000, Gain_w=0.35062, KCI_n=51204/63180]
+Epoch 11/1000:  80%|████████  | 8/10 [01:07<00:14,  7.36s/it, MSE=0.8641, SS_w=0.00000, Gain_w=0.58578, KCI_n=57798/71280]
+Epoch 11/1000:  90%|█████████ | 9/10 [01:07<00:07,  7.33s/it, MSE=0.8641, SS_w=0.00000, Gain_w=0.58578, KCI_n=57798/71280]
+Epoch 11/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.33s/it, MSE=0.7806, SS_w=0.00000, Gain_w=0.65585, KCI_n=64187/79344]
+Epoch 11/1000: 100%|██████████| 10/10 [01:15<00:00,  7.34s/it, MSE=0.7806, SS_w=0.00000, Gain_w=0.65585, KCI_n=64187/79344]
+Epoch 11/1000: 100%|██████████| 10/10 [01:15<00:00,  7.53s/it, MSE=0.7806, SS_w=0.00000, Gain_w=0.65585, KCI_n=64187/79344]
+Epoch [11/1000] | Train Total L: 1.405780 | MSE: 0.815374 | SS: 3.377055 | Gain: 0.00005076 | KCI: 64187/79344 = 80.90%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 18839/19692=95.7% ann_sign_avg=-0.76 dyn_pos=13.7% ; HEATER2_output_T_SP: 19722/20160=97.8% ann_sign_avg=0.18 dyn_pos=59.3%
+    B35_SO2 | air2_SP: 8148/21996=37.0% ann_sign_avg=1.00 dyn_pos=37.0% ; HEATER2_output_T_SP: 17478/17496=99.9% ann_sign_avg=0.21 dyn_pos=60.6%
+  [ANN Gain Teacher] target min: B35_H2S=0.00349214, B35_SO2=-0.000127173 | max: B35_H2S=0.0254547, B35_SO2=0.0140159 | <=1e-6: 0.86%
+  [Valid] MSE Loss: 0.791124
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.791124)
+
+Epoch 12/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 12/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.8274, SS_w=0.00000, Gain_w=0.58574, KCI_n=6339/8172]
+Epoch 12/1000:  10%|█         | 1/10 [00:09<01:23,  9.28s/it, MSE=0.8274, SS_w=0.00000, Gain_w=0.58574, KCI_n=6339/8172]
+Epoch 12/1000:  10%|█         | 1/10 [00:16<01:23,  9.28s/it, MSE=0.7684, SS_w=0.00000, Gain_w=0.62999, KCI_n=12651/15984]
+Epoch 12/1000:  20%|██        | 2/10 [00:16<01:05,  8.15s/it, MSE=0.7684, SS_w=0.00000, Gain_w=0.62999, KCI_n=12651/15984]
+Epoch 12/1000:  20%|██        | 2/10 [00:23<01:05,  8.15s/it, MSE=0.8757, SS_w=0.00000, Gain_w=0.04274, KCI_n=19131/24048]
+Epoch 12/1000:  30%|███       | 3/10 [00:23<00:54,  7.76s/it, MSE=0.8757, SS_w=0.00000, Gain_w=0.04274, KCI_n=19131/24048]
+Epoch 12/1000:  30%|███       | 3/10 [00:31<00:54,  7.76s/it, MSE=0.7835, SS_w=0.00000, Gain_w=0.57889, KCI_n=25899/32220]
+Epoch 12/1000:  40%|████      | 4/10 [00:31<00:45,  7.57s/it, MSE=0.7835, SS_w=0.00000, Gain_w=0.57889, KCI_n=25899/32220]
+Epoch 12/1000:  40%|████      | 4/10 [00:38<00:45,  7.57s/it, MSE=0.7920, SS_w=0.00000, Gain_w=0.89539, KCI_n=32550/40464]
+Epoch 12/1000:  50%|█████     | 5/10 [00:38<00:37,  7.52s/it, MSE=0.7920, SS_w=0.00000, Gain_w=0.89539, KCI_n=32550/40464]
+Epoch 12/1000:  50%|█████     | 5/10 [00:45<00:37,  7.52s/it, MSE=0.7754, SS_w=0.00000, Gain_w=0.63008, KCI_n=39016/48384]
+Epoch 12/1000:  60%|██████    | 6/10 [00:45<00:29,  7.43s/it, MSE=0.7754, SS_w=0.00000, Gain_w=0.63008, KCI_n=39016/48384]
+Epoch 12/1000:  60%|██████    | 6/10 [00:53<00:29,  7.43s/it, MSE=0.8749, SS_w=0.00000, Gain_w=0.06591, KCI_n=45600/56592]
+Epoch 12/1000:  70%|███████   | 7/10 [00:53<00:22,  7.38s/it, MSE=0.8749, SS_w=0.00000, Gain_w=0.06591, KCI_n=45600/56592]
+Epoch 12/1000:  70%|███████   | 7/10 [01:00<00:22,  7.38s/it, MSE=0.7424, SS_w=0.00000, Gain_w=0.58411, KCI_n=52172/64656]
+Epoch 12/1000:  80%|████████  | 8/10 [01:00<00:14,  7.41s/it, MSE=0.7424, SS_w=0.00000, Gain_w=0.58411, KCI_n=52172/64656]
+Epoch 12/1000:  80%|████████  | 8/10 [01:07<00:14,  7.41s/it, MSE=0.8986, SS_w=0.00000, Gain_w=0.45334, KCI_n=58604/73044]
+Epoch 12/1000:  90%|█████████ | 9/10 [01:07<00:07,  7.38s/it, MSE=0.8986, SS_w=0.00000, Gain_w=0.45334, KCI_n=58604/73044]
+Epoch 12/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.38s/it, MSE=0.8082, SS_w=0.00000, Gain_w=1.05261, KCI_n=64797/81000]
+Epoch 12/1000: 100%|██████████| 10/10 [01:15<00:00,  7.36s/it, MSE=0.8082, SS_w=0.00000, Gain_w=1.05261, KCI_n=64797/81000]
+Epoch 12/1000: 100%|██████████| 10/10 [01:15<00:00,  7.53s/it, MSE=0.8082, SS_w=0.00000, Gain_w=1.05261, KCI_n=64797/81000]
+Epoch [12/1000] | Train Total L: 1.366517 | MSE: 0.814636 | SS: 3.418586 | Gain: 0.00004881 | KCI: 64797/81000 = 80.00%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19895/20196=98.5% ann_sign_avg=-0.76 dyn_pos=11.6% ; HEATER2_output_T_SP: 20018/20880=95.9% ann_sign_avg=0.19 dyn_pos=60.3%
+    B35_SO2 | air2_SP: 7118/22140=32.1% ann_sign_avg=1.00 dyn_pos=32.1% ; HEATER2_output_T_SP: 17766/17784=99.9% ann_sign_avg=0.19 dyn_pos=59.6%
+  [ANN Gain Teacher] target min: B35_H2S=0.0039426, B35_SO2=-0.000143249 | max: B35_H2S=0.0223774, B35_SO2=0.0125726 | <=1e-6: 0.78%
+  [Valid] MSE Loss: 0.787535
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.787535)
+
+Epoch 13/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 13/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.7776, SS_w=0.00000, Gain_w=0.80312, KCI_n=6167/8028]
+Epoch 13/1000:  10%|█         | 1/10 [00:09<01:25,  9.54s/it, MSE=0.7776, SS_w=0.00000, Gain_w=0.80312, KCI_n=6167/8028]
+Epoch 13/1000:  10%|█         | 1/10 [00:16<01:25,  9.54s/it, MSE=0.8607, SS_w=0.00000, Gain_w=0.52981, KCI_n=12295/15696]
+Epoch 13/1000:  20%|██        | 2/10 [00:16<01:05,  8.18s/it, MSE=0.8607, SS_w=0.00000, Gain_w=0.52981, KCI_n=12295/15696]
+Epoch 13/1000:  20%|██        | 2/10 [00:24<01:05,  8.18s/it, MSE=0.7982, SS_w=0.00000, Gain_w=0.73216, KCI_n=18834/23796]
+Epoch 13/1000:  30%|███       | 3/10 [00:24<00:54,  7.83s/it, MSE=0.7982, SS_w=0.00000, Gain_w=0.73216, KCI_n=18834/23796]
+Epoch 13/1000:  30%|███       | 3/10 [00:31<00:54,  7.83s/it, MSE=0.8137, SS_w=0.00000, Gain_w=0.90759, KCI_n=24944/31824]
+Epoch 13/1000:  40%|████      | 4/10 [00:31<00:45,  7.62s/it, MSE=0.8137, SS_w=0.00000, Gain_w=0.90759, KCI_n=24944/31824]
+Epoch 13/1000:  40%|████      | 4/10 [00:38<00:45,  7.62s/it, MSE=0.7720, SS_w=0.00000, Gain_w=0.36770, KCI_n=31086/39636]
+Epoch 13/1000:  50%|█████     | 5/10 [00:38<00:37,  7.54s/it, MSE=0.7720, SS_w=0.00000, Gain_w=0.36770, KCI_n=31086/39636]
+Epoch 13/1000:  50%|█████     | 5/10 [00:46<00:37,  7.54s/it, MSE=0.8245, SS_w=0.00000, Gain_w=0.54573, KCI_n=37814/48060]
+Epoch 13/1000:  60%|██████    | 6/10 [00:46<00:29,  7.47s/it, MSE=0.8245, SS_w=0.00000, Gain_w=0.54573, KCI_n=37814/48060]
+Epoch 13/1000:  60%|██████    | 6/10 [00:53<00:29,  7.47s/it, MSE=0.6943, SS_w=0.00000, Gain_w=0.49275, KCI_n=44213/55908]
+Epoch 13/1000:  70%|███████   | 7/10 [00:53<00:22,  7.39s/it, MSE=0.6943, SS_w=0.00000, Gain_w=0.49275, KCI_n=44213/55908]
+Epoch 13/1000:  70%|███████   | 7/10 [01:00<00:22,  7.39s/it, MSE=0.7717, SS_w=0.00000, Gain_w=0.91584, KCI_n=50300/63648]
+Epoch 13/1000:  80%|████████  | 8/10 [01:00<00:14,  7.40s/it, MSE=0.7717, SS_w=0.00000, Gain_w=0.91584, KCI_n=50300/63648]
+Epoch 13/1000:  80%|████████  | 8/10 [01:08<00:14,  7.40s/it, MSE=0.8999, SS_w=0.00000, Gain_w=0.71392, KCI_n=57248/72000]
+Epoch 13/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.37s/it, MSE=0.8999, SS_w=0.00000, Gain_w=0.71392, KCI_n=57248/72000]
+Epoch 13/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.37s/it, MSE=0.7697, SS_w=0.00000, Gain_w=0.31277, KCI_n=63744/79992]
+Epoch 13/1000: 100%|██████████| 10/10 [01:15<00:00,  7.33s/it, MSE=0.7697, SS_w=0.00000, Gain_w=0.31277, KCI_n=63744/79992]
+Epoch 13/1000: 100%|██████████| 10/10 [01:15<00:00,  7.55s/it, MSE=0.7697, SS_w=0.00000, Gain_w=0.31277, KCI_n=63744/79992]
+Epoch [13/1000] | Train Total L: 1.430361 | MSE: 0.798221 | SS: 3.162155 | Gain: 0.00004377 | KCI: 63744/79992 = 79.69%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19556/20232=96.7% ann_sign_avg=-0.75 dyn_pos=14.4% ; HEATER2_output_T_SP: 20086/20592=97.5% ann_sign_avg=0.21 dyn_pos=60.9%
+    B35_SO2 | air2_SP: 6790/21708=31.3% ann_sign_avg=1.00 dyn_pos=31.3% ; HEATER2_output_T_SP: 17312/17460=99.2% ann_sign_avg=0.18 dyn_pos=58.7%
+  [ANN Gain Teacher] target min: B35_H2S=0.00381659, B35_SO2=-0.000135656 | max: B35_H2S=0.0220428, B35_SO2=0.0113985 | <=1e-6: 0.62%
+  [Valid] MSE Loss: 0.784209
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.784209)
+
+Epoch 14/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 14/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.7983, SS_w=0.00000, Gain_w=0.33363, KCI_n=6168/7956]
+Epoch 14/1000:  10%|█         | 1/10 [00:09<01:25,  9.50s/it, MSE=0.7983, SS_w=0.00000, Gain_w=0.33363, KCI_n=6168/7956]
+Epoch 14/1000:  10%|█         | 1/10 [00:16<01:25,  9.50s/it, MSE=0.8379, SS_w=0.00000, Gain_w=0.57667, KCI_n=12642/16092]
+Epoch 14/1000:  20%|██        | 2/10 [00:16<01:05,  8.18s/it, MSE=0.8379, SS_w=0.00000, Gain_w=0.57667, KCI_n=12642/16092]
+Epoch 14/1000:  20%|██        | 2/10 [00:24<01:05,  8.18s/it, MSE=0.7976, SS_w=0.00000, Gain_w=0.41586, KCI_n=18796/23652]
+Epoch 14/1000:  30%|███       | 3/10 [00:24<00:55,  7.87s/it, MSE=0.7976, SS_w=0.00000, Gain_w=0.41586, KCI_n=18796/23652]
+Epoch 14/1000:  30%|███       | 3/10 [00:31<00:55,  7.87s/it, MSE=0.8085, SS_w=0.00000, Gain_w=0.34021, KCI_n=25155/31680]
+Epoch 14/1000:  40%|████      | 4/10 [00:31<00:46,  7.68s/it, MSE=0.8085, SS_w=0.00000, Gain_w=0.34021, KCI_n=25155/31680]
+Epoch 14/1000:  40%|████      | 4/10 [00:38<00:46,  7.68s/it, MSE=0.8056, SS_w=0.00000, Gain_w=0.89943, KCI_n=31458/39744]
+Epoch 14/1000:  50%|█████     | 5/10 [00:38<00:37,  7.55s/it, MSE=0.8056, SS_w=0.00000, Gain_w=0.89943, KCI_n=31458/39744]
+Epoch 14/1000:  50%|█████     | 5/10 [00:46<00:37,  7.55s/it, MSE=0.8292, SS_w=0.00000, Gain_w=0.51263, KCI_n=37509/47196]
+Epoch 14/1000:  60%|██████    | 6/10 [00:46<00:30,  7.51s/it, MSE=0.8292, SS_w=0.00000, Gain_w=0.51263, KCI_n=37509/47196]
+Epoch 14/1000:  60%|██████    | 6/10 [00:53<00:30,  7.51s/it, MSE=0.8601, SS_w=0.00000, Gain_w=1.11845, KCI_n=44048/55440]
+Epoch 14/1000:  70%|███████   | 7/10 [00:53<00:22,  7.43s/it, MSE=0.8601, SS_w=0.00000, Gain_w=1.11845, KCI_n=44048/55440]
+Epoch 14/1000:  70%|███████   | 7/10 [01:00<00:22,  7.43s/it, MSE=0.7510, SS_w=0.00000, Gain_w=0.29783, KCI_n=50397/63288]
+Epoch 14/1000:  80%|████████  | 8/10 [01:00<00:14,  7.37s/it, MSE=0.7510, SS_w=0.00000, Gain_w=0.29783, KCI_n=50397/63288]
+Epoch 14/1000:  80%|████████  | 8/10 [01:08<00:14,  7.37s/it, MSE=0.8536, SS_w=0.00000, Gain_w=0.48658, KCI_n=56397/71064]
+Epoch 14/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.34s/it, MSE=0.8536, SS_w=0.00000, Gain_w=0.48658, KCI_n=56397/71064]
+Epoch 14/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.34s/it, MSE=0.9106, SS_w=0.00000, Gain_w=0.29442, KCI_n=62873/79344]
+Epoch 14/1000: 100%|██████████| 10/10 [01:15<00:00,  7.35s/it, MSE=0.9106, SS_w=0.00000, Gain_w=0.29442, KCI_n=62873/79344]
+Epoch 14/1000: 100%|██████████| 10/10 [01:15<00:00,  7.56s/it, MSE=0.9106, SS_w=0.00000, Gain_w=0.29442, KCI_n=62873/79344]
+Epoch [14/1000] | Train Total L: 1.352818 | MSE: 0.825247 | SS: 3.476341 | Gain: 0.00004468 | KCI: 62873/79344 = 79.24%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19660/19764=99.5% ann_sign_avg=-0.76 dyn_pos=12.3% ; HEATER2_output_T_SP: 19735/20520=96.2% ann_sign_avg=0.17 dyn_pos=59.4%
+    B35_SO2 | air2_SP: 6536/22032=29.7% ann_sign_avg=1.00 dyn_pos=29.7% ; HEATER2_output_T_SP: 16942/17028=99.5% ann_sign_avg=0.18 dyn_pos=59.3%
+  [ANN Gain Teacher] target min: B35_H2S=0.00330289, B35_SO2=-0.000157 | max: B35_H2S=0.0233209, B35_SO2=0.0113875 | <=1e-6: 0.39%
+  [Valid] MSE Loss: 0.805803
+  [Info] No improvement for 1 epochs.
+
+Epoch 15/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 15/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.6962, SS_w=0.00000, Gain_w=0.64113, KCI_n=6676/8424]
+Epoch 15/1000:  10%|█         | 1/10 [00:09<01:23,  9.25s/it, MSE=0.6962, SS_w=0.00000, Gain_w=0.64113, KCI_n=6676/8424]
+Epoch 15/1000:  10%|█         | 1/10 [00:16<01:23,  9.25s/it, MSE=0.8078, SS_w=0.00000, Gain_w=0.29425, KCI_n=13132/16632]
+Epoch 15/1000:  20%|██        | 2/10 [00:16<01:05,  8.18s/it, MSE=0.8078, SS_w=0.00000, Gain_w=0.29425, KCI_n=13132/16632]
+Epoch 15/1000:  20%|██        | 2/10 [00:24<01:05,  8.18s/it, MSE=0.7486, SS_w=0.00000, Gain_w=0.14068, KCI_n=19696/24624]
+Epoch 15/1000:  30%|███       | 3/10 [00:24<00:54,  7.80s/it, MSE=0.7486, SS_w=0.00000, Gain_w=0.14068, KCI_n=19696/24624]
+Epoch 15/1000:  30%|███       | 3/10 [00:31<00:54,  7.80s/it, MSE=0.8928, SS_w=0.00000, Gain_w=0.54626, KCI_n=26018/32580]
+Epoch 15/1000:  40%|████      | 4/10 [00:31<00:45,  7.61s/it, MSE=0.8928, SS_w=0.00000, Gain_w=0.54626, KCI_n=26018/32580]
+Epoch 15/1000:  40%|████      | 4/10 [00:38<00:45,  7.61s/it, MSE=0.7637, SS_w=0.00000, Gain_w=1.17599, KCI_n=32146/40500]
+Epoch 15/1000:  50%|█████     | 5/10 [00:38<00:37,  7.56s/it, MSE=0.7637, SS_w=0.00000, Gain_w=1.17599, KCI_n=32146/40500]
+Epoch 15/1000:  50%|█████     | 5/10 [00:46<00:37,  7.56s/it, MSE=0.8795, SS_w=0.00000, Gain_w=1.10399, KCI_n=38088/48636]
+Epoch 15/1000:  60%|██████    | 6/10 [00:46<00:29,  7.47s/it, MSE=0.8795, SS_w=0.00000, Gain_w=1.10399, KCI_n=38088/48636]
+Epoch 15/1000:  60%|██████    | 6/10 [00:53<00:29,  7.47s/it, MSE=0.8634, SS_w=0.00000, Gain_w=1.30512, KCI_n=43953/56484]
+Epoch 15/1000:  70%|███████   | 7/10 [00:53<00:22,  7.42s/it, MSE=0.8634, SS_w=0.00000, Gain_w=1.30512, KCI_n=43953/56484]
+Epoch 15/1000:  70%|███████   | 7/10 [01:00<00:22,  7.42s/it, MSE=0.7983, SS_w=0.00000, Gain_w=1.19121, KCI_n=49984/64548]
+Epoch 15/1000:  80%|████████  | 8/10 [01:00<00:14,  7.43s/it, MSE=0.7983, SS_w=0.00000, Gain_w=1.19121, KCI_n=49984/64548]
+Epoch 15/1000:  80%|████████  | 8/10 [01:08<00:14,  7.43s/it, MSE=0.7055, SS_w=0.00000, Gain_w=0.45601, KCI_n=56024/72108]
+Epoch 15/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.38s/it, MSE=0.7055, SS_w=0.00000, Gain_w=0.45601, KCI_n=56024/72108]
+Epoch 15/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.38s/it, MSE=0.8245, SS_w=0.00000, Gain_w=0.40562, KCI_n=62265/80100]
+Epoch 15/1000: 100%|██████████| 10/10 [01:15<00:00,  7.35s/it, MSE=0.8245, SS_w=0.00000, Gain_w=0.40562, KCI_n=62265/80100]
+Epoch 15/1000: 100%|██████████| 10/10 [01:15<00:00,  7.55s/it, MSE=0.8245, SS_w=0.00000, Gain_w=0.40562, KCI_n=62265/80100]
+Epoch [15/1000] | Train Total L: 1.524046 | MSE: 0.798021 | SS: 3.427165 | Gain: 0.00004745 | KCI: 62265/80100 = 77.73%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19186/19728=97.3% ann_sign_avg=-0.72 dyn_pos=12.7% ; HEATER2_output_T_SP: 19103/20628=92.6% ann_sign_avg=0.15 dyn_pos=50.9%
+    B35_SO2 | air2_SP: 6594/22248=29.6% ann_sign_avg=1.00 dyn_pos=29.6% ; HEATER2_output_T_SP: 17382/17496=99.3% ann_sign_avg=0.16 dyn_pos=58.1%
+  [ANN Gain Teacher] target min: B35_H2S=0.00353987, B35_SO2=-0.000147112 | max: B35_H2S=0.0229969, B35_SO2=0.0126749 | <=1e-6: 0.55%
+  [Valid] MSE Loss: 0.779995
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.779995)
+
+Epoch 16/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 16/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.7401, SS_w=0.00000, Gain_w=0.65870, KCI_n=6600/8028]
+Epoch 16/1000:  10%|█         | 1/10 [00:09<01:24,  9.43s/it, MSE=0.7401, SS_w=0.00000, Gain_w=0.65870, KCI_n=6600/8028]
+Epoch 16/1000:  10%|█         | 1/10 [00:16<01:24,  9.43s/it, MSE=0.6936, SS_w=0.00000, Gain_w=0.86002, KCI_n=12754/15876]
+Epoch 16/1000:  20%|██        | 2/10 [00:16<01:05,  8.13s/it, MSE=0.6936, SS_w=0.00000, Gain_w=0.86002, KCI_n=12754/15876]
+Epoch 16/1000:  20%|██        | 2/10 [00:24<01:05,  8.13s/it, MSE=0.8006, SS_w=0.00000, Gain_w=0.27796, KCI_n=18949/23688]
+Epoch 16/1000:  30%|███       | 3/10 [00:24<00:54,  7.84s/it, MSE=0.8006, SS_w=0.00000, Gain_w=0.27796, KCI_n=18949/23688]
+Epoch 16/1000:  30%|███       | 3/10 [00:31<00:54,  7.84s/it, MSE=0.7789, SS_w=0.00000, Gain_w=0.30954, KCI_n=25268/31752]
+Epoch 16/1000:  40%|████      | 4/10 [00:31<00:45,  7.61s/it, MSE=0.7789, SS_w=0.00000, Gain_w=0.30954, KCI_n=25268/31752]
+Epoch 16/1000:  40%|████      | 4/10 [00:38<00:45,  7.61s/it, MSE=0.7681, SS_w=0.00000, Gain_w=0.15165, KCI_n=31640/39888]
+Epoch 16/1000:  50%|█████     | 5/10 [00:38<00:37,  7.49s/it, MSE=0.7681, SS_w=0.00000, Gain_w=0.15165, KCI_n=31640/39888]
+Epoch 16/1000:  50%|█████     | 5/10 [00:46<00:37,  7.49s/it, MSE=0.9225, SS_w=0.00000, Gain_w=0.10756, KCI_n=38404/48204]
+Epoch 16/1000:  60%|██████    | 6/10 [00:46<00:29,  7.45s/it, MSE=0.9225, SS_w=0.00000, Gain_w=0.10756, KCI_n=38404/48204]
+Epoch 16/1000:  60%|██████    | 6/10 [00:53<00:29,  7.45s/it, MSE=0.7698, SS_w=0.00000, Gain_w=0.34603, KCI_n=44804/56376]
+Epoch 16/1000:  70%|███████   | 7/10 [00:53<00:22,  7.38s/it, MSE=0.7698, SS_w=0.00000, Gain_w=0.34603, KCI_n=44804/56376]
+Epoch 16/1000:  70%|███████   | 7/10 [01:00<00:22,  7.38s/it, MSE=0.7820, SS_w=0.00000, Gain_w=0.32947, KCI_n=50981/64332]
+Epoch 16/1000:  80%|████████  | 8/10 [01:00<00:14,  7.35s/it, MSE=0.7820, SS_w=0.00000, Gain_w=0.32947, KCI_n=50981/64332]
+Epoch 16/1000:  80%|████████  | 8/10 [01:07<00:14,  7.35s/it, MSE=0.7444, SS_w=0.00000, Gain_w=0.63498, KCI_n=57356/72540]
+Epoch 16/1000:  90%|█████████ | 9/10 [01:07<00:07,  7.37s/it, MSE=0.7444, SS_w=0.00000, Gain_w=0.63498, KCI_n=57356/72540]
+Epoch 16/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.37s/it, MSE=0.7645, SS_w=0.00000, Gain_w=0.84796, KCI_n=63839/80928]
+Epoch 16/1000: 100%|██████████| 10/10 [01:15<00:00,  7.34s/it, MSE=0.7645, SS_w=0.00000, Gain_w=0.84796, KCI_n=63839/80928]
+Epoch 16/1000: 100%|██████████| 10/10 [01:15<00:00,  7.53s/it, MSE=0.7645, SS_w=0.00000, Gain_w=0.84796, KCI_n=63839/80928]
+Epoch [16/1000] | Train Total L: 1.228848 | MSE: 0.776462 | SS: 3.527928 | Gain: 0.00004853 | KCI: 63839/80928 = 78.88%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 20030/20160=99.4% ann_sign_avg=-0.74 dyn_pos=13.5% ; HEATER2_output_T_SP: 20236/20772=97.4% ann_sign_avg=0.21 dyn_pos=59.8%
+    B35_SO2 | air2_SP: 5938/22248=26.7% ann_sign_avg=1.00 dyn_pos=26.7% ; HEATER2_output_T_SP: 17635/17748=99.4% ann_sign_avg=0.18 dyn_pos=59.0%
+  [ANN Gain Teacher] target min: B35_H2S=0.00407852, B35_SO2=-0.00011358 | max: B35_H2S=0.0247579, B35_SO2=0.0120233 | <=1e-6: 0.55%
+  [Valid] MSE Loss: 0.774300
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.774300)
+
+Epoch 17/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 17/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.7359, SS_w=0.00000, Gain_w=0.38827, KCI_n=6108/8136]
+Epoch 17/1000:  10%|█         | 1/10 [00:09<01:24,  9.36s/it, MSE=0.7359, SS_w=0.00000, Gain_w=0.38827, KCI_n=6108/8136]
+Epoch 17/1000:  10%|█         | 1/10 [00:16<01:24,  9.36s/it, MSE=0.7105, SS_w=0.00000, Gain_w=0.39048, KCI_n=12274/16020]
+Epoch 17/1000:  20%|██        | 2/10 [00:16<01:05,  8.19s/it, MSE=0.7105, SS_w=0.00000, Gain_w=0.39048, KCI_n=12274/16020]
+Epoch 17/1000:  20%|██        | 2/10 [00:23<01:05,  8.19s/it, MSE=0.7385, SS_w=0.00000, Gain_w=1.12402, KCI_n=18519/24012]
+Epoch 17/1000:  30%|███       | 3/10 [00:23<00:54,  7.76s/it, MSE=0.7385, SS_w=0.00000, Gain_w=1.12402, KCI_n=18519/24012]
+Epoch 17/1000:  30%|███       | 3/10 [00:31<00:54,  7.76s/it, MSE=0.7041, SS_w=0.00000, Gain_w=0.29163, KCI_n=24808/32184]
+Epoch 17/1000:  40%|████      | 4/10 [00:31<00:45,  7.56s/it, MSE=0.7041, SS_w=0.00000, Gain_w=0.29163, KCI_n=24808/32184]
+Epoch 17/1000:  40%|████      | 4/10 [00:38<00:45,  7.56s/it, MSE=0.7926, SS_w=0.00000, Gain_w=0.31887, KCI_n=30999/40104]
+Epoch 17/1000:  50%|█████     | 5/10 [00:38<00:37,  7.49s/it, MSE=0.7926, SS_w=0.00000, Gain_w=0.31887, KCI_n=30999/40104]
+Epoch 17/1000:  50%|█████     | 5/10 [00:45<00:37,  7.49s/it, MSE=0.7457, SS_w=0.00000, Gain_w=0.83716, KCI_n=36849/47808]
+Epoch 17/1000:  60%|██████    | 6/10 [00:45<00:29,  7.40s/it, MSE=0.7457, SS_w=0.00000, Gain_w=0.83716, KCI_n=36849/47808]
+Epoch 17/1000:  60%|██████    | 6/10 [00:53<00:29,  7.40s/it, MSE=0.7086, SS_w=0.00000, Gain_w=0.56059, KCI_n=43070/55656]
+Epoch 17/1000:  70%|███████   | 7/10 [00:53<00:22,  7.34s/it, MSE=0.7086, SS_w=0.00000, Gain_w=0.56059, KCI_n=43070/55656]
+Epoch 17/1000:  70%|███████   | 7/10 [01:00<00:22,  7.34s/it, MSE=0.7605, SS_w=0.00000, Gain_w=0.50657, KCI_n=49383/63684]
+Epoch 17/1000:  80%|████████  | 8/10 [01:00<00:14,  7.34s/it, MSE=0.7605, SS_w=0.00000, Gain_w=0.50657, KCI_n=49383/63684]
+Epoch 17/1000:  80%|████████  | 8/10 [01:07<00:14,  7.34s/it, MSE=0.7964, SS_w=0.00000, Gain_w=1.12943, KCI_n=55606/71496]
+Epoch 17/1000:  90%|█████████ | 9/10 [01:07<00:07,  7.30s/it, MSE=0.7964, SS_w=0.00000, Gain_w=1.12943, KCI_n=55606/71496]
+Epoch 17/1000:  90%|█████████ | 9/10 [01:14<00:07,  7.30s/it, MSE=0.7184, SS_w=0.00000, Gain_w=0.31531, KCI_n=62043/79560]
+Epoch 17/1000: 100%|██████████| 10/10 [01:14<00:00,  7.29s/it, MSE=0.7184, SS_w=0.00000, Gain_w=0.31531, KCI_n=62043/79560]
+Epoch 17/1000: 100%|██████████| 10/10 [01:14<00:00,  7.49s/it, MSE=0.7184, SS_w=0.00000, Gain_w=0.31531, KCI_n=62043/79560]
+Epoch [17/1000] | Train Total L: 1.327360 | MSE: 0.741127 | SS: 3.228214 | Gain: 0.00004904 | KCI: 62043/79560 = 77.98%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19783/20052=98.7% ann_sign_avg=-0.78 dyn_pos=11.5% ; HEATER2_output_T_SP: 19663/20268=97.0% ann_sign_avg=0.18 dyn_pos=59.6%
+    B35_SO2 | air2_SP: 5498/22140=24.8% ann_sign_avg=1.00 dyn_pos=24.8% ; HEATER2_output_T_SP: 17099/17100=100.0% ann_sign_avg=0.20 dyn_pos=60.2%
+  [ANN Gain Teacher] target min: B35_H2S=0.00362534, B35_SO2=-0.000124246 | max: B35_H2S=0.0246995, B35_SO2=0.0112836 | <=1e-6: 0.62%
+  [Valid] MSE Loss: 0.768135
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.768135)
+
+Epoch 18/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 18/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.7396, SS_w=0.00000, Gain_w=0.40042, KCI_n=6972/8532]
+Epoch 18/1000:  10%|█         | 1/10 [00:09<01:24,  9.42s/it, MSE=0.7396, SS_w=0.00000, Gain_w=0.40042, KCI_n=6972/8532]
+Epoch 18/1000:  10%|█         | 1/10 [00:16<01:24,  9.42s/it, MSE=0.7225, SS_w=0.00000, Gain_w=0.18552, KCI_n=13249/16632]
+Epoch 18/1000:  20%|██        | 2/10 [00:16<01:05,  8.13s/it, MSE=0.7225, SS_w=0.00000, Gain_w=0.18552, KCI_n=13249/16632]
+Epoch 18/1000:  20%|██        | 2/10 [00:24<01:05,  8.13s/it, MSE=0.7468, SS_w=0.00000, Gain_w=0.85872, KCI_n=19011/24444]
+Epoch 18/1000:  30%|███       | 3/10 [00:24<00:54,  7.82s/it, MSE=0.7468, SS_w=0.00000, Gain_w=0.85872, KCI_n=19011/24444]
+Epoch 18/1000:  30%|███       | 3/10 [00:31<00:54,  7.82s/it, MSE=0.6838, SS_w=0.00000, Gain_w=0.77825, KCI_n=25198/32328]
+Epoch 18/1000:  40%|████      | 4/10 [00:31<00:45,  7.58s/it, MSE=0.6838, SS_w=0.00000, Gain_w=0.77825, KCI_n=25198/32328]
+Epoch 18/1000:  40%|████      | 4/10 [00:38<00:45,  7.58s/it, MSE=0.7181, SS_w=0.00000, Gain_w=0.48881, KCI_n=31879/40608]
+Epoch 18/1000:  50%|█████     | 5/10 [00:38<00:37,  7.45s/it, MSE=0.7181, SS_w=0.00000, Gain_w=0.48881, KCI_n=31879/40608]
+Epoch 18/1000:  50%|█████     | 5/10 [00:45<00:37,  7.45s/it, MSE=0.7052, SS_w=0.00000, Gain_w=0.31651, KCI_n=38240/48636]
+Epoch 18/1000:  60%|██████    | 6/10 [00:45<00:29,  7.44s/it, MSE=0.7052, SS_w=0.00000, Gain_w=0.31651, KCI_n=38240/48636]
+Epoch 18/1000:  60%|██████    | 6/10 [00:53<00:29,  7.44s/it, MSE=0.7758, SS_w=0.00000, Gain_w=0.18153, KCI_n=45159/56952]
+Epoch 18/1000:  70%|███████   | 7/10 [00:53<00:22,  7.39s/it, MSE=0.7758, SS_w=0.00000, Gain_w=0.18153, KCI_n=45159/56952]
+Epoch 18/1000:  70%|███████   | 7/10 [01:00<00:22,  7.39s/it, MSE=0.7876, SS_w=0.00000, Gain_w=0.76080, KCI_n=51065/64620]
+Epoch 18/1000:  80%|████████  | 8/10 [01:00<00:14,  7.38s/it, MSE=0.7876, SS_w=0.00000, Gain_w=0.76080, KCI_n=51065/64620]
+Epoch 18/1000:  80%|████████  | 8/10 [01:07<00:14,  7.38s/it, MSE=0.7429, SS_w=0.00000, Gain_w=0.10894, KCI_n=57470/72468]
+Epoch 18/1000:  90%|█████████ | 9/10 [01:07<00:07,  7.35s/it, MSE=0.7429, SS_w=0.00000, Gain_w=0.10894, KCI_n=57470/72468]
+Epoch 18/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.35s/it, MSE=0.8007, SS_w=0.00000, Gain_w=0.59448, KCI_n=63353/80172]
+Epoch 18/1000: 100%|██████████| 10/10 [01:15<00:00,  7.37s/it, MSE=0.8007, SS_w=0.00000, Gain_w=0.59448, KCI_n=63353/80172]
+Epoch 18/1000: 100%|██████████| 10/10 [01:15<00:00,  7.54s/it, MSE=0.8007, SS_w=0.00000, Gain_w=0.59448, KCI_n=63353/80172]
+Epoch [18/1000] | Train Total L: 1.209715 | MSE: 0.742318 | SS: 3.634516 | Gain: 0.00004512 | KCI: 63353/80172 = 79.02%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19566/20088=97.4% ann_sign_avg=-0.74 dyn_pos=11.7% ; HEATER2_output_T_SP: 20092/20484=98.1% ann_sign_avg=0.14 dyn_pos=57.2%
+    B35_SO2 | air2_SP: 6152/21960=28.0% ann_sign_avg=1.00 dyn_pos=28.0% ; HEATER2_output_T_SP: 17543/17640=99.5% ann_sign_avg=0.13 dyn_pos=57.1%
+  [ANN Gain Teacher] target min: B35_H2S=0.00355084, B35_SO2=-0.000178075 | max: B35_H2S=0.0253931, B35_SO2=0.0133877 | <=1e-6: 0.86%
+  [Valid] MSE Loss: 0.745731
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.745731)
+
+Epoch 19/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 19/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.7405, SS_w=0.00000, Gain_w=0.41254, KCI_n=6419/8136]
+Epoch 19/1000:  10%|█         | 1/10 [00:09<01:24,  9.34s/it, MSE=0.7405, SS_w=0.00000, Gain_w=0.41254, KCI_n=6419/8136]
+Epoch 19/1000:  10%|█         | 1/10 [00:16<01:24,  9.34s/it, MSE=0.8090, SS_w=0.00000, Gain_w=0.28481, KCI_n=12620/16236]
+Epoch 19/1000:  20%|██        | 2/10 [00:16<01:05,  8.19s/it, MSE=0.8090, SS_w=0.00000, Gain_w=0.28481, KCI_n=12620/16236]
+Epoch 19/1000:  20%|██        | 2/10 [00:24<01:05,  8.19s/it, MSE=0.7348, SS_w=0.00000, Gain_w=0.50616, KCI_n=18789/23976]
+Epoch 19/1000:  30%|███       | 3/10 [00:24<00:54,  7.79s/it, MSE=0.7348, SS_w=0.00000, Gain_w=0.50616, KCI_n=18789/23976]
+Epoch 19/1000:  30%|███       | 3/10 [00:31<00:54,  7.79s/it, MSE=0.7369, SS_w=0.00000, Gain_w=0.34299, KCI_n=25067/31752]
+Epoch 19/1000:  40%|████      | 4/10 [00:31<00:45,  7.59s/it, MSE=0.7369, SS_w=0.00000, Gain_w=0.34299, KCI_n=25067/31752]
+Epoch 19/1000:  40%|████      | 4/10 [00:38<00:45,  7.59s/it, MSE=0.7200, SS_w=0.00000, Gain_w=0.16771, KCI_n=31425/39816]
+Epoch 19/1000:  50%|█████     | 5/10 [00:38<00:37,  7.52s/it, MSE=0.7200, SS_w=0.00000, Gain_w=0.16771, KCI_n=31425/39816]
+Epoch 19/1000:  50%|█████     | 5/10 [00:45<00:37,  7.52s/it, MSE=0.7684, SS_w=0.00000, Gain_w=0.25626, KCI_n=37798/47844]
+Epoch 19/1000:  60%|██████    | 6/10 [00:45<00:29,  7.42s/it, MSE=0.7684, SS_w=0.00000, Gain_w=0.25626, KCI_n=37798/47844]
+Epoch 19/1000:  60%|██████    | 6/10 [00:53<00:29,  7.42s/it, MSE=0.7231, SS_w=0.00000, Gain_w=0.20390, KCI_n=44284/55908]
+Epoch 19/1000:  70%|███████   | 7/10 [00:53<00:22,  7.38s/it, MSE=0.7231, SS_w=0.00000, Gain_w=0.20390, KCI_n=44284/55908]
+Epoch 19/1000:  70%|███████   | 7/10 [01:00<00:22,  7.38s/it, MSE=0.6427, SS_w=0.00000, Gain_w=0.07591, KCI_n=50678/63936]
+Epoch 19/1000:  80%|████████  | 8/10 [01:00<00:14,  7.41s/it, MSE=0.6427, SS_w=0.00000, Gain_w=0.07591, KCI_n=50678/63936]
+Epoch 19/1000:  80%|████████  | 8/10 [01:08<00:14,  7.41s/it, MSE=0.7002, SS_w=0.00000, Gain_w=0.06890, KCI_n=57328/72288]
+Epoch 19/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.37s/it, MSE=0.7002, SS_w=0.00000, Gain_w=0.06890, KCI_n=57328/72288]
+Epoch 19/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.37s/it, MSE=0.6896, SS_w=0.00000, Gain_w=0.00000, KCI_n=63335/79920]
+Epoch 19/1000: 100%|██████████| 10/10 [01:15<00:00,  7.35s/it, MSE=0.6896, SS_w=0.00000, Gain_w=0.00000, KCI_n=63335/79920]
+Epoch 19/1000: 100%|██████████| 10/10 [01:15<00:00,  7.54s/it, MSE=0.6896, SS_w=0.00000, Gain_w=0.00000, KCI_n=63335/79920]
+Epoch [19/1000] | Train Total L: 0.958437 | MSE: 0.726519 | SS: 3.587943 | Gain: 0.00004156 | KCI: 63335/79920 = 79.25%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 20004/20232=98.9% ann_sign_avg=-0.75 dyn_pos=11.8% ; HEATER2_output_T_SP: 19840/20160=98.4% ann_sign_avg=0.27 dyn_pos=63.5%
+    B35_SO2 | air2_SP: 5802/21816=26.6% ann_sign_avg=1.00 dyn_pos=26.6% ; HEATER2_output_T_SP: 17689/17712=99.9% ann_sign_avg=0.25 dyn_pos=62.6%
+  [ANN Gain Teacher] target min: B35_H2S=0.00392596, B35_SO2=-0.000159007 | max: B35_H2S=0.0235804, B35_SO2=0.0122189 | <=1e-6: 0.86%
+  [Valid] MSE Loss: 0.700156
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.700156)
+
+Epoch 20/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 20/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.6536, SS_w=0.00000, Gain_w=0.10223, KCI_n=6598/8136]
+Epoch 20/1000:  10%|█         | 1/10 [00:09<01:25,  9.51s/it, MSE=0.6536, SS_w=0.00000, Gain_w=0.10223, KCI_n=6598/8136]
+Epoch 20/1000:  10%|█         | 1/10 [00:17<01:25,  9.51s/it, MSE=0.7069, SS_w=0.00000, Gain_w=0.05550, KCI_n=12728/15840]
+Epoch 20/1000:  20%|██        | 2/10 [00:17<01:07,  8.44s/it, MSE=0.7069, SS_w=0.00000, Gain_w=0.05550, KCI_n=12728/15840]
+Epoch 20/1000:  20%|██        | 2/10 [00:24<01:07,  8.44s/it, MSE=0.7063, SS_w=0.00000, Gain_w=0.13412, KCI_n=19044/23904]
+Epoch 20/1000:  30%|███       | 3/10 [00:24<00:55,  7.94s/it, MSE=0.7063, SS_w=0.00000, Gain_w=0.13412, KCI_n=19044/23904]
+Epoch 20/1000:  30%|███       | 3/10 [00:31<00:55,  7.94s/it, MSE=0.6055, SS_w=0.00000, Gain_w=0.15691, KCI_n=25110/31788]
+Epoch 20/1000:  40%|████      | 4/10 [00:31<00:46,  7.75s/it, MSE=0.6055, SS_w=0.00000, Gain_w=0.15691, KCI_n=25110/31788]
+Epoch 20/1000:  40%|████      | 4/10 [00:39<00:46,  7.75s/it, MSE=0.7033, SS_w=0.00000, Gain_w=0.77515, KCI_n=31800/40140]
+Epoch 20/1000:  50%|█████     | 5/10 [00:39<00:37,  7.56s/it, MSE=0.7033, SS_w=0.00000, Gain_w=0.77515, KCI_n=31800/40140]
+Epoch 20/1000:  50%|█████     | 5/10 [00:46<00:37,  7.56s/it, MSE=0.7408, SS_w=0.00000, Gain_w=0.35198, KCI_n=37994/47988]
+Epoch 20/1000:  60%|██████    | 6/10 [00:46<00:29,  7.47s/it, MSE=0.7408, SS_w=0.00000, Gain_w=0.35198, KCI_n=37994/47988]
+Epoch 20/1000:  60%|██████    | 6/10 [00:53<00:29,  7.47s/it, MSE=0.6095, SS_w=0.00000, Gain_w=0.12665, KCI_n=44546/56088]
+Epoch 20/1000:  70%|███████   | 7/10 [00:53<00:22,  7.44s/it, MSE=0.6095, SS_w=0.00000, Gain_w=0.12665, KCI_n=44546/56088]
+Epoch 20/1000:  70%|███████   | 7/10 [01:01<00:22,  7.44s/it, MSE=0.7774, SS_w=0.00000, Gain_w=0.09250, KCI_n=50819/64008]
+Epoch 20/1000:  80%|████████  | 8/10 [01:01<00:14,  7.42s/it, MSE=0.7774, SS_w=0.00000, Gain_w=0.09250, KCI_n=50819/64008]
+Epoch 20/1000:  80%|████████  | 8/10 [01:08<00:14,  7.42s/it, MSE=0.6706, SS_w=0.00000, Gain_w=0.48873, KCI_n=57183/71964]
+Epoch 20/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.38s/it, MSE=0.6706, SS_w=0.00000, Gain_w=0.48873, KCI_n=57183/71964]
+Epoch 20/1000:  90%|█████████ | 9/10 [01:16<00:07,  7.38s/it, MSE=0.6474, SS_w=0.00000, Gain_w=0.77292, KCI_n=63115/79740]
+Epoch 20/1000: 100%|██████████| 10/10 [01:16<00:00,  7.40s/it, MSE=0.6474, SS_w=0.00000, Gain_w=0.77292, KCI_n=63115/79740]
+Epoch 20/1000: 100%|██████████| 10/10 [01:16<00:00,  7.61s/it, MSE=0.6474, SS_w=0.00000, Gain_w=0.77292, KCI_n=63115/79740]
+Epoch [20/1000] | Train Total L: 0.987811 | MSE: 0.682141 | SS: 3.081528 | Gain: 0.00005374 | KCI: 63115/79740 = 79.15%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19908/19980=99.6% ann_sign_avg=-0.71 dyn_pos=14.5% ; HEATER2_output_T_SP: 19782/20304=97.4% ann_sign_avg=0.13 dyn_pos=56.4%
+    B35_SO2 | air2_SP: 6296/22248=28.3% ann_sign_avg=1.00 dyn_pos=28.3% ; HEATER2_output_T_SP: 17129/17208=99.5% ann_sign_avg=0.16 dyn_pos=58.6%
+  [ANN Gain Teacher] target min: B35_H2S=0.00335368, B35_SO2=-7.82916e-05 | max: B35_H2S=0.0232131, B35_SO2=0.0109123 | <=1e-6: 0.23%
+  [Valid] MSE Loss: 0.576988
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.576988)
+
+Epoch 21/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 21/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.6869, SS_w=0.00000, Gain_w=0.15301, KCI_n=6108/7776]
+Epoch 21/1000:  10%|█         | 1/10 [00:09<01:23,  9.32s/it, MSE=0.6869, SS_w=0.00000, Gain_w=0.15301, KCI_n=6108/7776]
+Epoch 21/1000:  10%|█         | 1/10 [00:16<01:23,  9.32s/it, MSE=0.5936, SS_w=0.00000, Gain_w=0.30828, KCI_n=12389/15588]
+Epoch 21/1000:  20%|██        | 2/10 [00:16<01:05,  8.21s/it, MSE=0.5936, SS_w=0.00000, Gain_w=0.30828, KCI_n=12389/15588]
+Epoch 21/1000:  20%|██        | 2/10 [00:24<01:05,  8.21s/it, MSE=0.5978, SS_w=0.00000, Gain_w=1.73689, KCI_n=18727/23400]
+Epoch 21/1000:  30%|███       | 3/10 [00:24<00:54,  7.81s/it, MSE=0.5978, SS_w=0.00000, Gain_w=1.73689, KCI_n=18727/23400]
+Epoch 21/1000:  30%|███       | 3/10 [00:31<00:54,  7.81s/it, MSE=0.5759, SS_w=0.00000, Gain_w=1.60128, KCI_n=24874/31500]
+Epoch 21/1000:  40%|████      | 4/10 [00:31<00:45,  7.62s/it, MSE=0.5759, SS_w=0.00000, Gain_w=1.60128, KCI_n=24874/31500]
+Epoch 21/1000:  40%|████      | 4/10 [00:38<00:45,  7.62s/it, MSE=0.6897, SS_w=0.00000, Gain_w=1.70428, KCI_n=31394/39852]
+Epoch 21/1000:  50%|█████     | 5/10 [00:38<00:37,  7.54s/it, MSE=0.6897, SS_w=0.00000, Gain_w=1.70428, KCI_n=31394/39852]
+Epoch 21/1000:  50%|█████     | 5/10 [00:46<00:37,  7.54s/it, MSE=0.6395, SS_w=0.00000, Gain_w=1.73301, KCI_n=38097/47808]
+Epoch 21/1000:  60%|██████    | 6/10 [00:46<00:29,  7.43s/it, MSE=0.6395, SS_w=0.00000, Gain_w=1.73301, KCI_n=38097/47808]
+Epoch 21/1000:  60%|██████    | 6/10 [00:53<00:29,  7.43s/it, MSE=0.6354, SS_w=0.00000, Gain_w=0.25318, KCI_n=44605/56016]
+Epoch 21/1000:  70%|███████   | 7/10 [00:53<00:22,  7.38s/it, MSE=0.6354, SS_w=0.00000, Gain_w=0.25318, KCI_n=44605/56016]
+Epoch 21/1000:  70%|███████   | 7/10 [01:00<00:22,  7.38s/it, MSE=0.5845, SS_w=0.00000, Gain_w=0.37370, KCI_n=50899/64008]
+Epoch 21/1000:  80%|████████  | 8/10 [01:00<00:14,  7.36s/it, MSE=0.5845, SS_w=0.00000, Gain_w=0.37370, KCI_n=50899/64008]
+Epoch 21/1000:  80%|████████  | 8/10 [01:07<00:14,  7.36s/it, MSE=0.5508, SS_w=0.00000, Gain_w=0.71619, KCI_n=57185/71928]
+Epoch 21/1000:  90%|█████████ | 9/10 [01:07<00:07,  7.34s/it, MSE=0.5508, SS_w=0.00000, Gain_w=0.71619, KCI_n=57185/71928]
+Epoch 21/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.34s/it, MSE=0.5924, SS_w=0.00000, Gain_w=1.19771, KCI_n=63018/79884]
+Epoch 21/1000: 100%|██████████| 10/10 [01:15<00:00,  7.32s/it, MSE=0.5924, SS_w=0.00000, Gain_w=1.19771, KCI_n=63018/79884]
+Epoch 21/1000: 100%|██████████| 10/10 [01:15<00:00,  7.53s/it, MSE=0.5924, SS_w=0.00000, Gain_w=1.19771, KCI_n=63018/79884]
+Epoch [21/1000] | Train Total L: 1.592395 | MSE: 0.614642 | SS: 3.131952 | Gain: 0.00005672 | KCI: 63018/79884 = 78.89%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19251/20088=95.8% ann_sign_avg=-0.75 dyn_pos=15.1% ; HEATER2_output_T_SP: 19455/20412=95.3% ann_sign_avg=0.22 dyn_pos=59.6%
+    B35_SO2 | air2_SP: 7262/21924=33.1% ann_sign_avg=1.00 dyn_pos=33.1% ; HEATER2_output_T_SP: 17050/17460=97.7% ann_sign_avg=0.20 dyn_pos=58.3%
+  [ANN Gain Teacher] target min: B35_H2S=0.00332788, B35_SO2=-0.000123783 | max: B35_H2S=0.02333, B35_SO2=0.0111683 | <=1e-6: 0.47%
+  [Valid] MSE Loss: 0.556402
+  [Save] New Best Model saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth (Val Loss: 0.556402)
+
+Epoch 22/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 22/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.5387, SS_w=0.00000, Gain_w=0.88147, KCI_n=6537/8280]
+Epoch 22/1000:  10%|█         | 1/10 [00:09<01:25,  9.50s/it, MSE=0.5387, SS_w=0.00000, Gain_w=0.88147, KCI_n=6537/8280]
+Epoch 22/1000:  10%|█         | 1/10 [00:16<01:25,  9.50s/it, MSE=0.5863, SS_w=0.00000, Gain_w=0.55367, KCI_n=12835/16020]
+Epoch 22/1000:  20%|██        | 2/10 [00:16<01:05,  8.18s/it, MSE=0.5863, SS_w=0.00000, Gain_w=0.55367, KCI_n=12835/16020]
+Epoch 22/1000:  20%|██        | 2/10 [00:24<01:05,  8.18s/it, MSE=0.5748, SS_w=0.00000, Gain_w=0.31021, KCI_n=18936/23472]
+Epoch 22/1000:  30%|███       | 3/10 [00:24<00:55,  7.87s/it, MSE=0.5748, SS_w=0.00000, Gain_w=0.31021, KCI_n=18936/23472]
+Epoch 22/1000:  30%|███       | 3/10 [00:31<00:55,  7.87s/it, MSE=0.5578, SS_w=0.00000, Gain_w=0.62387, KCI_n=24971/31104]
+Epoch 22/1000:  40%|████      | 4/10 [00:31<00:45,  7.65s/it, MSE=0.5578, SS_w=0.00000, Gain_w=0.62387, KCI_n=24971/31104]
+Epoch 22/1000:  40%|████      | 4/10 [00:38<00:45,  7.65s/it, MSE=0.5770, SS_w=0.00000, Gain_w=0.34090, KCI_n=31733/39420]
+Epoch 22/1000:  50%|█████     | 5/10 [00:38<00:37,  7.54s/it, MSE=0.5770, SS_w=0.00000, Gain_w=0.34090, KCI_n=31733/39420]
+Epoch 22/1000:  50%|█████     | 5/10 [00:46<00:37,  7.54s/it, MSE=0.5770, SS_w=0.00000, Gain_w=0.47424, KCI_n=38159/47340]
+Epoch 22/1000:  60%|██████    | 6/10 [00:46<00:29,  7.48s/it, MSE=0.5770, SS_w=0.00000, Gain_w=0.47424, KCI_n=38159/47340]
+Epoch 22/1000:  60%|██████    | 6/10 [00:53<00:29,  7.48s/it, MSE=0.5743, SS_w=0.00000, Gain_w=0.41742, KCI_n=44327/55296]
+Epoch 22/1000:  70%|███████   | 7/10 [00:53<00:22,  7.47s/it, MSE=0.5743, SS_w=0.00000, Gain_w=0.41742, KCI_n=44327/55296]
+Epoch 22/1000:  70%|███████   | 7/10 [01:00<00:22,  7.47s/it, MSE=0.5685, SS_w=0.00000, Gain_w=0.80833, KCI_n=50627/63252]
+Epoch 22/1000:  80%|████████  | 8/10 [01:00<00:14,  7.39s/it, MSE=0.5685, SS_w=0.00000, Gain_w=0.80833, KCI_n=50627/63252]
+Epoch 22/1000:  80%|████████  | 8/10 [01:08<00:14,  7.39s/it, MSE=0.6769, SS_w=0.00000, Gain_w=0.44593, KCI_n=56695/71136]
+Epoch 22/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.37s/it, MSE=0.6769, SS_w=0.00000, Gain_w=0.44593, KCI_n=56695/71136]
+Epoch 22/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.37s/it, MSE=0.5721, SS_w=0.00000, Gain_w=0.70529, KCI_n=63261/79380]
+Epoch 22/1000: 100%|██████████| 10/10 [01:15<00:00,  7.38s/it, MSE=0.5721, SS_w=0.00000, Gain_w=0.70529, KCI_n=63261/79380]
+Epoch 22/1000: 100%|██████████| 10/10 [01:15<00:00,  7.57s/it, MSE=0.5721, SS_w=0.00000, Gain_w=0.70529, KCI_n=63261/79380]
+Epoch [22/1000] | Train Total L: 1.136459 | MSE: 0.580326 | SS: 3.858613 | Gain: 0.00006104 | KCI: 63261/79380 = 79.69%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19806/19980=99.1% ann_sign_avg=-0.75 dyn_pos=11.8% ; HEATER2_output_T_SP: 19645/20052=98.0% ann_sign_avg=0.17 dyn_pos=58.8%
+    B35_SO2 | air2_SP: 6476/21888=29.6% ann_sign_avg=1.00 dyn_pos=29.6% ; HEATER2_output_T_SP: 17334/17460=99.3% ann_sign_avg=0.17 dyn_pos=58.4%
+  [ANN Gain Teacher] target min: B35_H2S=0.0036036, B35_SO2=-0.000128036 | max: B35_H2S=0.0241411, B35_SO2=0.0125145 | <=1e-6: 0.86%
+  [Valid] MSE Loss: 0.573715
+  [Info] No improvement for 1 epochs.
+
+Epoch 23/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 23/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.5406, SS_w=0.00000, Gain_w=0.06035, KCI_n=5864/7740]
+Epoch 23/1000:  10%|█         | 1/10 [00:09<01:23,  9.33s/it, MSE=0.5406, SS_w=0.00000, Gain_w=0.06035, KCI_n=5864/7740]
+Epoch 23/1000:  10%|█         | 1/10 [00:16<01:23,  9.33s/it, MSE=0.6032, SS_w=0.00000, Gain_w=0.46322, KCI_n=12751/16128]
+Epoch 23/1000:  20%|██        | 2/10 [00:16<01:05,  8.21s/it, MSE=0.6032, SS_w=0.00000, Gain_w=0.46322, KCI_n=12751/16128]
+Epoch 23/1000:  20%|██        | 2/10 [00:24<01:05,  8.21s/it, MSE=0.5323, SS_w=0.00000, Gain_w=0.45287, KCI_n=19396/24336]
+Epoch 23/1000:  30%|███       | 3/10 [00:24<00:54,  7.81s/it, MSE=0.5323, SS_w=0.00000, Gain_w=0.45287, KCI_n=19396/24336]
+Epoch 23/1000:  30%|███       | 3/10 [00:31<00:54,  7.81s/it, MSE=0.6115, SS_w=0.00000, Gain_w=0.63802, KCI_n=25095/31860]
+Epoch 23/1000:  40%|████      | 4/10 [00:31<00:45,  7.61s/it, MSE=0.6115, SS_w=0.00000, Gain_w=0.63802, KCI_n=25095/31860]
+Epoch 23/1000:  40%|████      | 4/10 [00:38<00:45,  7.61s/it, MSE=0.6233, SS_w=0.00000, Gain_w=0.36261, KCI_n=31187/39456]
+Epoch 23/1000:  50%|█████     | 5/10 [00:38<00:37,  7.53s/it, MSE=0.6233, SS_w=0.00000, Gain_w=0.36261, KCI_n=31187/39456]
+Epoch 23/1000:  50%|█████     | 5/10 [00:46<00:37,  7.53s/it, MSE=0.6179, SS_w=0.00000, Gain_w=0.48739, KCI_n=37668/47556]
+Epoch 23/1000:  60%|██████    | 6/10 [00:46<00:29,  7.45s/it, MSE=0.6179, SS_w=0.00000, Gain_w=0.48739, KCI_n=37668/47556]
+Epoch 23/1000:  60%|██████    | 6/10 [00:53<00:29,  7.45s/it, MSE=0.5819, SS_w=0.00000, Gain_w=0.55883, KCI_n=43826/55188]
+Epoch 23/1000:  70%|███████   | 7/10 [00:53<00:22,  7.42s/it, MSE=0.5819, SS_w=0.00000, Gain_w=0.55883, KCI_n=43826/55188]
+Epoch 23/1000:  70%|███████   | 7/10 [01:00<00:22,  7.42s/it, MSE=0.6096, SS_w=0.00000, Gain_w=0.62072, KCI_n=50038/63000]
+Epoch 23/1000:  80%|████████  | 8/10 [01:00<00:14,  7.44s/it, MSE=0.6096, SS_w=0.00000, Gain_w=0.62072, KCI_n=50038/63000]
+Epoch 23/1000:  80%|████████  | 8/10 [01:08<00:14,  7.44s/it, MSE=0.5791, SS_w=0.00000, Gain_w=0.58359, KCI_n=55958/70776]
+Epoch 23/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.42s/it, MSE=0.5791, SS_w=0.00000, Gain_w=0.58359, KCI_n=55958/70776]
+Epoch 23/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.42s/it, MSE=0.5463, SS_w=0.00000, Gain_w=0.19557, KCI_n=62111/78696]
+Epoch 23/1000: 100%|██████████| 10/10 [01:15<00:00,  7.39s/it, MSE=0.5463, SS_w=0.00000, Gain_w=0.19557, KCI_n=62111/78696]
+Epoch 23/1000: 100%|██████████| 10/10 [01:15<00:00,  7.57s/it, MSE=0.5463, SS_w=0.00000, Gain_w=0.19557, KCI_n=62111/78696]
+Epoch [23/1000] | Train Total L: 1.026890 | MSE: 0.584571 | SS: 3.463437 | Gain: 0.00005439 | KCI: 62111/78696 = 78.93%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 20306/20664=98.3% ann_sign_avg=-0.75 dyn_pos=12.0% ; HEATER2_output_T_SP: 18843/19512=96.6% ann_sign_avg=0.24 dyn_pos=59.5%
+    B35_SO2 | air2_SP: 6189/21672=28.6% ann_sign_avg=1.00 dyn_pos=28.6% ; HEATER2_output_T_SP: 16773/16848=99.6% ann_sign_avg=0.23 dyn_pos=61.5%
+  [ANN Gain Teacher] target min: B35_H2S=0.00358217, B35_SO2=-0.000132741 | max: B35_H2S=0.0241497, B35_SO2=0.0125021 | <=1e-6: 1.02%
+  [Valid] MSE Loss: 0.601694
+  [Info] No improvement for 2 epochs.
+
+Epoch 24/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 24/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.5109, SS_w=0.00000, Gain_w=0.22538, KCI_n=6157/7740]
+Epoch 24/1000:  10%|█         | 1/10 [00:09<01:26,  9.56s/it, MSE=0.5109, SS_w=0.00000, Gain_w=0.22538, KCI_n=6157/7740]
+Epoch 24/1000:  10%|█         | 1/10 [00:16<01:26,  9.56s/it, MSE=0.5872, SS_w=0.00000, Gain_w=0.26088, KCI_n=12895/16056]
+Epoch 24/1000:  20%|██        | 2/10 [00:16<01:05,  8.25s/it, MSE=0.5872, SS_w=0.00000, Gain_w=0.26088, KCI_n=12895/16056]
+Epoch 24/1000:  20%|██        | 2/10 [00:24<01:05,  8.25s/it, MSE=0.6458, SS_w=0.00000, Gain_w=0.23009, KCI_n=19572/24084]
+Epoch 24/1000:  30%|███       | 3/10 [00:24<00:54,  7.84s/it, MSE=0.6458, SS_w=0.00000, Gain_w=0.23009, KCI_n=19572/24084]
+Epoch 24/1000:  30%|███       | 3/10 [00:31<00:54,  7.84s/it, MSE=0.5763, SS_w=0.00000, Gain_w=0.10096, KCI_n=26064/32148]
+Epoch 24/1000:  40%|████      | 4/10 [00:31<00:46,  7.68s/it, MSE=0.5763, SS_w=0.00000, Gain_w=0.10096, KCI_n=26064/32148]
+Epoch 24/1000:  40%|████      | 4/10 [00:38<00:46,  7.68s/it, MSE=0.5586, SS_w=0.00000, Gain_w=0.51972, KCI_n=32387/39996]
+Epoch 24/1000:  50%|█████     | 5/10 [00:38<00:37,  7.52s/it, MSE=0.5586, SS_w=0.00000, Gain_w=0.51972, KCI_n=32387/39996]
+Epoch 24/1000:  50%|█████     | 5/10 [00:46<00:37,  7.52s/it, MSE=0.5280, SS_w=0.00000, Gain_w=0.39448, KCI_n=38957/47916]
+Epoch 24/1000:  60%|██████    | 6/10 [00:46<00:29,  7.45s/it, MSE=0.5280, SS_w=0.00000, Gain_w=0.39448, KCI_n=38957/47916]
+Epoch 24/1000:  60%|██████    | 6/10 [00:53<00:29,  7.45s/it, MSE=0.6150, SS_w=0.00000, Gain_w=0.15675, KCI_n=45726/56340]
+Epoch 24/1000:  70%|███████   | 7/10 [00:53<00:22,  7.44s/it, MSE=0.6150, SS_w=0.00000, Gain_w=0.15675, KCI_n=45726/56340]
+Epoch 24/1000:  70%|███████   | 7/10 [01:00<00:22,  7.44s/it, MSE=0.5619, SS_w=0.00000, Gain_w=0.19840, KCI_n=51805/63900]
+Epoch 24/1000:  80%|████████  | 8/10 [01:00<00:14,  7.38s/it, MSE=0.5619, SS_w=0.00000, Gain_w=0.19840, KCI_n=51805/63900]
+Epoch 24/1000:  80%|████████  | 8/10 [01:08<00:14,  7.38s/it, MSE=0.6319, SS_w=0.00000, Gain_w=0.21201, KCI_n=58393/72180]
+Epoch 24/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.35s/it, MSE=0.6319, SS_w=0.00000, Gain_w=0.21201, KCI_n=58393/72180]
+Epoch 24/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.35s/it, MSE=0.5279, SS_w=0.00000, Gain_w=0.51783, KCI_n=65334/80388]
+Epoch 24/1000: 100%|██████████| 10/10 [01:15<00:00,  7.38s/it, MSE=0.5279, SS_w=0.00000, Gain_w=0.51783, KCI_n=65334/80388]
+Epoch 24/1000: 100%|██████████| 10/10 [01:15<00:00,  7.57s/it, MSE=0.5279, SS_w=0.00000, Gain_w=0.51783, KCI_n=65334/80388]
+Epoch [24/1000] | Train Total L: 0.855989 | MSE: 0.574340 | SS: 3.120729 | Gain: 0.00005003 | KCI: 65334/80388 = 81.27%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19871/20052=99.1% ann_sign_avg=-0.73 dyn_pos=14.0% ; HEATER2_output_T_SP: 20454/20700=98.8% ann_sign_avg=0.18 dyn_pos=58.6%
+    B35_SO2 | air2_SP: 7425/21960=33.8% ann_sign_avg=1.00 dyn_pos=33.8% ; HEATER2_output_T_SP: 17584/17676=99.5% ann_sign_avg=0.16 dyn_pos=58.2%
+  [ANN Gain Teacher] target min: B35_H2S=0.00325144, B35_SO2=-0.000124072 | max: B35_H2S=0.0233138, B35_SO2=0.0118971 | <=1e-6: 0.70%
+  [Valid] MSE Loss: 0.617178
+  [Info] No improvement for 3 epochs.
+
+Epoch 25/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 25/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.5730, SS_w=0.00000, Gain_w=0.19274, KCI_n=6182/7704]
+Epoch 25/1000:  10%|█         | 1/10 [00:09<01:24,  9.37s/it, MSE=0.5730, SS_w=0.00000, Gain_w=0.19274, KCI_n=6182/7704]
+Epoch 25/1000:  10%|█         | 1/10 [00:16<01:24,  9.37s/it, MSE=0.5644, SS_w=0.00000, Gain_w=1.27081, KCI_n=12886/15912]
+Epoch 25/1000:  20%|██        | 2/10 [00:16<01:06,  8.28s/it, MSE=0.5644, SS_w=0.00000, Gain_w=1.27081, KCI_n=12886/15912]
+Epoch 25/1000:  20%|██        | 2/10 [00:24<01:06,  8.28s/it, MSE=0.5117, SS_w=0.00000, Gain_w=0.44083, KCI_n=19374/23976]
+Epoch 25/1000:  30%|███       | 3/10 [00:24<00:54,  7.85s/it, MSE=0.5117, SS_w=0.00000, Gain_w=0.44083, KCI_n=19374/23976]
+Epoch 25/1000:  30%|███       | 3/10 [00:31<00:54,  7.85s/it, MSE=0.5879, SS_w=0.00000, Gain_w=0.45850, KCI_n=25655/31932]
+Epoch 25/1000:  40%|████      | 4/10 [00:31<00:45,  7.64s/it, MSE=0.5879, SS_w=0.00000, Gain_w=0.45850, KCI_n=25655/31932]
+Epoch 25/1000:  40%|████      | 4/10 [00:39<00:45,  7.64s/it, MSE=0.5643, SS_w=0.00000, Gain_w=0.77734, KCI_n=32189/39816]
+Epoch 25/1000:  50%|█████     | 5/10 [00:39<00:37,  7.58s/it, MSE=0.5643, SS_w=0.00000, Gain_w=0.77734, KCI_n=32189/39816]
+Epoch 25/1000:  50%|█████     | 5/10 [00:46<00:37,  7.58s/it, MSE=0.6297, SS_w=0.00000, Gain_w=0.43693, KCI_n=38114/47520]
+Epoch 25/1000:  60%|██████    | 6/10 [00:46<00:29,  7.49s/it, MSE=0.6297, SS_w=0.00000, Gain_w=0.43693, KCI_n=38114/47520]
+Epoch 25/1000:  60%|██████    | 6/10 [00:53<00:29,  7.49s/it, MSE=0.5484, SS_w=0.00000, Gain_w=0.23954, KCI_n=44258/55152]
+Epoch 25/1000:  70%|███████   | 7/10 [00:53<00:22,  7.44s/it, MSE=0.5484, SS_w=0.00000, Gain_w=0.23954, KCI_n=44258/55152]
+Epoch 25/1000:  70%|███████   | 7/10 [01:01<00:22,  7.44s/it, MSE=0.5702, SS_w=0.00000, Gain_w=0.10085, KCI_n=51025/63576]
+Epoch 25/1000:  80%|████████  | 8/10 [01:01<00:14,  7.44s/it, MSE=0.5702, SS_w=0.00000, Gain_w=0.10085, KCI_n=51025/63576]
+Epoch 25/1000:  80%|████████  | 8/10 [01:08<00:14,  7.44s/it, MSE=0.6208, SS_w=0.00000, Gain_w=0.26104, KCI_n=57625/71676]
+Epoch 25/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.42s/it, MSE=0.6208, SS_w=0.00000, Gain_w=0.26104, KCI_n=57625/71676]
+Epoch 25/1000:  90%|█████████ | 9/10 [01:15<00:07,  7.42s/it, MSE=0.5770, SS_w=0.00000, Gain_w=0.15621, KCI_n=63855/79560]
+Epoch 25/1000: 100%|██████████| 10/10 [01:15<00:00,  7.38s/it, MSE=0.5770, SS_w=0.00000, Gain_w=0.15621, KCI_n=63855/79560]
+Epoch 25/1000: 100%|██████████| 10/10 [01:15<00:00,  7.58s/it, MSE=0.5770, SS_w=0.00000, Gain_w=0.15621, KCI_n=63855/79560]
+Epoch [25/1000] | Train Total L: 1.008213 | MSE: 0.574735 | SS: 3.154637 | Gain: 0.00004973 | KCI: 63855/79560 = 80.26%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 20078/20340=98.7% ann_sign_avg=-0.77 dyn_pos=11.3% ; HEATER2_output_T_SP: 19281/20124=95.8% ann_sign_avg=0.21 dyn_pos=57.3%
+    B35_SO2 | air2_SP: 7596/22176=34.3% ann_sign_avg=1.00 dyn_pos=34.3% ; HEATER2_output_T_SP: 16900/16920=99.9% ann_sign_avg=0.23 dyn_pos=61.6%
+  [ANN Gain Teacher] target min: B35_H2S=0.00338908, B35_SO2=-9.98985e-05 | max: B35_H2S=0.0246367, B35_SO2=0.0121825 | <=1e-6: 0.62%
+  [Valid] MSE Loss: 0.621079
+  [Info] No improvement for 4 epochs.
+
+Epoch 26/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 26/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.5292, SS_w=0.00000, Gain_w=0.15102, KCI_n=6433/7776]
+Epoch 26/1000:  10%|█         | 1/10 [00:09<01:25,  9.51s/it, MSE=0.5292, SS_w=0.00000, Gain_w=0.15102, KCI_n=6433/7776]
+Epoch 26/1000:  10%|█         | 1/10 [00:16<01:25,  9.51s/it, MSE=0.6158, SS_w=0.00000, Gain_w=0.32770, KCI_n=13120/15804]
+Epoch 26/1000:  20%|██        | 2/10 [00:16<01:05,  8.21s/it, MSE=0.6158, SS_w=0.00000, Gain_w=0.32770, KCI_n=13120/15804]
+Epoch 26/1000:  20%|██        | 2/10 [00:24<01:05,  8.21s/it, MSE=0.5493, SS_w=0.00000, Gain_w=0.68876, KCI_n=20061/23976]
+Epoch 26/1000:  30%|███       | 3/10 [00:24<00:55,  7.89s/it, MSE=0.5493, SS_w=0.00000, Gain_w=0.68876, KCI_n=20061/23976]
+Epoch 26/1000:  30%|███       | 3/10 [00:31<00:55,  7.89s/it, MSE=0.5812, SS_w=0.00000, Gain_w=0.25311, KCI_n=26683/31968]
+Epoch 26/1000:  40%|████      | 4/10 [00:31<00:46,  7.68s/it, MSE=0.5812, SS_w=0.00000, Gain_w=0.25311, KCI_n=26683/31968]
+Epoch 26/1000:  40%|████      | 4/10 [00:38<00:46,  7.68s/it, MSE=0.5782, SS_w=0.00000, Gain_w=0.00000, KCI_n=33143/39816]
+Epoch 26/1000:  50%|█████     | 5/10 [00:38<00:37,  7.54s/it, MSE=0.5782, SS_w=0.00000, Gain_w=0.00000, KCI_n=33143/39816]
+Epoch 26/1000:  50%|█████     | 5/10 [00:46<00:37,  7.54s/it, MSE=0.6263, SS_w=0.00000, Gain_w=0.60889, KCI_n=39674/47736]
+Epoch 26/1000:  60%|██████    | 6/10 [00:46<00:29,  7.46s/it, MSE=0.6263, SS_w=0.00000, Gain_w=0.60889, KCI_n=39674/47736]
+Epoch 26/1000:  60%|██████    | 6/10 [00:53<00:29,  7.46s/it, MSE=0.5874, SS_w=0.00000, Gain_w=0.54725, KCI_n=46214/55764]
+Epoch 26/1000:  70%|███████   | 7/10 [00:53<00:22,  7.47s/it, MSE=0.5874, SS_w=0.00000, Gain_w=0.54725, KCI_n=46214/55764]
+Epoch 26/1000:  70%|███████   | 7/10 [01:01<00:22,  7.47s/it, MSE=0.4675, SS_w=0.00000, Gain_w=0.23502, KCI_n=52925/63900]
+Epoch 26/1000:  80%|████████  | 8/10 [01:01<00:14,  7.45s/it, MSE=0.4675, SS_w=0.00000, Gain_w=0.23502, KCI_n=52925/63900]
+Epoch 26/1000:  80%|████████  | 8/10 [01:08<00:14,  7.45s/it, MSE=0.5211, SS_w=0.00000, Gain_w=0.28457, KCI_n=59523/72072]
+Epoch 26/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.45s/it, MSE=0.5211, SS_w=0.00000, Gain_w=0.28457, KCI_n=59523/72072]
+Epoch 26/1000:  90%|█████████ | 9/10 [01:16<00:07,  7.45s/it, MSE=0.4990, SS_w=0.00000, Gain_w=0.27846, KCI_n=66375/80208]
+Epoch 26/1000: 100%|██████████| 10/10 [01:16<00:00,  7.47s/it, MSE=0.4990, SS_w=0.00000, Gain_w=0.27846, KCI_n=66375/80208]
+Epoch 26/1000: 100%|██████████| 10/10 [01:16<00:00,  7.62s/it, MSE=0.4990, SS_w=0.00000, Gain_w=0.27846, KCI_n=66375/80208]
+Epoch [26/1000] | Train Total L: 0.892976 | MSE: 0.555498 | SS: 3.320976 | Gain: 0.00004701 | KCI: 66375/80208 = 82.75%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19678/20088=98.0% ann_sign_avg=-0.76 dyn_pos=12.7% ; HEATER2_output_T_SP: 20084/20376=98.6% ann_sign_avg=0.18 dyn_pos=59.8%
+    B35_SO2 | air2_SP: 8755/21852=40.1% ann_sign_avg=1.00 dyn_pos=40.1% ; HEATER2_output_T_SP: 17858/17892=99.8% ann_sign_avg=0.14 dyn_pos=57.1%
+  [ANN Gain Teacher] target min: B35_H2S=0.00357166, B35_SO2=-0.000127119 | max: B35_H2S=0.0225596, B35_SO2=0.0112953 | <=1e-6: 0.70%
+  [Valid] MSE Loss: 0.607616
+  [Info] No improvement for 5 epochs.
+
+Epoch 27/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 27/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.6084, SS_w=0.00000, Gain_w=0.95034, KCI_n=6662/8064]
+Epoch 27/1000:  10%|█         | 1/10 [00:09<01:25,  9.46s/it, MSE=0.6084, SS_w=0.00000, Gain_w=0.95034, KCI_n=6662/8064]
+Epoch 27/1000:  10%|█         | 1/10 [00:17<01:25,  9.46s/it, MSE=0.5526, SS_w=0.00000, Gain_w=1.93368, KCI_n=12919/15660]
+Epoch 27/1000:  20%|██        | 2/10 [00:17<01:06,  8.36s/it, MSE=0.5526, SS_w=0.00000, Gain_w=1.93368, KCI_n=12919/15660]
+Epoch 27/1000:  20%|██        | 2/10 [00:24<01:06,  8.36s/it, MSE=0.5615, SS_w=0.00000, Gain_w=0.62771, KCI_n=19329/23400]
+Epoch 27/1000:  30%|███       | 3/10 [00:24<00:55,  7.93s/it, MSE=0.5615, SS_w=0.00000, Gain_w=0.62771, KCI_n=19329/23400]
+Epoch 27/1000:  30%|███       | 3/10 [00:31<00:55,  7.93s/it, MSE=0.5362, SS_w=0.00000, Gain_w=1.44763, KCI_n=25808/31104]
+Epoch 27/1000:  40%|████      | 4/10 [00:31<00:46,  7.69s/it, MSE=0.5362, SS_w=0.00000, Gain_w=1.44763, KCI_n=25808/31104]
+Epoch 27/1000:  40%|████      | 4/10 [00:39<00:46,  7.69s/it, MSE=0.5046, SS_w=0.00000, Gain_w=1.14676, KCI_n=32389/39168]
+Epoch 27/1000:  50%|█████     | 5/10 [00:39<00:38,  7.62s/it, MSE=0.5046, SS_w=0.00000, Gain_w=1.14676, KCI_n=32389/39168]
+Epoch 27/1000:  50%|█████     | 5/10 [00:46<00:38,  7.62s/it, MSE=0.5174, SS_w=0.00000, Gain_w=1.97381, KCI_n=38896/46944]
+Epoch 27/1000:  60%|██████    | 6/10 [00:46<00:30,  7.55s/it, MSE=0.5174, SS_w=0.00000, Gain_w=1.97381, KCI_n=38896/46944]
+Epoch 27/1000:  60%|██████    | 6/10 [00:54<00:30,  7.55s/it, MSE=0.5159, SS_w=0.00000, Gain_w=0.00000, KCI_n=45354/54864]
+Epoch 27/1000:  70%|███████   | 7/10 [00:54<00:22,  7.51s/it, MSE=0.5159, SS_w=0.00000, Gain_w=0.00000, KCI_n=45354/54864]
+Epoch 27/1000:  70%|███████   | 7/10 [01:01<00:22,  7.51s/it, MSE=0.5653, SS_w=0.00000, Gain_w=0.53095, KCI_n=51640/62748]
+Epoch 27/1000:  80%|████████  | 8/10 [01:01<00:14,  7.49s/it, MSE=0.5653, SS_w=0.00000, Gain_w=0.53095, KCI_n=51640/62748]
+Epoch 27/1000:  80%|████████  | 8/10 [01:08<00:14,  7.49s/it, MSE=0.5466, SS_w=0.00000, Gain_w=0.95013, KCI_n=57908/70632]
+Epoch 27/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.44s/it, MSE=0.5466, SS_w=0.00000, Gain_w=0.95013, KCI_n=57908/70632]
+Epoch 27/1000:  90%|█████████ | 9/10 [01:16<00:07,  7.44s/it, MSE=0.6062, SS_w=0.00000, Gain_w=2.14891, KCI_n=64227/78444]
+Epoch 27/1000: 100%|██████████| 10/10 [01:16<00:00,  7.40s/it, MSE=0.6062, SS_w=0.00000, Gain_w=2.14891, KCI_n=64227/78444]
+Epoch 27/1000: 100%|██████████| 10/10 [01:16<00:00,  7.63s/it, MSE=0.6062, SS_w=0.00000, Gain_w=2.14891, KCI_n=64227/78444]
+Epoch [27/1000] | Train Total L: 1.722469 | MSE: 0.551476 | SS: 3.195454 | Gain: 0.00006552 | KCI: 64227/78444 = 81.88%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19323/19584=98.7% ann_sign_avg=-0.79 dyn_pos=11.0% ; HEATER2_output_T_SP: 19818/20124=98.5% ann_sign_avg=0.14 dyn_pos=58.0%
+    B35_SO2 | air2_SP: 8503/22032=38.6% ann_sign_avg=1.00 dyn_pos=38.6% ; HEATER2_output_T_SP: 16583/16704=99.3% ann_sign_avg=0.15 dyn_pos=57.8%
+  [ANN Gain Teacher] target min: B35_H2S=0.00336593, B35_SO2=-8.02109e-05 | max: B35_H2S=0.0234392, B35_SO2=0.0136591 | <=1e-6: 0.31%
+  [Valid] MSE Loss: 0.641965
+  [Info] No improvement for 6 epochs.
+
+Epoch 28/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 28/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.7001, SS_w=0.00000, Gain_w=2.72752, KCI_n=6499/7992]
+Epoch 28/1000:  10%|█         | 1/10 [00:09<01:25,  9.45s/it, MSE=0.7001, SS_w=0.00000, Gain_w=2.72752, KCI_n=6499/7992]
+Epoch 28/1000:  10%|█         | 1/10 [00:16<01:25,  9.45s/it, MSE=0.7422, SS_w=0.00000, Gain_w=5.63237, KCI_n=12985/15948]
+Epoch 28/1000:  20%|██        | 2/10 [00:16<01:06,  8.27s/it, MSE=0.7422, SS_w=0.00000, Gain_w=5.63237, KCI_n=12985/15948]
+Epoch 28/1000:  20%|██        | 2/10 [00:24<01:06,  8.27s/it, MSE=0.8187, SS_w=0.00000, Gain_w=2.60928, KCI_n=19626/24012]
+Epoch 28/1000:  30%|███       | 3/10 [00:24<00:55,  7.91s/it, MSE=0.8187, SS_w=0.00000, Gain_w=2.60928, KCI_n=19626/24012]
+Epoch 28/1000:  30%|███       | 3/10 [00:31<00:55,  7.91s/it, MSE=0.9608, SS_w=0.00000, Gain_w=2.59035, KCI_n=26018/31680]
+Epoch 28/1000:  40%|████      | 4/10 [00:31<00:46,  7.70s/it, MSE=0.9608, SS_w=0.00000, Gain_w=2.59035, KCI_n=26018/31680]
+Epoch 28/1000:  40%|████      | 4/10 [00:39<00:46,  7.70s/it, MSE=1.0230, SS_w=0.00000, Gain_w=0.67420, KCI_n=32528/39816]
+Epoch 28/1000:  50%|█████     | 5/10 [00:39<00:37,  7.59s/it, MSE=1.0230, SS_w=0.00000, Gain_w=0.67420, KCI_n=32528/39816]
+Epoch 28/1000:  50%|█████     | 5/10 [00:46<00:37,  7.59s/it, MSE=1.1742, SS_w=0.00000, Gain_w=3.40913, KCI_n=39078/47736]
+Epoch 28/1000:  60%|██████    | 6/10 [00:46<00:30,  7.56s/it, MSE=1.1742, SS_w=0.00000, Gain_w=3.40913, KCI_n=39078/47736]
+Epoch 28/1000:  60%|██████    | 6/10 [00:53<00:30,  7.56s/it, MSE=1.1909, SS_w=0.00000, Gain_w=6.31288, KCI_n=45732/55800]
+Epoch 28/1000:  70%|███████   | 7/10 [00:53<00:22,  7.47s/it, MSE=1.1909, SS_w=0.00000, Gain_w=6.31288, KCI_n=45732/55800]
+Epoch 28/1000:  70%|███████   | 7/10 [01:01<00:22,  7.47s/it, MSE=1.2438, SS_w=0.00000, Gain_w=4.48162, KCI_n=52227/63828]
+Epoch 28/1000:  80%|████████  | 8/10 [01:01<00:14,  7.45s/it, MSE=1.2438, SS_w=0.00000, Gain_w=4.48162, KCI_n=52227/63828]
+Epoch 28/1000:  80%|████████  | 8/10 [01:08<00:14,  7.45s/it, MSE=1.3075, SS_w=0.00000, Gain_w=5.30951, KCI_n=58071/71496]
+Epoch 28/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.47s/it, MSE=1.3075, SS_w=0.00000, Gain_w=5.30951, KCI_n=58071/71496]
+Epoch 28/1000:  90%|█████████ | 9/10 [01:16<00:07,  7.47s/it, MSE=1.3096, SS_w=0.00000, Gain_w=5.29697, KCI_n=64765/79704]
+Epoch 28/1000: 100%|██████████| 10/10 [01:16<00:00,  7.44s/it, MSE=1.3096, SS_w=0.00000, Gain_w=5.29697, KCI_n=64765/79704]
+Epoch 28/1000: 100%|██████████| 10/10 [01:16<00:00,  7.63s/it, MSE=1.3096, SS_w=0.00000, Gain_w=5.29697, KCI_n=64765/79704]
+Epoch [28/1000] | Train Total L: 4.951465 | MSE: 1.047082 | SS: 3.693069 | Gain: 0.00005800 | KCI: 64765/79704 = 81.26%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19760/20268=97.5% ann_sign_avg=-0.71 dyn_pos=13.8% ; HEATER2_output_T_SP: 19828/20268=97.8% ann_sign_avg=0.14 dyn_pos=57.9%
+    B35_SO2 | air2_SP: 8093/21960=36.9% ann_sign_avg=1.00 dyn_pos=36.9% ; HEATER2_output_T_SP: 17084/17208=99.3% ann_sign_avg=0.14 dyn_pos=57.6%
+  [ANN Gain Teacher] target min: B35_H2S=0.003799, B35_SO2=-0.000118229 | max: B35_H2S=0.0247107, B35_SO2=0.0136522 | <=1e-6: 1.17%
+  [Valid] MSE Loss: 1.345046
+  [Info] No improvement for 7 epochs.
+
+Epoch 29/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 29/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=1.3796, SS_w=0.00000, Gain_w=8.62471, KCI_n=6409/8064]
+Epoch 29/1000:  10%|█         | 1/10 [00:09<01:25,  9.53s/it, MSE=1.3796, SS_w=0.00000, Gain_w=8.62471, KCI_n=6409/8064]
+Epoch 29/1000:  10%|█         | 1/10 [00:16<01:25,  9.53s/it, MSE=1.3694, SS_w=0.00000, Gain_w=7.18720, KCI_n=13033/16272]
+Epoch 29/1000:  20%|██        | 2/10 [00:16<01:06,  8.31s/it, MSE=1.3694, SS_w=0.00000, Gain_w=7.18720, KCI_n=13033/16272]
+Epoch 29/1000:  20%|██        | 2/10 [00:24<01:06,  8.31s/it, MSE=1.4104, SS_w=0.00000, Gain_w=7.86968, KCI_n=19855/24516]
+Epoch 29/1000:  30%|███       | 3/10 [00:24<00:55,  7.90s/it, MSE=1.4104, SS_w=0.00000, Gain_w=7.86968, KCI_n=19855/24516]
+Epoch 29/1000:  30%|███       | 3/10 [00:31<00:55,  7.90s/it, MSE=1.4584, SS_w=0.00000, Gain_w=8.70876, KCI_n=26149/32148]
+Epoch 29/1000:  40%|████      | 4/10 [00:31<00:46,  7.72s/it, MSE=1.4584, SS_w=0.00000, Gain_w=8.70876, KCI_n=26149/32148]
+Epoch 29/1000:  40%|████      | 4/10 [00:39<00:46,  7.72s/it, MSE=1.4990, SS_w=0.00000, Gain_w=12.35812, KCI_n=32354/40068]
+Epoch 29/1000:  50%|█████     | 5/10 [00:39<00:37,  7.59s/it, MSE=1.4990, SS_w=0.00000, Gain_w=12.35812, KCI_n=32354/40068]
+Epoch 29/1000:  50%|█████     | 5/10 [00:46<00:37,  7.59s/it, MSE=1.4842, SS_w=0.00000, Gain_w=9.40714, KCI_n=38655/47880] 
+Epoch 29/1000:  60%|██████    | 6/10 [00:46<00:30,  7.51s/it, MSE=1.4842, SS_w=0.00000, Gain_w=9.40714, KCI_n=38655/47880]
+Epoch 29/1000:  60%|██████    | 6/10 [00:53<00:30,  7.51s/it, MSE=1.5406, SS_w=0.00000, Gain_w=4.97220, KCI_n=45055/55836]
+Epoch 29/1000:  70%|███████   | 7/10 [00:53<00:22,  7.49s/it, MSE=1.5406, SS_w=0.00000, Gain_w=4.97220, KCI_n=45055/55836]
+Epoch 29/1000:  70%|███████   | 7/10 [01:01<00:22,  7.49s/it, MSE=1.5968, SS_w=0.00000, Gain_w=7.46758, KCI_n=51407/63540]
+Epoch 29/1000:  80%|████████  | 8/10 [01:01<00:14,  7.44s/it, MSE=1.5968, SS_w=0.00000, Gain_w=7.46758, KCI_n=51407/63540]
+Epoch 29/1000:  80%|████████  | 8/10 [01:08<00:14,  7.44s/it, MSE=1.5628, SS_w=0.00000, Gain_w=2.24605, KCI_n=57715/71388]
+Epoch 29/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.43s/it, MSE=1.5628, SS_w=0.00000, Gain_w=2.24605, KCI_n=57715/71388]
+Epoch 29/1000:  90%|█████████ | 9/10 [01:16<00:07,  7.43s/it, MSE=1.6090, SS_w=0.00000, Gain_w=3.84859, KCI_n=63976/78984]
+Epoch 29/1000: 100%|██████████| 10/10 [01:16<00:00,  7.44s/it, MSE=1.6090, SS_w=0.00000, Gain_w=3.84859, KCI_n=63976/78984]
+Epoch 29/1000: 100%|██████████| 10/10 [01:16<00:00,  7.63s/it, MSE=1.6090, SS_w=0.00000, Gain_w=3.84859, KCI_n=63976/78984]
+Epoch [29/1000] | Train Total L: 8.760033 | MSE: 1.491030 | SS: 4.018541 | Gain: 0.00005130 | KCI: 63976/78984 = 81.00%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19022/19620=97.0% ann_sign_avg=-0.74 dyn_pos=12.1% ; HEATER2_output_T_SP: 19789/20520=96.4% ann_sign_avg=0.18 dyn_pos=56.3%
+    B35_SO2 | air2_SP: 8528/21888=39.0% ann_sign_avg=1.00 dyn_pos=39.0% ; HEATER2_output_T_SP: 16637/16956=98.1% ann_sign_avg=0.14 dyn_pos=55.3%
+  [ANN Gain Teacher] target min: B35_H2S=0.00325385, B35_SO2=-0.000203636 | max: B35_H2S=0.023543, B35_SO2=0.012245 | <=1e-6: 0.55%
+  [Valid] MSE Loss: 1.507493
+  [Info] No improvement for 8 epochs.
+
+Epoch 30/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 30/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=1.6024, SS_w=0.00000, Gain_w=4.47717, KCI_n=6287/7740]
+Epoch 30/1000:  10%|█         | 1/10 [00:09<01:25,  9.52s/it, MSE=1.6024, SS_w=0.00000, Gain_w=4.47717, KCI_n=6287/7740]
+Epoch 30/1000:  10%|█         | 1/10 [00:17<01:25,  9.52s/it, MSE=1.5125, SS_w=0.00000, Gain_w=3.91576, KCI_n=12854/15732]
+Epoch 30/1000:  20%|██        | 2/10 [00:17<01:06,  8.33s/it, MSE=1.5125, SS_w=0.00000, Gain_w=3.91576, KCI_n=12854/15732]
+Epoch 30/1000:  20%|██        | 2/10 [00:24<01:06,  8.33s/it, MSE=1.5283, SS_w=0.00000, Gain_w=6.83497, KCI_n=19404/23796]
+Epoch 30/1000:  30%|███       | 3/10 [00:24<00:55,  7.89s/it, MSE=1.5283, SS_w=0.00000, Gain_w=6.83497, KCI_n=19404/23796]
+Epoch 30/1000:  30%|███       | 3/10 [00:31<00:55,  7.89s/it, MSE=1.5482, SS_w=0.00000, Gain_w=2.97568, KCI_n=25738/31572]
+Epoch 30/1000:  40%|████      | 4/10 [00:31<00:46,  7.67s/it, MSE=1.5482, SS_w=0.00000, Gain_w=2.97568, KCI_n=25738/31572]
+Epoch 30/1000:  40%|████      | 4/10 [00:39<00:46,  7.67s/it, MSE=1.6009, SS_w=0.00000, Gain_w=3.94426, KCI_n=32169/39456]
+Epoch 30/1000:  50%|█████     | 5/10 [00:39<00:37,  7.59s/it, MSE=1.6009, SS_w=0.00000, Gain_w=3.94426, KCI_n=32169/39456]
+Epoch 30/1000:  50%|█████     | 5/10 [00:46<00:37,  7.59s/it, MSE=1.5499, SS_w=0.00000, Gain_w=1.51943, KCI_n=38416/47052]
+Epoch 30/1000:  60%|██████    | 6/10 [00:46<00:30,  7.51s/it, MSE=1.5499, SS_w=0.00000, Gain_w=1.51943, KCI_n=38416/47052]
+Epoch 30/1000:  60%|██████    | 6/10 [00:53<00:30,  7.51s/it, MSE=1.4098, SS_w=0.00000, Gain_w=1.65187, KCI_n=45049/55332]
+Epoch 30/1000:  70%|███████   | 7/10 [00:53<00:22,  7.46s/it, MSE=1.4098, SS_w=0.00000, Gain_w=1.65187, KCI_n=45049/55332]
+Epoch 30/1000:  70%|███████   | 7/10 [01:01<00:22,  7.46s/it, MSE=1.4370, SS_w=0.00000, Gain_w=0.27480, KCI_n=51596/63180]
+Epoch 30/1000:  80%|████████  | 8/10 [01:01<00:14,  7.49s/it, MSE=1.4370, SS_w=0.00000, Gain_w=0.27480, KCI_n=51596/63180]
+Epoch 30/1000:  80%|████████  | 8/10 [01:08<00:14,  7.49s/it, MSE=1.4038, SS_w=0.00000, Gain_w=0.00000, KCI_n=58118/71280]
+Epoch 30/1000:  90%|█████████ | 9/10 [01:08<00:07,  7.46s/it, MSE=1.4038, SS_w=0.00000, Gain_w=0.00000, KCI_n=58118/71280]
+Epoch 30/1000:  90%|█████████ | 9/10 [01:16<00:07,  7.46s/it, MSE=1.0816, SS_w=0.00000, Gain_w=5.04805, KCI_n=64135/78984]
+Epoch 30/1000: 100%|██████████| 10/10 [01:16<00:00,  7.43s/it, MSE=1.0816, SS_w=0.00000, Gain_w=5.04805, KCI_n=64135/78984]
+Epoch 30/1000: 100%|██████████| 10/10 [01:16<00:00,  7.62s/it, MSE=1.0816, SS_w=0.00000, Gain_w=5.04805, KCI_n=64135/78984]
+Epoch [30/1000] | Train Total L: 4.531616 | MSE: 1.467418 | SS: 4.001137 | Gain: 0.00005069 | KCI: 64135/78984 = 81.20%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19388/19548=99.2% ann_sign_avg=-0.80 dyn_pos=10.8% ; HEATER2_output_T_SP: 20108/20700=97.1% ann_sign_avg=0.15 dyn_pos=57.5%
+    B35_SO2 | air2_SP: 7537/21600=34.9% ann_sign_avg=1.00 dyn_pos=34.9% ; HEATER2_output_T_SP: 17102/17136=99.8% ann_sign_avg=0.14 dyn_pos=56.7%
+  [ANN Gain Teacher] target min: B35_H2S=0.00318679, B35_SO2=-0.000210614 | max: B35_H2S=0.023005, B35_SO2=0.0112583 | <=1e-6: 1.33%
+  [Valid] MSE Loss: 0.903362
+  [Info] No improvement for 9 epochs.
+
+Epoch 31/1000:   0%|          | 0/10 [00:00<?, ?it/s]
+  [Plot] Updated PGIN runtime rollout/gain plot: C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\runtime_visualizations\pgin_runtime_latest.png
+
+Epoch 31/1000:   0%|          | 0/10 [00:09<?, ?it/s, MSE=0.8383, SS_w=0.00000, Gain_w=2.29755, KCI_n=6394/8136]
+Epoch 31/1000:  10%|█         | 1/10 [00:09<01:26,  9.63s/it, MSE=0.8383, SS_w=0.00000, Gain_w=2.29755, KCI_n=6394/8136]
+Epoch 31/1000:  10%|█         | 1/10 [00:17<01:26,  9.63s/it, MSE=0.7651, SS_w=0.00000, Gain_w=1.51887, KCI_n=12907/16272]
+Epoch 31/1000:  20%|██        | 2/10 [00:17<01:06,  8.31s/it, MSE=0.7651, SS_w=0.00000, Gain_w=1.51887, KCI_n=12907/16272]
+Epoch 31/1000:  20%|██        | 2/10 [00:24<01:06,  8.31s/it, MSE=0.6591, SS_w=0.00000, Gain_w=3.05989, KCI_n=19154/24372]
+Epoch 31/1000:  30%|███       | 3/10 [00:24<00:55,  7.96s/it, MSE=0.6591, SS_w=0.00000, Gain_w=3.05989, KCI_n=19154/24372]
+Epoch 31/1000:  30%|███       | 3/10 [00:31<00:55,  7.96s/it, MSE=0.6073, SS_w=0.00000, Gain_w=1.42603, KCI_n=25328/32184]
+Epoch 31/1000:  40%|████      | 4/10 [00:31<00:46,  7.74s/it, MSE=0.6073, SS_w=0.00000, Gain_w=1.42603, KCI_n=25328/32184]
+Epoch 31/1000:  40%|████      | 4/10 [00:39<00:46,  7.74s/it, MSE=0.5404, SS_w=0.00000, Gain_w=2.96050, KCI_n=31332/39924]
+Epoch 31/1000:  50%|█████     | 5/10 [00:39<00:38,  7.62s/it, MSE=0.5404, SS_w=0.00000, Gain_w=2.96050, KCI_n=31332/39924]
+Epoch 31/1000:  50%|█████     | 5/10 [00:46<00:38,  7.62s/it, MSE=0.4973, SS_w=0.00000, Gain_w=0.20595, KCI_n=37590/47700]
+Epoch 31/1000:  60%|██████    | 6/10 [00:46<00:30,  7.55s/it, MSE=0.4973, SS_w=0.00000, Gain_w=0.20595, KCI_n=37590/47700]
+Epoch 31/1000:  60%|██████    | 6/10 [00:54<00:30,  7.55s/it, MSE=0.5323, SS_w=0.00000, Gain_w=0.37645, KCI_n=43569/55116]
+Epoch 31/1000:  70%|███████   | 7/10 [00:54<00:22,  7.55s/it, MSE=0.5323, SS_w=0.00000, Gain_w=0.37645, KCI_n=43569/55116]
+Epoch 31/1000:  70%|███████   | 7/10 [01:01<00:22,  7.55s/it, MSE=0.5567, SS_w=0.00000, Gain_w=1.09724, KCI_n=49823/62820]
+Epoch 31/1000:  80%|████████  | 8/10 [01:01<00:14,  7.49s/it, MSE=0.5567, SS_w=0.00000, Gain_w=1.09724, KCI_n=49823/62820]
+Epoch 31/1000:  80%|████████  | 8/10 [01:09<00:14,  7.49s/it, MSE=0.5752, SS_w=0.00000, Gain_w=0.28776, KCI_n=56467/70884]
+Epoch 31/1000:  90%|█████████ | 9/10 [01:09<00:07,  7.44s/it, MSE=0.5752, SS_w=0.00000, Gain_w=0.28776, KCI_n=56467/70884]
+Epoch 31/1000:  90%|█████████ | 9/10 [01:16<00:07,  7.44s/it, MSE=0.5898, SS_w=0.00000, Gain_w=0.77139, KCI_n=63341/79164]
+Epoch 31/1000: 100%|██████████| 10/10 [01:16<00:00,  7.47s/it, MSE=0.5898, SS_w=0.00000, Gain_w=0.77139, KCI_n=63341/79164]
+Epoch 31/1000: 100%|██████████| 10/10 [01:16<00:00,  7.66s/it, MSE=0.5898, SS_w=0.00000, Gain_w=0.77139, KCI_n=63341/79164]
+Epoch [31/1000] | Train Total L: 2.016316 | MSE: 0.616153 | SS: 3.065244 | Gain: 0.00006523 | KCI: 63341/79164 = 80.01%
+  [Gain Pair KCI]
+    B35_H2S | air2_SP: 19742/20016=98.6% ann_sign_avg=-0.78 dyn_pos=10.4% ; HEATER2_output_T_SP: 19981/20304=98.4% ann_sign_avg=0.24 dyn_pos=61.0%
+    B35_SO2 | air2_SP: 6634/21816=30.4% ann_sign_avg=1.00 dyn_pos=30.4% ; HEATER2_output_T_SP: 16984/17028=99.7% ann_sign_avg=0.26 dyn_pos=63.3%
+  [ANN Gain Teacher] target min: B35_H2S=0.00358732, B35_SO2=-0.000133974 | max: B35_H2S=0.0230535, B35_SO2=0.012893 | <=1e-6: 0.78%
+  [Valid] MSE Loss: 0.703672
+  [Info] No improvement for 10 epochs.
+
+[Early Stopping] Triggered after 31 epochs without improvement in validation loss.
+
+[Done] Model training complete. Weights securely saved to ./saved_models/lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss.pth
+[Info] Training metrics exported to C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\training_loss_curve.png
+[Info] KCI curve exported to C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\kci_consistency_curve.png
+[Info] KCI CSV exported to C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\kci_history.csv
+[Info] Steady-state loss history exported to C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\ss_loss_history.csv
+[Info] Group GradNorm history exported to C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\gain_group_gradnorm_history.csv
+[Info] Gain pair KCI bar chart exported to C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\final_gain_pair_kci_bar.png
+[Info] Gain pair KCI history exported to C:\Users\Administrator\Desktop\digital_twin_revised\results\pgin\retrain_lhs10_23\seed44\lhs10_23_dg_ratio150_seed44_difficult_group_gradnorm_no_ss\gain_pair_kci_history.csv
