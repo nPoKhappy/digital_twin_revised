@@ -1,0 +1,22 @@
+model,family,value,short,full,max_scale,number
+no_gain,no_gain,0,NG,"No-Gain: Gain = 0, SS = 0",,1
+gain005,gain,0.050000000000000003,G 0.05,"Gain: Gain = 0.05, SS = 0",,2
+gain2p5,gain,2.5,G 2.5,"Gain: Gain = 2.5, SS = 0",,3
+gain25,gain,25,G 25,"Gain: Gain = 25, SS = 0",,4
+gain250,gain,250,G 250,"Gain: Gain = 250, SS = 0",,5
+gain2500,gain,2500,G 2500,"Gain: Gain = 2500, SS = 0",,6
+ss005_only,ss_only,0.050000000000000003,S 0.05,"SS-only: Gain = 0, SS = 0.05",,7
+ss2p5_only,ss_only,2.5,S 2.5,"SS-only: Gain = 0, SS = 2.5",,8
+ss25_only,ss_only,25,S 25,"SS-only: Gain = 0, SS = 25",,9
+ss250_only,ss_only,250,S 250,"SS-only: Gain = 0, SS = 250",,10
+ss2500_only,ss_only,2500,S 2500,"SS-only: Gain = 0, SS = 2500",,11
+gain005_ss005,gain_ss,0.050000000000000003,GS 0.05,"Gain+SS: Gain = 0.05, SS = 0.05",,12
+gain2p5_ss2p5,gain_ss,2.5,GS 2.5,"Gain+SS: Gain = 2.5, SS = 2.5",,13
+gain25_ss25,gain_ss,25,GS 25,"Gain+SS: Gain = 25, SS = 25",,14
+gain250_ss250,gain_ss,250,GS 250,"Gain+SS: Gain = 250, SS = 250",,15
+gain2500_ss2500,gain_ss,2500,GS 2500,"Gain+SS: Gain = 2500, SS = 2500",,16
+dg_ratio0p015,difficult_gradnorm,0.014999999999999901,D ρ=0.015,"Difficult-GradNorm: ρ = 0.015, Gain = 0.05, SS = 0",1000,17
+dg_ratio0p15,difficult_gradnorm,0.14999999999999991,D ρ=0.15,"Difficult-GradNorm: ρ = 0.15, Gain = 0.05, SS = 0",20000,18
+dg_ratio1p5,difficult_gradnorm,1.5,D ρ=1.5,"Difficult-GradNorm: ρ = 1.5, Gain = 0.05, SS = 0",500000,19
+dg_ratio15,difficult_gradnorm,15,D ρ=15,"Difficult-GradNorm: ρ = 15, Gain = 0.05, SS = 0",10000000,20
+dg_ratio150,difficult_gradnorm,150,D ρ=150,"Difficult-GradNorm: ρ = 150, Gain = 0.05, SS = 0",500000000,21

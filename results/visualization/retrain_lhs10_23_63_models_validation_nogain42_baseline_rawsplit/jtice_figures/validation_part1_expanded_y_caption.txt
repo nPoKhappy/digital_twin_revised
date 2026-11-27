@@ -1,0 +1,1 @@
+Validation of three seeds. AvgRelRMSE is normalized to the same-case, same-target, same-horizon No-Gain seed 42 RMSE; KCI is agreement with the shared ANN teacher. A piecewise-linear y axis is used.

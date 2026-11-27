@@ -1,0 +1,24 @@
+{
+  "worker_script": "scripts\\prediction\\parallel_rawsplit_test_worker.py",
+  "worker_script_sha256": "c6a6d8f87955ae29c1a882bc1eb0f840191e5dd306548cdcf73d9437004c3805",
+  "shared_run_protocol_sha256": "028c37d81747f4a87d3a6b66ce1bbe3aa663c77e54dd9f3a5472b49f6b2d186b",
+  "seed": 44,
+  "execution": "independent temporary output; publish complete directories atomically; main evaluation verifies markers and aggregates",
+  "models": "selected seed44 models, reversed",
+  "published_models": [
+    "dg_ratio1p5_seed44",
+    "gain250_ss250_seed44",
+    "ss2p5_only_seed44"
+  ],
+  "claimed_by_main": [
+    "gain25_seed44",
+    "no_gain_seed44"
+  ],
+  "verified_formal_model_markers": {
+    "no_gain_seed44": "4dc5030837df37033125703187ca541ca5aa282a6650305191877a0d8e0e4f24",
+    "gain25_seed44": "811efe7ae23985e761a0a79f6db4c049f735fcd3522edd2049b3c6d96a264449",
+    "ss2p5_only_seed44": "b8d8577dabb1ce79add25f900b63a35c60919e9554d04b58820b024b636cd68a",
+    "gain250_ss250_seed44": "7cb18fbca709c98f10e654875b460cd431e0e9cd37b52e63dcb57d6729e3d2ff",
+    "dg_ratio1p5_seed44": "057c5c7e1bb43a329461de39b72d9155fb03a13c42d6c998249757778cd4233e"
+  }
+}

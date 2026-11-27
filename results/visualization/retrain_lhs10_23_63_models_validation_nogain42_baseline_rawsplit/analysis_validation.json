@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "model_count": 63,
+  "regional_points": 126,
+  "components": 2268,
+  "kci_components": 504,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "newly_evaluated_models": 63,
+  "baseline_seed": 42,
+  "same_x_y_axes_all_panels": true,
+  "no_jitter": true,
+  "optimizer_updates": 0
+}

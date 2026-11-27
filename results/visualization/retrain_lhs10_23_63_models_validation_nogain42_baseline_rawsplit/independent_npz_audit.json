@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "model_count": 63,
+  "rmse_checks": 2268,
+  "kci_pair_checks": 504,
+  "teacher_arrays_consistent": true,
+  "marker_and_source_hashes_checked": true
+}

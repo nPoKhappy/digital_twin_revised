@@ -1,0 +1,68 @@
+{
+  "sources_sha256": {
+    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline_rawsplit\\run_protocol.json": "f7b7ddf0410a1adcabf2b7bd948d4c72f18a0eed048e4506ec7c847f902ecffa",
+    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline_rawsplit\\evaluation_validation.json": "819ed9c9ea479ca9b2997f545c227d679d428237a9eb62f5a83b53bffc8ca519",
+    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline_rawsplit\\dependency_snapshot.json": "f595eed90f08593b43c4f5817ad875bd836c67f3e5450084882bf36e20011eed",
+    "scripts/training/train_pgin_stepwise_gain.py": "8e51d74934bf27ec6ae9f40e0d11fd0bff9bc591ea14039ffdda15cbe3af0a04",
+    "results\\visualization\\retrain_lhs10_23_63_models_validation_nogain42_baseline\\model_parameter_metadata.csv": "9aef0ed2bc52a111392c6deaf252af4f9360f0839bc57c8d0cc49525b8267bb1",
+    "scripts\\analysis\\build_rawsplit_validation_report.py": "378f7e814b3cbf192d5c45268b0b5da93d7d7d2885079137bde97d5119314ea5",
+    "scripts\\analysis\\audit_rawsplit_validation.py": "83207b4413aac374ec94cb89f0e0328b3e83b95246051cae11928d6f88fe7b1e",
+    "scripts\\prediction\\validate_rawsplit_seed_worker.py": "7dda4d16e84ae23f65f2f95c8f1ba6d02b4811474e7643a5213aabd676f82d3d"
+  },
+  "outputs_sha256": {
+    "validation_metrics.csv": "25e46e225e9ce2402f7a4187738f23137a83ec64f7b8bd47bbb29e412c8d8486",
+    "kci_components.csv": "a8743d09e872c3befa58615731d8a9a13ec857f89e00cb1d22539278a2197e17",
+    "baseline_raw_rmse.csv": "f74b828662eec988c8f5876c6d05d75894a6a363a189a50807f716b0234d8f76",
+    "relative_rmse_components.csv": "f5830b3d67ca462e4959d3adee53b40d017d7b62b212465daee3d6c896e7c950",
+    "regional_coordinates_63_models.csv": "a3ac7a67608f7f0b6cef4e2d358fb5fba3d02d000ecab95a3e841a6f0d45b83f",
+    "scores_by_model_seed.csv": "4cc23566ffe788633992c194cac9bb2c3edcd740e397ff25bd9e652a57cf8867",
+    "scores_by_family_model.csv": "888eb0aa70300940dde1c95fb6367f1b12dd6db670786d26529669c0a7854a63",
+    "model_parameter_metadata.csv": "ba1d3bd675ccd38d2a7d62dc73a6b544f1207f01160f246b6d6028694de6c03e",
+    "regional_validation_nogain42_by_seed.html": "03c9be95b04a6e56eefd5bc7fedf444603078bb97399e06bc1c5bcb3d1027f6b",
+    "analysis_validation.json": "d85a384e1f367d005bcad85142f8b78399e63428421bf054c327834ddf11b223",
+    "independent_npz_audit.json": "acd4bb6648aa95803dd639cbab74e09dd01e9868597e5b4557c2c28b0f5cda70",
+    "README.md": "225b56cf3ad73d7ac3b5a57f98e59f33e6711429df44b26e9a0652e566fedc06",
+    "figures/nogain42_4x2_expanded_y.pdf": "1204448a05290b5235082b0de54f1d7e6c746028a2a8ff879367097e101cad03",
+    "figures/nogain42_4x2_expanded_y.png": "ff5871665b465f99fd38c69b0ba41ed5150ed28001c060904f4f9d4670a327b2",
+    "figures/nogain42_4x2_linear.pdf": "00769ab0ada70e68d7657070c87a2a6f49dfbdbcffce82b6e3b4132be8f5d198",
+    "figures/nogain42_4x2_linear.png": "88439f583949625aa0f214150aaf14162040bc98b36036e685240cfbd89caea5",
+    "figures/nogain42_part1_expanded_y.pdf": "8fcba627aec035368bde90990fe800bf311e85432c316294d40471560df71c4e",
+    "figures/nogain42_part1_expanded_y.png": "f700da04c792c47ad2dda605e4fe61cf57e97a995c6de3eb45c31ba6819055a6",
+    "figures/nogain42_part1_linear.pdf": "47ffd9934a1c32fd1ab4494f1b2c7020e622ea064402f8aac310f23d745178f1",
+    "figures/nogain42_part1_linear.png": "c03263411a275be0c5eb3be1aca06de1287d8feff75fb20dd27968c9f79b0b03",
+    "figures/nogain42_part2_expanded_y.pdf": "935700c2f5fb8a9b4dae8cda1f4ec60fbdaabbc7629a6fc509591ed221193a7f",
+    "figures/nogain42_part2_expanded_y.png": "0356cd5207727994a68bac1fa24a723e7893479cf099edd553738127a47b0a27",
+    "figures/nogain42_part2_linear.pdf": "af952d327239de21393c1fd44cf61ca4a3c9aff91e204e3a870ef0e9d09fc57a",
+    "figures/nogain42_part2_linear.png": "55f04537a042b198ac1dcbdb36ab3960b313952a1654f6677d04e4c8c359722f",
+    "jtice_figures/validation_all_families_expanded_y.pdf": "253307169fc697b7e1aeab9aa306397452acad872c6b65226385fa63c5b0cf25",
+    "jtice_figures/validation_all_families_expanded_y.png": "ff5871665b465f99fd38c69b0ba41ed5150ed28001c060904f4f9d4670a327b2",
+    "jtice_figures/validation_all_families_expanded_y_caption.txt": "dba715162162d1c336ba83d3109eb4d1927fbe2ca2eb130183b2fa5775e43b44",
+    "jtice_figures/validation_all_families_linear.pdf": "4988d98a2b98db340f2986784c5f93ac77c8851f97320f096645f2d12d7b3058",
+    "jtice_figures/validation_all_families_linear.png": "88439f583949625aa0f214150aaf14162040bc98b36036e685240cfbd89caea5",
+    "jtice_figures/validation_all_families_linear_caption.txt": "246143ca196832e021f7daaa4c28cd8550f36bf85792190c39bffa281a84bccd",
+    "jtice_figures/validation_part1_expanded_y.pdf": "e159d38a31da15b7e68a755c8610f7d0532610b3e8f4c32ca227bee09145c0da",
+    "jtice_figures/validation_part1_expanded_y.png": "f700da04c792c47ad2dda605e4fe61cf57e97a995c6de3eb45c31ba6819055a6",
+    "jtice_figures/validation_part1_expanded_y_caption.txt": "dba715162162d1c336ba83d3109eb4d1927fbe2ca2eb130183b2fa5775e43b44",
+    "jtice_figures/validation_part1_linear.pdf": "f85c385f7059179a28ff54d7d7b3a7ec9d7dc31c7ca0c1a77a198f7a8975b305",
+    "jtice_figures/validation_part1_linear.png": "c03263411a275be0c5eb3be1aca06de1287d8feff75fb20dd27968c9f79b0b03",
+    "jtice_figures/validation_part1_linear_caption.txt": "246143ca196832e021f7daaa4c28cd8550f36bf85792190c39bffa281a84bccd",
+    "jtice_figures/validation_part2_expanded_y.pdf": "b507224faaee04df2be88217762e10ac968ab094166bd46cf4a6285b988cb573",
+    "jtice_figures/validation_part2_expanded_y.png": "0356cd5207727994a68bac1fa24a723e7893479cf099edd553738127a47b0a27",
+    "jtice_figures/validation_part2_expanded_y_caption.txt": "dba715162162d1c336ba83d3109eb4d1927fbe2ca2eb130183b2fa5775e43b44",
+    "jtice_figures/validation_part2_linear.pdf": "10b9eea673c6a8942ad5a959cb37c99dc7e7f5a3332f3521bbd38a7e717760df",
+    "jtice_figures/validation_part2_linear.png": "55f04537a042b198ac1dcbdb36ab3960b313952a1654f6677d04e4c8c359722f",
+    "jtice_figures/validation_part2_linear_caption.txt": "246143ca196832e021f7daaa4c28cd8550f36bf85792190c39bffa281a84bccd"
+  },
+  "plot_bounds": {
+    "x": [
+      84,
+      100.2
+    ],
+    "y": [
+      0.25,
+      3.8
+    ]
+  },
+  "baseline": "new rawsplit No-Gain seed42",
+  "model_count": 63
+}

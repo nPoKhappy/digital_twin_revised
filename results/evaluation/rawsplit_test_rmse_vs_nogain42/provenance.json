@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "models": 15,
+  "per_seed_rows": 6840,
+  "three_seed_groups": 2280,
+  "comparison_rows": 456,
+  "source_sha256": {
+    "test_metrics.csv": "d5341eb6ebfb157e104f2c5afac0dbfc0725bdd7b458a4745db38ea14f0e4739",
+    "horizon_metrics.csv": "00e8797616b17f20d716709e265ea1bf9e1ce2bc9c5ffc3601c820186b3699cb",
+    "relative_rmse_components.csv": "59bc131c0490199a8e73f935dbc3b03ee8c9838f3b19213eb877d56257dca61c",
+    "selected_models.json": "140dc43641aadc046f5234100c5e78589864b690db434a257d2998cb4762a446",
+    "run_protocol.json": "028c37d81747f4a87d3a6b66ce1bbe3aa663c77e54dd9f3a5472b49f6b2d186b",
+    "independent_npz_audit.json": "31f0cdf9be27fcb86de72ea9524584feab987119e05d783dbf8aa99aefbec28e"
+  },
+  "output_sha256": {
+    "README.md": "2ca43b8b1d83881204fca548021f77fc92745e5d1acd9490a0f5a4b08b599eea",
+    "rmse_comparison.html": "d9be22488b0b3471174ad8988cc64a60ddf445b3431a3bb898ab34c0e922773c",
+    "rmse_per_seed_all_horizons_and_ts.csv": "d64b00ffe1bb2723c56bf647c90df8d9cce6ac3279bb7d5b7ef665542fa07f9d",
+    "rmse_per_seed_H1_H18_TS.csv": "e516e90e52b0e86117fca67ab5aac9ed68b330fa309a332e8da9b1f2d7dfa20b",
+    "rmse_three_seed_summary_all_horizons_and_ts.csv": "825fea054d7fe608bfbb41e3ce7d4b44fc30c2549bbb679c4f2a19f016a80c54",
+    "rmse_three_seed_summary_H1_H18_TS.csv": "2e0b385dbaa9690b78eb2ad2689c2a3f068a5c78ebb508207abbb49637e0e9dd"
+  },
+  "script_sha256": "88a4be10573632ac2e4c3b3380a8119734f86c936263fd881c17081a9f484e6e"
+}

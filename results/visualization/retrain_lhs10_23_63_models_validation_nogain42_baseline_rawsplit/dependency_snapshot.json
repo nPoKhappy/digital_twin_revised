@@ -1,0 +1,6 @@
+{
+  "snapshot_utc": "2026-11-27T09:06:57.297152+00:00",
+  "path": "scripts/training/train_pgin_stepwise_gain.py",
+  "sha256": "8e51d74934bf27ec6ae9f40e0d11fd0bff9bc591ea14039ffdda15cbe3af0a04",
+  "reason": "evaluation_gain_in_out_distribution imports teacher and loader from this trainer"
+}

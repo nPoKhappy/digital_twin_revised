@@ -1,0 +1,26 @@
+{
+  "status": "user-supplied JTICE guide snapshot; confirm current guide before submission",
+  "num_models": 15,
+  "regional_points": 30,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "figure_width_mm": 190,
+  "figure_height_mm": 97,
+  "png_dpi": 1000,
+  "data_source_sha256": {
+    "regional_coordinates.csv": "26255678d79dc5e909629f61b9b093614e59d8e4ee33de10124b18bb2c05949d",
+    "selected_models.json": "140dc43641aadc046f5234100c5e78589864b690db434a257d2998cb4762a446",
+    "evaluation_validation.json": "db1aa2cc3347e51c2be8235cf9a90304d35684f509268c5e279df68330eb8819"
+  },
+  "figure_source_sha256": "9fa33f2a278cf57e6011a216f9b5c5c9d1f1165202ef780ce569b17e87ac7c88",
+  "output_sha256": {
+    "selected_test_jtice.pdf": "76055b7bd035af55a10615c51724715684cec9a918f84f3b72158c63a335f205",
+    "selected_test_jtice.png": "509c690a670b041aba18a9e1b3ec816fa74b70beed7f7e6e2b8afbdfd5e1e7ee",
+    "grayscale_check_preview.png": "9d8d16cb3af5a34dd9ca02381ec5bcfadab39a729c2cfca045ea7969fc4307b9",
+    "caption.txt": "dab03f592fbddb2c50ba35d4fa55302d4ab3e566a4344a3799bf7acf87c914be",
+    "figure_notes.txt": "c5a89ddd9808e736f4764642c81df4e64d312a28837b5d075681667096bd922b"
+  }
+}

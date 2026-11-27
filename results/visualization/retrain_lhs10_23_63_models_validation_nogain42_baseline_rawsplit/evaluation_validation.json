@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "model_count": 63,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "dynamic_metrics": 2268,
+  "kci_components": 504,
+  "independent_rmse_and_numpy_kci_recounts": true,
+  "source_hashes_unchanged": true,
+  "optimizer_updates": 0
+}

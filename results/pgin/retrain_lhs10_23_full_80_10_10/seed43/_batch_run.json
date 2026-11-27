@@ -1,0 +1,629 @@
+{
+  "seed": 43,
+  "status": "complete",
+  "started_utc": "2026-11-25T06:43:24.582892+00:00",
+  "sources_sha256": {
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\config_manifest.json": "310b3b500e2dfdae32ac69967d8a0312984ca17b4e48977542f90ea745660b85",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\dg_ratio0p015.yaml": "320b2b1377a91f35b57105e301cfb6a981a9fe346d73fcac9dc271ce4efcae0b",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\dg_ratio0p15.yaml": "9b808276f85830215dde3fe717b8b2b1ae6e04ef8326e46b6782a1cb25180a9c",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\dg_ratio15.yaml": "63fb20d9bdf3384aebdf57457078a5182bff29c9633f44d3b83adca7bc34081f",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\dg_ratio150.yaml": "e1dc0cd9fd1900428336b86d22d1997ca72585a721d02e0983373e16e33b5fcb",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\dg_ratio1p5.yaml": "697821d93e628b2913eff4242a1216bc66e9f6b266cc529d774bc1a2d78aaa16",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\gain005.yaml": "529371a3471bd1ce33ac67895ba5f9c1ddd9e6bb2cda9b835fb1a55a8447ac24",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\gain005_ss005.yaml": "5454a21b188883f3c312ad98b961703d4b37ad5d7e9ec1949e3a0ad15069fe45",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\gain25.yaml": "bff434329d34e28917184837df316aa9a04c06325f2c22480da9017b56ebdbcf",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\gain250.yaml": "525b06c099b648c82d55a323eda05c960e0e802249cf84e0add1ee77d926f13d",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\gain2500.yaml": "87f1e4d56bef7b5bfabc2ebac9e55b872a675979ac9516d20ee57c9a8787cdc1",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\gain2500_ss2500.yaml": "678aeb096a69e8db234597d5eee90e6b0eaecd4f7e79397c2100030bcfc3500d",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\gain250_ss250.yaml": "b5e418448e059bf86dddf8ab7fd4cd79e5296832f8d0281605d1bf65dabb900a",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\gain25_ss25.yaml": "bf2ac320dde1be93b5034090b8b83a13c379e35e08a520665da4df9aa531f0cf",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\gain2p5.yaml": "dd590719ace0ab6946ef953d866a6bf865b2fee6e632715de6ffe642c1f09342",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\gain2p5_ss2p5.yaml": "d7921d5a75d35205108190703bef21f92e78d0c8bd8cc4198653847b11384043",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\no_gain.yaml": "5136397dfea666fae9c1c1dea69e41d7ea52cb6032269b236a17b78a101be430",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\ss005_only.yaml": "1360d5b664a8d3704a64242726f65f7ed4fa1988c2729a2bcb40e498dc248ba5",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\ss2500_only.yaml": "2220ea0a5af1c9754cb1b1b9d61fbe89f2fccf0ed6bf580ac15e247c7e80ff54",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\ss250_only.yaml": "e751aca716c7c3ea75ba52a1fe679ff25839a468d31ebf2c5f9e9a9286b52010",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\ss25_only.yaml": "c045a1785c2bcbaa26074ad0115bb654967a46ad836058c0844b726303e69f81",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed42\\ss2p5_only.yaml": "ee779c1657f9d1a774b2d0d40aeb77ebe27812fe7775907bbe7124aa58410f8c",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\dg_ratio0p015.yaml": "a3545a9ef9c2875c904729b23eb118d358f1c1c89b01323b8f2f6c5aaec1e5f0",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\dg_ratio0p15.yaml": "c8c7b764be603f8b5cf47278315f203400573ade64683909ec0d30248f8c44db",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\dg_ratio15.yaml": "caa87beb2a3d44b42a0d16c4e1dbb128b16365f0a05724864f9613b370210913",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\dg_ratio150.yaml": "c0fe87b0760bcdcc1bddfec6c1a7b27e3516da385dce169d9f77861311ef120a",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\dg_ratio1p5.yaml": "17370fa659f2332f22b54e0ebfe8ffc3d1ade59072fad939d243ecae67c434e0",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\gain005.yaml": "40cd80edf2b18b8f069776c4c3b199b63e0062907a289a2fdbd7010ef7bf2492",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\gain005_ss005.yaml": "73e8aaa55ed4fb9edfd496821294be996c7a4b10699424bf7ee6289da23567fe",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\gain25.yaml": "a1f8066da2091eb22ea22991e30f9a8d6121849394a40da8e0d01984228b1e28",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\gain250.yaml": "475a87103be47eef2cc770511f7b075274e50511d0df7b64ddaccb503e2ee597",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\gain2500.yaml": "1b412fd52f7cab701c6d898977d7f5c5a7e33f87c2659e1193dba6c0d0d2b20e",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\gain2500_ss2500.yaml": "449a07f66c1e11ae2c9ad38b681ec7a00543332e3085bce36a6e02c7d15f64a9",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\gain250_ss250.yaml": "b5fd284ce89bf02b7ef97841be7f2814feeee52564a6c9627741b0a9202dcf78",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\gain25_ss25.yaml": "1bf6199a6a4a2a117d2540ebb8d0b4d42428944278fe3419e6a03fdf898f854a",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\gain2p5.yaml": "18631e9ada16c9e4c281b5c92162dcf94ed95ffee016eb6230b052bc0dd5bc22",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\gain2p5_ss2p5.yaml": "e9b10075dc7591abbc0b9631d45a3f0891e72cbe9eb98a08c4da34e0f8d84905",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\no_gain.yaml": "b2f6cae6cc3bf8c8ca7bdd55db7e3307930a170c5ffabcc8afb12cb2935575c3",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\ss005_only.yaml": "27625d3be1fb919bc2cb30f09b39b37c32bdff8609ba5fbe6bd5483a9131dbba",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\ss2500_only.yaml": "44c99194330471325e0c4a04295c0242e738070b09feaf39af75290d579575b1",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\ss250_only.yaml": "e05a1412d2f5ef40206199ebb6c9568b0acc8c7254c24974baa706fbb4c26e4b",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\ss25_only.yaml": "e568f562d54f92d66285703c11e3f7798b4877cc922df42f00090fd03b097895",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\ss2p5_only.yaml": "439fd5ee2a71f4d6bb5e1c4c1f1e55587f634adc00371826b8d3ae1faff1370d",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\dg_ratio0p015.yaml": "eeb1d05c64a5c2d5233fc03dbc5eeaeaa59e43198de1ad9383f887bf75deb0c8",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\dg_ratio0p15.yaml": "53abb690d90aaf28a8c6c3b04860e0db3fe7c014899e25c94e0a83083201ab2d",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\dg_ratio15.yaml": "0059cdb6d999660b10fd54d15feb5a6d5855d1de4eeb41033b4ee69604d44aba",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\dg_ratio150.yaml": "c39f3ee6453944ea48653b5892022e2e701b885847f14615aeb09f3b4b751358",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\dg_ratio1p5.yaml": "124b55c671ab16f4c11c4c1fdf05a520cb2ff777ce697a768bb858f4ecb71a83",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\gain005.yaml": "a852929a63b186a8e9c7a7dcc9dd0a6d0d06ebfe76fb1abd39ca0d8dcbfb98e8",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\gain005_ss005.yaml": "ec815344293fc7b037c8069c8e010e9b4376e64557e4cc60d05e7db8c89d6a2c",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\gain25.yaml": "ea208a6a2e9e4ea46f38e170a3c5ef3c8aa000e7b732fc61e784e52ab8eace54",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\gain250.yaml": "5c646ba869b105730c4a4efce6feca093e4a55a1cd1361db5c11c16f15db0994",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\gain2500.yaml": "bc11a4d137ddcc2d87f558300645ecb00f9ccfed7a2e6e710bfae839daa41f64",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\gain2500_ss2500.yaml": "7402b29a90c2851e3017ba10f5b7e7ab911084ff328b855bd6123163dcb9bb4e",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\gain250_ss250.yaml": "0d668a2d3c8328fc361850b66bb7ce5d0472705ccff0a82fc2804b586fa8f7f3",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\gain25_ss25.yaml": "f6de8a864698c4da844947f747ef207e77a628898942675d486481c1286b99e4",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\gain2p5.yaml": "d174086dfc59a282e1137cde9b1fabcde2e28184e1e67753da41a97fb1a55a4a",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\gain2p5_ss2p5.yaml": "8866e357d17ec186da904892c14ed26915e44ea40968e687a52d6ee6a6bfbef4",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\no_gain.yaml": "2d593b730677a3b20450accda1d5610d12f5c922d7dc9a905f68434a0bf5bfcf",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\ss005_only.yaml": "2f9ff5b8516ea2cb352a8bfc13401b186e64bcc5f3af0a99de37b442455e95e4",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\ss2500_only.yaml": "bfd36b052ae9998135f937920db104656534575e8e46b9128f7ce6178e89ccb3",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\ss250_only.yaml": "69786436cf9d7852090b273b78aa32409c6c103d455afc9db927a5386ba87044",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\ss25_only.yaml": "0d50d3be472b4a1c188d09fedb1afcc9f2ace8ae350dc050f92fc689912a4e73",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\configs\\pgin\\retrain_lhs10_23_full_80_10_10\\seed44\\ss2p5_only.yaml": "468ce4659585aeca4042cb9b0ba4377c3ddc836decbea0f56d940872782f3b6c",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_dynamic\\Test_dataform_change_air2_R=5-1.csv": "cbd88222d779be7b44f624f97f04b9ab17ebfc31aea5f900398fd8c08ac424f9",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_dynamic\\Test_dataform_change_air2_R=5-2.csv": "46f6b98d3ccd8ee2d7299ea39a94c65da58742bc5d9d266ae88abfd5aeb4a204",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_dynamic\\Test_dataform_change_air2_R=5-6.csv": "897387c957cec886314f5e1a8db38e0de2ca12e21200860700c9c80663f679a4",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_dynamic\\Test_dataform_change_air2_R=5.csv": "563494c3019f64b5524548bd30e2a3f49eb1b1c15cc17c06b914fe2a7747f264",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_10.xlsx": "38624b86f577754784fb982c94bbdfae828acf2cdca72f8a6423c82f78111ea2",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_11.xlsx": "fca4e5c739d9a4d30c96c6fa021b0ebf518e312a60c66a1579326106013b2f25",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_15.xlsx": "9aa0f1c8a8625e39f6dedb350f0934dbe794f4ce3ce70d7a2a9dee444f6b66ef",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_16.xlsx": "3ae4e0334fd9b8b5f1d009062018569e1491e128401c7a99414a4e71ec9e8d21",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_17.xlsx": "17b1f82f6aa22813d24779c2b2180d031498c05da397915f721b1068b62bff23",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_18.xlsx": "b9e5541b395b7ee15eb0ddd6b1c149e816a7b0fff8fcddf70ef946c919cc839b",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_19.xlsx": "e0ca3392d09fa88c86142556826bccc7e194960627f1181d009309819825c54b",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_20.xlsx": "9c6cd9187dc527d94b3a1e79e184a4168dd631efc9b7d5918eb2a81d15549f9a",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_21.xlsx": "6233155a4ab008eb78571edbe3b60ebdc83f48df4f407ad0ff3401dd392b79fd",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_22.xlsx": "bc8a55ff7bd74dc44ab83d8a5feeb804ca6241946aead6891077a6ee3e43f879",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\data\\Claus_steady_state\\lhs_generated_dynamic_ss_data_23.xlsx": "5b53494e8a787b3b3581758528cb4e5da5152c9d966a721eb4eae707b0ac2b1c",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\steady_state\\Tabular_MLP_New\\training_protocol.json": "3d7108dcda2584b658a6a974dd0fd5515653b9494ed8d9f3f3bff3e44663e74a",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\steady_state\\Tabular_MLP_New\\training_result.json": "fd3ac86de43a1f561e3d12eb5fd8514a7727d8987dac229de7f992e9573f6744",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\steady_state\\Tabular_MLP_New\\zscore_mean.csv": "28c84eb6b3d3cdc9c3847b2e730ad1e312cc3f320c2a158e8c3c518885e04e41",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\results\\steady_state\\Tabular_MLP_New\\zscore_std.csv": "61ca90e99deb091ff1c559dcfe3dc880f4740ff7cadc0f9c396be17c643ac7c0",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\saved_models\\Tabular_MLP_5in_2out_QV.pth": "5ccef7ed9f66efede64edfb6ea4ce6fea5e482245b6f714f2b32f181ee177e52",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\scripts\\training\\dynamic_raw_split.py": "85170e9ba4379537343b1d4819e3b620c5e350ab36cea49040a9277f9cc8bab5",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\scripts\\training\\run_retrain_lhs10_23_full_80_10_10.py": "d719638e2179eab49a9ee0ea780097fe0985363aa4abfc799a7008678fbe6b7a",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\scripts\\training\\train_pgin_stepwise_gain_difficult_group_gradnorm_rawsplit.py": "bd14dd40959c9d41ef176ea520055ca5b75d71b7dc9cd9e582787c963ca3fc39",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\scripts\\training\\train_pgin_stepwise_gain_rawsplit.py": "a7f154906ac2f268ff305fd211038b3731d59159f7e577548874c9aadebceceb",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\scripts\\training\\train_pgin_stepwise_gain_ss_loss_rawsplit.py": "23a79560ae47cd795cad41b8bf13164913d5e7f44f5b155d7ef1607fc29a8585",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\dataset.py": "426bdb11b37f517b05f12f9b22e0d912e4244874e223d8792fb70e22991a645d",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\dataset_tabular.py": "917c04560d66c10e0a62c997108f65264e12297bd0c9963d9448f52ac57291a1",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\engine.py": "4d3b062211d7d9fe722f66fa7a8d5658cd9dc1adb510a630cc108631ac762241",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\experiment_paths.py": "36734c03070f921057e54aa361ae9905719475dcc762cafb63e840ff2f1d19ef",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\models\\__init__.py": "2857cac41209a4f5fa23f329e779cf59e8aa71f2c7272cbd35481c5e69d402c6",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\models\\tabular_mlp.py": "bc10afd5642eb9b0b60aed31b655d32389250cb85ceda3ac7ac950d927df48b5",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\models\\transformer_model.py": "6436661442dfb9a2b7f687c1ad55a0d9547e58b5dadeaee526983ddaf1e1f4c2",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\models\\user_defined_transformer.py": "7156b5cc2724eef1d5522ed59927c59ffa480de644fd13bbe824b9451a19d5bd",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\utils.py": "5098cf34bf540b2d0fe1e5fb661a7fdb1c5b8c2a20c30f97f7bd86fa4b74ec81",
+    "C:\\Users\\Administrator\\Desktop\\digital_twin_revised\\src\\variable_selection.py": "e23652b7da584ed4a9f517f977439e76d05eb6ec328b0b8370cf6f872e7540d8"
+  },
+  "completed": [
+    {
+      "job": {
+        "seed": 43,
+        "family": "no_gain",
+        "alias": "no_gain",
+        "source_config": "configs/pgin/no_gain/transformer_layerwise_63var_decoder_input_sp_pgin_no_gain_seed42.yaml",
+        "source_sha256": "16d888bcd5d88144244e35f2ff735f20bd366edc609ed6908712c59da308b59c",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/no_gain.yaml",
+        "config_sha256": "b2f6cae6cc3bf8c8ca7bdd55db7e3307930a170c5ffabcc8afb12cb2935575c3",
+        "exp_name": "lhs10_23_full_80_10_10_no_gain_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_no_gain_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_no_gain_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/no_gain.yaml",
+        "template_sha256": "64a865af44425485ee698cc0f8f4a49a986f482cbe6ccf24f51476f780e5468a",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_no_gain_seed43.pth": "33be0c0ad230f52252792ff75c594bba16c744f8d3a9e95fc0aba795f2530799",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_no_gain_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_no_gain_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "gain",
+        "alias": "gain005",
+        "source_config": "configs/pgin/gain/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42.yaml",
+        "source_sha256": "c9fe4c3f6fe0e400d75a80a37ad4f20908aeb4742a2933a457018d59de2fa479",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/gain005.yaml",
+        "config_sha256": "40cd80edf2b18b8f069776c4c3b199b63e0062907a289a2fdbd7010ef7bf2492",
+        "exp_name": "lhs10_23_full_80_10_10_gain005_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_gain005_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_gain005_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/gain005.yaml",
+        "template_sha256": "1aa4729bf885a1fe5b2d5fe1b378ad7d72f4f17b2293eca7eb1a04fbdfc9ff3d",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_gain005_seed43.pth": "efcc5e1d440893056ff189b7256fbfad3c7447e4293696fd981217fef59ecdc2",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain005_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain005_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "gain",
+        "alias": "gain2500",
+        "source_config": "configs/pgin/gain/transformer_layerwise_63var_decoder_input_sp_pgin_gain2500_seed42.yaml",
+        "source_sha256": "d78a447dfe96ca3f30b558e94a582aeea1bed15aef71539a8d41f984cff3089c",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/gain2500.yaml",
+        "config_sha256": "1b412fd52f7cab701c6d898977d7f5c5a7e33f87c2659e1193dba6c0d0d2b20e",
+        "exp_name": "lhs10_23_full_80_10_10_gain2500_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_gain2500_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_gain2500_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/gain2500.yaml",
+        "template_sha256": "8e4b8f187c6a2f5dc3b80972c5431a5873bd12ce103c2142a7df4a8f3bc44208",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_gain2500_seed43.pth": "fbfb8e41dfd0a568b3869ec3a325304a188a9b201aaa8298138ddce850fd4dfb",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain2500_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain2500_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "gain",
+        "alias": "gain250",
+        "source_config": "configs/pgin/gain/transformer_layerwise_63var_decoder_input_sp_pgin_gain250_seed42.yaml",
+        "source_sha256": "106aea82879c5d3395dbf5ca99595f73b52ce06a5f553546f0fe47bebc7512af",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/gain250.yaml",
+        "config_sha256": "475a87103be47eef2cc770511f7b075274e50511d0df7b64ddaccb503e2ee597",
+        "exp_name": "lhs10_23_full_80_10_10_gain250_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_gain250_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_gain250_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/gain250.yaml",
+        "template_sha256": "fbfe910497c33fd2b626646323f5aa5151575c636befaa60f4dfe213ee57e3d5",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_gain250_seed43.pth": "1841c81a2dabd5c4b471725a71058bf9ec388e3af7efbe06887e9b5c63de46d3",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain250_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain250_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "gain",
+        "alias": "gain25",
+        "source_config": "configs/pgin/gain/transformer_layerwise_63var_decoder_input_sp_pgin_gain25_seed42.yaml",
+        "source_sha256": "136e5c9c30b34bfd692372fb8c82a07959eda82f5045c13b90cd9cde97875464",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/gain25.yaml",
+        "config_sha256": "a1f8066da2091eb22ea22991e30f9a8d6121849394a40da8e0d01984228b1e28",
+        "exp_name": "lhs10_23_full_80_10_10_gain25_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_gain25_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_gain25_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/gain25.yaml",
+        "template_sha256": "9e74e08c4cbba9c2863088ff7a89622755b878f456ad93187fbc5733f2f0c8d5",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_gain25_seed43.pth": "b9e3df5e98c2f0a3ae7aa12e156a08123c58e05609ecb178ac1526540b232be2",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain25_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain25_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "gain",
+        "alias": "gain2p5",
+        "source_config": "configs/pgin/gain/transformer_layerwise_63var_decoder_input_sp_pgin_gain2p5_seed42.yaml",
+        "source_sha256": "60f55085aa685c3fc095168a1c07e24d49d0a668758646b6297bd86bf404ac43",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/gain2p5.yaml",
+        "config_sha256": "18631e9ada16c9e4c281b5c92162dcf94ed95ffee016eb6230b052bc0dd5bc22",
+        "exp_name": "lhs10_23_full_80_10_10_gain2p5_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_gain2p5_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_gain2p5_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/gain2p5.yaml",
+        "template_sha256": "accd5841c15737420a26292e3b6ff3ce971046fc6be959685df93b01cdf44082",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_gain2p5_seed43.pth": "c9ed32e638b2045641a6d4b710544e5e117bad03b407a5e148f7a32451d346c4",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain2p5_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain2p5_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "ss_only",
+        "alias": "ss005_only",
+        "source_config": "configs/pgin/ss_only/transformer_layerwise_63var_decoder_input_sp_pgin_ss005_only_seed42.yaml",
+        "source_sha256": "b82649f5708064c78e4e9a61eee9dba3c12677bfb25fbd80d06c66cafb62532c",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/ss005_only.yaml",
+        "config_sha256": "27625d3be1fb919bc2cb30f09b39b37c32bdff8609ba5fbe6bd5483a9131dbba",
+        "exp_name": "lhs10_23_full_80_10_10_ss005_only_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_ss005_only_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_ss005_only_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_ss_loss_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/ss005_only.yaml",
+        "template_sha256": "c04c5f8a034455a146f26988ef684253ecd282d39c43288bff22b99f833ba57b",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_ss005_only_seed43.pth": "8888d62fb04ccfdee14761c378143a41913448b2269d2adf4eab2d39b8ff3853",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_ss005_only_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_ss005_only_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "ss_only",
+        "alias": "ss2500_only",
+        "source_config": "configs/pgin/ss_only/transformer_layerwise_63var_decoder_input_sp_pgin_ss2500_only_seed42.yaml",
+        "source_sha256": "833abf21f42e880e454cea678e71681928e255bf32a68822f70afc03ab3c2896",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/ss2500_only.yaml",
+        "config_sha256": "44c99194330471325e0c4a04295c0242e738070b09feaf39af75290d579575b1",
+        "exp_name": "lhs10_23_full_80_10_10_ss2500_only_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_ss2500_only_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_ss2500_only_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_ss_loss_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/ss2500_only.yaml",
+        "template_sha256": "6dc59287c6df740b7b2e6abb03b861669e89a3a8c2d51a537125e68cdb54e9f3",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_ss2500_only_seed43.pth": "15d4cae8c6b6e31d7de3988027334cdc1908eb4eebdf18e4c5186eeb4c5ac7bd",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_ss2500_only_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_ss2500_only_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "ss_only",
+        "alias": "ss250_only",
+        "source_config": "configs/pgin/ss_only/transformer_layerwise_63var_decoder_input_sp_pgin_ss250_only_seed42.yaml",
+        "source_sha256": "8f5f1adb5c8e6cdbd431b2101e10f7713b1bc8efc4cdfea62fce665b31d540cb",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/ss250_only.yaml",
+        "config_sha256": "e05a1412d2f5ef40206199ebb6c9568b0acc8c7254c24974baa706fbb4c26e4b",
+        "exp_name": "lhs10_23_full_80_10_10_ss250_only_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_ss250_only_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_ss250_only_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_ss_loss_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/ss250_only.yaml",
+        "template_sha256": "6a9a98b1381ea559923ee1cc3d66b43bc0449984ff0fd1def5cce103a3211211",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_ss250_only_seed43.pth": "167cfc2e0ea3e90f6e4f23e1ff6222be4e602abdf9f173a5dd93885e2d271283",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_ss250_only_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_ss250_only_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "ss_only",
+        "alias": "ss25_only",
+        "source_config": "configs/pgin/ss_only/transformer_layerwise_63var_decoder_input_sp_pgin_ss25_only_seed42.yaml",
+        "source_sha256": "729c0e005c633114c85521ab48602f90b52689a2846de204bd716079b1c6497d",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/ss25_only.yaml",
+        "config_sha256": "e568f562d54f92d66285703c11e3f7798b4877cc922df42f00090fd03b097895",
+        "exp_name": "lhs10_23_full_80_10_10_ss25_only_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_ss25_only_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_ss25_only_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_ss_loss_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/ss25_only.yaml",
+        "template_sha256": "93297ab1d845e031e705679f001c413932bd76c87953e53311f0021a66b6b0d0",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_ss25_only_seed43.pth": "fa8b0bb9ca2b9f79e519f748b5fa3c4e0c373abe6f82868ffc0829c108471a2d",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_ss25_only_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_ss25_only_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "ss_only",
+        "alias": "ss2p5_only",
+        "source_config": "configs/pgin/ss_only/transformer_layerwise_63var_decoder_input_sp_pgin_ss2p5_only_seed42.yaml",
+        "source_sha256": "9974873f0054327b2c44a62d3f49c10a3dd79355087f6da2bf9ccf17541b5d33",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/ss2p5_only.yaml",
+        "config_sha256": "439fd5ee2a71f4d6bb5e1c4c1f1e55587f634adc00371826b8d3ae1faff1370d",
+        "exp_name": "lhs10_23_full_80_10_10_ss2p5_only_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_ss2p5_only_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_ss2p5_only_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_ss_loss_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/ss2p5_only.yaml",
+        "template_sha256": "bb3b2b8597019bcb07c00329e6120214282a8c9562598ae275fa53a5f37b78c3",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_ss2p5_only_seed43.pth": "3dfef9419e661d62d0784d3f466a66dafbe667eb9646c15ae90fca866e2ae590",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_ss2p5_only_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_ss2p5_only_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "gain_ss",
+        "alias": "gain005_ss005",
+        "source_config": "configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_ss005_seed42.yaml",
+        "source_sha256": "142e9f290ed8b54e7efa5c661af6c78c58768159c72787ef229cdff0b7f9509f",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/gain005_ss005.yaml",
+        "config_sha256": "73e8aaa55ed4fb9edfd496821294be996c7a4b10699424bf7ee6289da23567fe",
+        "exp_name": "lhs10_23_full_80_10_10_gain005_ss005_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_gain005_ss005_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_gain005_ss005_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_ss_loss_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/gain005_ss005.yaml",
+        "template_sha256": "b76a77511aff2d43592a09be806152fa87946dab55e982b22b0edfbff00d9d4b",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_gain005_ss005_seed43.pth": "1b1fe36732a838dd91a3a0f643a979083b67d33ab8ad1a5960c51703cc0270a2",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain005_ss005_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain005_ss005_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "gain_ss",
+        "alias": "gain2500_ss2500",
+        "source_config": "configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain2500_ss2500_seed42.yaml",
+        "source_sha256": "02371d749238df4ca66d6ef4e074f6e363d52bbb178619541de2361b7134027c",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/gain2500_ss2500.yaml",
+        "config_sha256": "449a07f66c1e11ae2c9ad38b681ec7a00543332e3085bce36a6e02c7d15f64a9",
+        "exp_name": "lhs10_23_full_80_10_10_gain2500_ss2500_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_gain2500_ss2500_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_gain2500_ss2500_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_ss_loss_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/gain2500_ss2500.yaml",
+        "template_sha256": "3144fd4cce130b65f7dcfd4755242eec922672cbc4b861a9bd6443a5dd62b231",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_gain2500_ss2500_seed43.pth": "911d85b6442a8177527ba63e8b0136dc3a1a89c7eb68d337d91c24e4194de2cb",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain2500_ss2500_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain2500_ss2500_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "gain_ss",
+        "alias": "gain250_ss250",
+        "source_config": "configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain250_ss250_seed42.yaml",
+        "source_sha256": "bb7f815e13a2f44e48acac714679c8464862912feabbd7e89ee7921c9fd1df95",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/gain250_ss250.yaml",
+        "config_sha256": "b5fd284ce89bf02b7ef97841be7f2814feeee52564a6c9627741b0a9202dcf78",
+        "exp_name": "lhs10_23_full_80_10_10_gain250_ss250_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_gain250_ss250_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_gain250_ss250_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_ss_loss_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/gain250_ss250.yaml",
+        "template_sha256": "623b5bc4f15a1c619fee2d91931e8eab350347e3af390dbdac581a16daf3f68d",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_gain250_ss250_seed43.pth": "a3e5f2c80cc1dacc2018b49f2f1b696d895cb19ec71b25c6670c8e361df5ad0a",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain250_ss250_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain250_ss250_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "gain_ss",
+        "alias": "gain25_ss25",
+        "source_config": "configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain25_ss25_seed42.yaml",
+        "source_sha256": "1150f2e8bb31fc4e06267f84aa14f999a9a1e164c104912fa13e1622b74e1189",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/gain25_ss25.yaml",
+        "config_sha256": "1bf6199a6a4a2a117d2540ebb8d0b4d42428944278fe3419e6a03fdf898f854a",
+        "exp_name": "lhs10_23_full_80_10_10_gain25_ss25_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_gain25_ss25_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_gain25_ss25_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_ss_loss_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/gain25_ss25.yaml",
+        "template_sha256": "ed49803cee55198c7411db836993c291b1592f8b8dd6ad524a3e449958d6c402",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_gain25_ss25_seed43.pth": "740ede28aee5e34b4a2afbdb31165aa02fbb05d47b806c56d3604ab0a5632c23",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain25_ss25_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain25_ss25_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "gain_ss",
+        "alias": "gain2p5_ss2p5",
+        "source_config": "configs/pgin/gain_ss/transformer_layerwise_63var_decoder_input_sp_pgin_gain2p5_ss2p5_seed42.yaml",
+        "source_sha256": "197839fa8aa158d9d366c281994d65300abf4a39109e559be21acc5dab0230a8",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/gain2p5_ss2p5.yaml",
+        "config_sha256": "e9b10075dc7591abbc0b9631d45a3f0891e72cbe9eb98a08c4da34e0f8d84905",
+        "exp_name": "lhs10_23_full_80_10_10_gain2p5_ss2p5_seed43",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_gain2p5_ss2p5_seed43",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_gain2p5_ss2p5_seed43.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_ss_loss_rawsplit",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/gain2p5_ss2p5.yaml",
+        "template_sha256": "80c3692f162cfc83578c34c4476213e64b4f9daae1c9738d41550da6c9ac50a7",
+        "cli_args": []
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_gain2p5_ss2p5_seed43.pth": "920099e00dd3abee685524adafbb1bd889053da875917f7e6b4ed24474638c93",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain2p5_ss2p5_seed43\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_gain2p5_ss2p5_seed43\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "difficult_gradnorm",
+        "alias": "dg_ratio0p015",
+        "source_config": "configs/pgin/difficult_gradnorm/transformer_layerwise_63var_decoder_input_sp_pgin_gain005_seed42_difficult_group_gradnorm_no_ss.yaml",
+        "source_sha256": "dc21c0af5fa81a0e644770f9b470874c7fc08d3b42e5278ade11b01033f46228",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/dg_ratio0p015.yaml",
+        "config_sha256": "a3545a9ef9c2875c904729b23eb118d358f1c1c89b01323b8f2f6c5aaec1e5f0",
+        "exp_name": "lhs10_23_full_80_10_10_dg_ratio0p015_seed43_difficult_group_gradnorm_no_ss",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_dg_ratio0p015_seed43_difficult_group_gradnorm_no_ss",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_dg_ratio0p015_seed43_difficult_group_gradnorm_no_ss.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_difficult_group_gradnorm_rawsplit",
+        "cli_args": [
+          "--no-ss",
+          "--target-ratio",
+          "0.015",
+          "--max-scale",
+          "1000",
+          "--use-config-steady-state-source"
+        ],
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/dg_ratio0p015.yaml",
+        "template_sha256": "133234f3b261fa91cc063f884f2dfdc67888aaa6caef3d6cae1c99efec7bb4c6"
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_dg_ratio0p015_seed43_difficult_group_gradnorm_no_ss.pth": "8773beaf6ac32c71fcf7b4c56daf96c8919ae55f41b0b924ad7d4afcecb6b9b3",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_dg_ratio0p015_seed43_difficult_group_gradnorm_no_ss\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_dg_ratio0p015_seed43_difficult_group_gradnorm_no_ss\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "difficult_gradnorm",
+        "alias": "dg_ratio0p15",
+        "target_ratio": "0.15",
+        "max_scale": "20000",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/dg_ratio0p15.yaml",
+        "config_sha256": "c8c7b764be603f8b5cf47278315f203400573ade64683909ec0d30248f8c44db",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/dg_ratio0p15.yaml",
+        "template_sha256": "0b0b1ecb95a01a66dcb88c7dac70c7bf508967d02c1d591f491d151397cbca35",
+        "exp_name": "lhs10_23_full_80_10_10_dg_ratio0p15_seed43_difficult_group_gradnorm_no_ss",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_dg_ratio0p15_seed43_difficult_group_gradnorm_no_ss",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_dg_ratio0p15_seed43_difficult_group_gradnorm_no_ss.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_difficult_group_gradnorm_rawsplit",
+        "cli_args": [
+          "--no-ss",
+          "--target-ratio",
+          "0.15",
+          "--max-scale",
+          "20000",
+          "--use-config-steady-state-source"
+        ]
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_dg_ratio0p15_seed43_difficult_group_gradnorm_no_ss.pth": "6e0c49714fea77a360b3a6a6aaaf512aa4e958e762e07993b12c2d92a816ce5d",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_dg_ratio0p15_seed43_difficult_group_gradnorm_no_ss\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_dg_ratio0p15_seed43_difficult_group_gradnorm_no_ss\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "difficult_gradnorm",
+        "alias": "dg_ratio1p5",
+        "target_ratio": "1.5",
+        "max_scale": "500000",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/dg_ratio1p5.yaml",
+        "config_sha256": "17370fa659f2332f22b54e0ebfe8ffc3d1ade59072fad939d243ecae67c434e0",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/dg_ratio1p5.yaml",
+        "template_sha256": "bc9b980d76f06af6388ee0c44e4cd2f3ebcfe0a83de9f58aaf236adbe67ad4e1",
+        "exp_name": "lhs10_23_full_80_10_10_dg_ratio1p5_seed43_difficult_group_gradnorm_no_ss",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_dg_ratio1p5_seed43_difficult_group_gradnorm_no_ss",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_dg_ratio1p5_seed43_difficult_group_gradnorm_no_ss.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_difficult_group_gradnorm_rawsplit",
+        "cli_args": [
+          "--no-ss",
+          "--target-ratio",
+          "1.5",
+          "--max-scale",
+          "500000",
+          "--use-config-steady-state-source"
+        ]
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_dg_ratio1p5_seed43_difficult_group_gradnorm_no_ss.pth": "d3d9bcc19cc97bd5295c6b0b5053cde3d706e02241836bf479836fc0113e0727",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_dg_ratio1p5_seed43_difficult_group_gradnorm_no_ss\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_dg_ratio1p5_seed43_difficult_group_gradnorm_no_ss\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "difficult_gradnorm",
+        "alias": "dg_ratio15",
+        "target_ratio": "15",
+        "max_scale": "10000000",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/dg_ratio15.yaml",
+        "config_sha256": "caa87beb2a3d44b42a0d16c4e1dbb128b16365f0a05724864f9613b370210913",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/dg_ratio15.yaml",
+        "template_sha256": "8a9bc23f25af4d0c2dde7583bb07f1d202dd25cd20bbc28c63f2e9757f49aa07",
+        "exp_name": "lhs10_23_full_80_10_10_dg_ratio15_seed43_difficult_group_gradnorm_no_ss",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_dg_ratio15_seed43_difficult_group_gradnorm_no_ss",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_dg_ratio15_seed43_difficult_group_gradnorm_no_ss.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_difficult_group_gradnorm_rawsplit",
+        "cli_args": [
+          "--no-ss",
+          "--target-ratio",
+          "15",
+          "--max-scale",
+          "10000000",
+          "--use-config-steady-state-source"
+        ]
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_dg_ratio15_seed43_difficult_group_gradnorm_no_ss.pth": "52170016c71e0f284cd91baeff9d6b74f67bf64ab54965d35ff3f34d9e03b83f",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_dg_ratio15_seed43_difficult_group_gradnorm_no_ss\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_dg_ratio15_seed43_difficult_group_gradnorm_no_ss\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    },
+    {
+      "job": {
+        "seed": 43,
+        "family": "difficult_gradnorm",
+        "alias": "dg_ratio150",
+        "target_ratio": "150",
+        "max_scale": "500000000",
+        "config": "configs/pgin/retrain_lhs10_23_full_80_10_10/seed43/dg_ratio150.yaml",
+        "config_sha256": "c0fe87b0760bcdcc1bddfec6c1a7b27e3516da385dce169d9f77861311ef120a",
+        "template_config": "configs/pgin/retrain_lhs10_23/seed43/dg_ratio150.yaml",
+        "template_sha256": "841f7e7a6ee994ab23ec636ef41cb769c9817e765e307f09c5939323815fc4bb",
+        "exp_name": "lhs10_23_full_80_10_10_dg_ratio150_seed43_difficult_group_gradnorm_no_ss",
+        "results": "results/pgin/retrain_lhs10_23_full_80_10_10/seed43/lhs10_23_full_80_10_10_dg_ratio150_seed43_difficult_group_gradnorm_no_ss",
+        "checkpoint": "saved_models/lhs10_23_full_80_10_10_dg_ratio150_seed43_difficult_group_gradnorm_no_ss.pth",
+        "module": "scripts.training.train_pgin_stepwise_gain_difficult_group_gradnorm_rawsplit",
+        "cli_args": [
+          "--no-ss",
+          "--target-ratio",
+          "150",
+          "--max-scale",
+          "500000000",
+          "--use-config-steady-state-source"
+        ]
+      },
+      "outputs_sha256": {
+        "saved_models\\lhs10_23_full_80_10_10_dg_ratio150_seed43_difficult_group_gradnorm_no_ss.pth": "7ae019a732a619a1b4679cb949337421d385d54cca3226a825da58623110b313",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_dg_ratio150_seed43_difficult_group_gradnorm_no_ss\\zscore_mean.csv": "780d77f85d48de438e89e0eb35e5dc456c35608624b520715a36ac8ebacbf0a1",
+        "results\\pgin\\retrain_lhs10_23_full_80_10_10\\seed43\\lhs10_23_full_80_10_10_dg_ratio150_seed43_difficult_group_gradnorm_no_ss\\zscore_std.csv": "6ee9b6932fa01f35fd6f8c259dbda5bd3af31f058c52467f7f64e7e76ff428b7"
+      }
+    }
+  ],
+  "active": null,
+  "finished_utc": "2026-11-26T07:55:15.352736+00:00"
+}

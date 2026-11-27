@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "model_count": 15,
+  "regional_points": 30,
+  "models": {
+    "no_gain": "No-Gain",
+    "gain": "Gain = 25",
+    "ss_only": "SS-only = 2.5",
+    "gain_ss": "Gain + SS = 250 / 250",
+    "difficult_gradnorm": "Difficult-GradNorm, rho = 1.5"
+  },
+  "source_sha256": {
+    "regional_coordinates.csv": "26255678d79dc5e909629f61b9b093614e59d8e4ee33de10124b18bb2c05949d",
+    "selected_models.json": "140dc43641aadc046f5234100c5e78589864b690db434a257d2998cb4762a446",
+    "evaluation_validation.json": "db1aa2cc3347e51c2be8235cf9a90304d35684f509268c5e279df68330eb8819"
+  },
+  "output_sha256": {
+    "three_seed_coordinates.csv": "8813e64330d52af01bb1bd3d675f6b37e9629c3dea94c8b1de5353e884fb2d96",
+    "three_seed_test_comparison.html": "2a08bdc52838a41ca467b171a38257e118bdb8d2e7bdef62be1553c3928ea75b",
+    "three_seed_test_comparison.pdf": "4c9e5e77e1afa8a4f69347888be7c6db2324154eed3441ce1d4a6777a9134de1",
+    "three_seed_test_comparison.png": "d19d772776d2b51b6041e68d10346544b5c38d8b2e464dc1e0037b58143d63c9"
+  }
+}
